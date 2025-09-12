@@ -1,4 +1,7 @@
 package com.lemon.supershop.swp391fa25evdm.user.repository;
 
-public class UserRepo {
+import com.lemon.supershop.swp391fa25evdm.user.model.entity.User;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface UserRepo extends JpaRepository<User, Long> {
 }
