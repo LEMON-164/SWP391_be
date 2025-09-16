@@ -1,6 +1,5 @@
 package com.lemon.supershop.swp391fa25evdm.user.model.entity;
 
-import com.lemon.supershop.swp391fa25evdm.cart.model.entity.Cart;
 import com.lemon.supershop.swp391fa25evdm.contract.model.entity.Contract;
 import com.lemon.supershop.swp391fa25evdm.dealer.model.entity.Dealer;
 import com.lemon.supershop.swp391fa25evdm.feedback.model.entity.Feedback;
@@ -62,9 +61,6 @@ public class User {
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<PreOrder> preOrders;
-
-    @OneToOne(mappedBy = "user")
-    private Cart cart;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Payment> payments;
@@ -139,14 +135,6 @@ public class User {
 
     public void setOrders(List<Order> orders) {
         this.orders = orders;
-    }
-
-    public Cart getCart() {
-        return cart;
-    }
-
-    public void setCart(Cart cart) {
-        this.cart = cart;
     }
 
     public boolean isIs_black() {

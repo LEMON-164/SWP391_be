@@ -1,7 +1,6 @@
 package com.lemon.supershop.swp391fa25evdm.product.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.lemon.supershop.swp391fa25evdm.cart.model.entity.CartItem;
 import com.lemon.supershop.swp391fa25evdm.category.model.entity.Category;
 import com.lemon.supershop.swp391fa25evdm.category.model.entity.DealerCategory;
 import com.lemon.supershop.swp391fa25evdm.order.model.entity.OrderItem;
@@ -52,9 +51,6 @@ public class Product {
 
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<OrderItem> orderItems = new ArrayList<>();
-
-    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<CartItem> cartItems = new ArrayList<>();
 
     public Product() {}
 
@@ -120,14 +116,6 @@ public class Product {
 
     public void setOrderItems(List<OrderItem> orderItems) {
         this.orderItems = orderItems;
-    }
-
-    public List<CartItem> getCartItems() {
-        return cartItems;
-    }
-
-    public void setCartItems(List<CartItem> cartItems) {
-        this.cartItems = cartItems;
     }
 
     public String getStatus() {
