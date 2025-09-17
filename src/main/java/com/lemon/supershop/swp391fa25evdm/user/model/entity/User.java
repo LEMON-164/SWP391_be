@@ -24,13 +24,13 @@ public class User {
     @Column(name = "Username", columnDefinition = "VARCHAR(50)")
     private String username;
 
-    @Column(name = "Password", nullable = false, columnDefinition = "VARCHAR(50)")
+    @Column(name = "Password", columnDefinition = "VARCHAR(50)")
     private String password;
 
     @Column(name = "Email", columnDefinition = "VARCHAR(50)")
     private String email;
 
-    @Column(name = "Phone", nullable = false, columnDefinition = "VARCHAR(11)")
+    @Column(name = "Phone", columnDefinition = "VARCHAR(11)")
     private String phone;
 
     @Column(name = "Address", columnDefinition = "NVARCHAR(255)")
@@ -39,7 +39,7 @@ public class User {
     @Column(name = "Is_black", columnDefinition = "VARCHAR(20)")
     private boolean is_black;
 
-    @Column(insertable = false, updatable = false, name = "Create_at", nullable = false, columnDefinition = "DATETIME2 DEFAULT GETDATE()" )
+    @Column(insertable = false, updatable = false, name = "Create_at", columnDefinition = "DATETIME2 DEFAULT GETDATE()" )
     @Temporal(TemporalType.TIMESTAMP)
     private Date createAt;
 
@@ -75,6 +75,15 @@ public class User {
     private List<Contract> contracts;
 
     public User() {
+    }
+
+    public User(String username, String password, String email, String phone, String address, Role role) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.phone = phone;
+        this.address = address;
+        this.role = role;
     }
 
     public int getId() {
@@ -167,5 +176,37 @@ public class User {
 
     public void setFeedbacks(List<Feedback> feedbacks) {
         this.feedbacks = feedbacks;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public List<Contract> getContracts() {
+        return contracts;
+    }
+
+    public void setContracts(List<Contract> contracts) {
+        this.contracts = contracts;
+    }
+
+    public List<TestDrive> getTestDrives() {
+        return testDrives;
+    }
+
+    public void setTestDrives(List<TestDrive> testDrives) {
+        this.testDrives = testDrives;
+    }
+
+    public Dealer getDealer() {
+        return dealer;
+    }
+
+    public void setDealer(Dealer dealer) {
+        this.dealer = dealer;
     }
 }

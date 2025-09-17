@@ -1,36 +1,39 @@
 package com.lemon.supershop.swp391fa25evdm.authentication.model.dto;
 
-public class RegisterReq {
-    private String username;
-    private String phone;
-    private String email;
-    private String address;
-    private String password;
-    private String confirmPassword;
+import com.lemon.supershop.swp391fa25evdm.role.model.entity.Role;
 
-    public RegisterReq() {}
+public class AuthenRes {
+    private String username;
+    private String password;
+    private String email;
+    private String phone;
+    private String address;
+    private Role role;
+
+    public AuthenRes() {
+    }
 
     public String getUsername() {
         return username;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public String getEmail() {
-        return email;
     }
 
     public String getPassword() {
         return password;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
     public String getAddress() {
         return address;
     }
 
-    public String getConfirmPassword() {
-        return confirmPassword;
+    public Role getRole() {
+        return role;
     }
 }

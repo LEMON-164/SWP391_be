@@ -30,6 +30,9 @@ public class Product {
     @Column(name = "Manufacture", columnDefinition = "DATETIME2")
     private Date manufacture_date;
 
+    @Column(name = "Image", columnDefinition = "NVARCHAR(MAX)")
+    private String image;
+
     @Column(name = "Description", columnDefinition = "NVARCHAR(MAX)")
     private String description;
 
@@ -124,5 +127,21 @@ public class Product {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public List<DealerCategory> getDealerCategories() {
+        return dealerCategories;
+    }
+
+    public void setDealerCategories(List<DealerCategory> dealerCategories) {
+        this.dealerCategories = dealerCategories;
     }
 }

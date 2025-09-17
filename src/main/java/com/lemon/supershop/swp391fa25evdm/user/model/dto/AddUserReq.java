@@ -1,14 +1,17 @@
-package com.lemon.supershop.swp391fa25evdm.authentication.model.dto;
+package com.lemon.supershop.swp391fa25evdm.user.model.dto;
 
-public class RegisterReq {
+import com.lemon.supershop.swp391fa25evdm.role.model.dto.RoleDto;
+import com.lemon.supershop.swp391fa25evdm.role.model.entity.Role;
+
+public class AddUserReq {
     private String username;
     private String phone;
     private String email;
-    private String address;
     private String password;
-    private String confirmPassword;
+    private String role;
 
-    public RegisterReq() {}
+    public AddUserReq() {
+    }
 
     public String getUsername() {
         return username;
@@ -26,11 +29,7 @@ public class RegisterReq {
         return password;
     }
 
-    public String getAddress() {
-        return address;
-    }
-
-    public String getConfirmPassword() {
-        return confirmPassword;
+    public String getRole() {
+        return role;
     }
 }
