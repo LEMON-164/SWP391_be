@@ -1,14 +1,12 @@
 package com.lemon.supershop.swp391fa25evdm.user.model.dto;
 
-import com.lemon.supershop.swp391fa25evdm.role.model.dto.RoleDto;
-import com.lemon.supershop.swp391fa25evdm.role.model.entity.Role;
-
 public class AddUserReq {
     private String username;
     private String phone;
     private String email;
     private String password;
     private String role;
+    private String dealer;
 
     public AddUserReq() {
     }
@@ -31,5 +29,9 @@ public class AddUserReq {
 
     public String getRole() {
         return role;
+    }
+
+    public String getDealer() {
+        return dealer;
     }
 }

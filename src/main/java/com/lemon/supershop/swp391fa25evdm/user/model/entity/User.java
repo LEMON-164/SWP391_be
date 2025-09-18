@@ -36,8 +36,8 @@ public class User {
     @Column(name = "Address", columnDefinition = "NVARCHAR(255)")
     private String address;
 
-    @Column(name = "Is_black", columnDefinition = "VARCHAR(20)")
-    private boolean is_black;
+    @Column(name = "IsBlack", columnDefinition = "VARCHAR(20)")
+    private boolean isBlack;
 
     @Column(insertable = false, updatable = false, name = "Create_at", columnDefinition = "DATETIME2 DEFAULT GETDATE()" )
     @Temporal(TemporalType.TIMESTAMP)
@@ -146,12 +146,12 @@ public class User {
         this.orders = orders;
     }
 
-    public boolean isIs_black() {
-        return is_black;
+    public boolean isBlack() {
+        return isBlack;
     }
 
-    public void setIs_black(boolean is_black) {
-        this.is_black = is_black;
+    public void setBlack(boolean black) {
+        isBlack = black;
     }
 
     public List<Payment> getPayments() {

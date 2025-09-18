@@ -23,8 +23,11 @@ public class Dealer {
     @Column(name = "Name", columnDefinition = "VARCHAR(50)")
     private String name;
 
-    @Column(name = "Phone", nullable = false, columnDefinition = "VARCHAR(11)")
+    @Column(name = "Phone", columnDefinition = "VARCHAR(11)")
     private String phone;
+
+    @Column(name = "Email", columnDefinition = "VARCHAR(50)")
+    private String email;
 
     @Column(name = "Address", columnDefinition = "NVARCHAR(255)")
     private String address;
@@ -32,10 +35,10 @@ public class Dealer {
     @Column(name = "Tax", columnDefinition = "VARCHAR(50)")
     private String taxcode;
 
-    @Column(name = "Status", nullable = false, columnDefinition = "VARCHAR(20)")
+    @Column(name = "Status", columnDefinition = "VARCHAR(20)")
     private String status;
 
-    @Column(insertable = false, updatable = false, name = "Create_at", nullable = false, columnDefinition = "DATETIME2 DEFAULT GETDATE()" )
+    @Column(insertable = false, updatable = false, name = "Create_at", columnDefinition = "DATETIME2 DEFAULT GETDATE()" )
     @Temporal(TemporalType.TIMESTAMP)
     private Date createAt;
 
@@ -180,5 +183,13 @@ public class Dealer {
 
     public void setTestDrives(List<TestDrive> testDrives) {
         this.testDrives = testDrives;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }
