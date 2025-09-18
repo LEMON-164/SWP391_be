@@ -7,10 +7,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserRepo extends JpaRepository<User, Long> {
-    boolean existsByUsername(String username);
-    boolean existsByEmail(String email);
-    boolean existsByPhone(String phone);
     Optional<User> findByEmail(String email);
+    Optional<User> findByUsername(String username);
     List<User> findByUsernameContainingIgnoreCase(String username);
     Optional<User> findById(int id);
     Optional<User> findByIsBlackTrue();
