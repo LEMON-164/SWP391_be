@@ -37,7 +37,7 @@ public class Payment {
     @JoinColumn(name = "PreOrderId")
     private PreOrder preOrder;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "InsPaymentId")
     private InstallmentPayment installmentPayment;
 

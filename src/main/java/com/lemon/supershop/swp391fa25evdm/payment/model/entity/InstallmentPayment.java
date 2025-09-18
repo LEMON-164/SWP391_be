@@ -26,11 +26,11 @@ public class InstallmentPayment {
     private boolean paid = false;
 
     @ManyToOne
-    @JoinColumn(name = "installment_plan_id", nullable = false)
+    @JoinColumn(name = "installment_plan_id")
     private InstallmentPlan installmentPlan;
 
-    @OneToMany(mappedBy = "installmentPayment")
-    private List<Payment> payments;
+    @OneToOne(mappedBy = "installmentPayment", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Payment payment;
 
     public InstallmentPayment() {}
 
@@ -82,11 +82,11 @@ public class InstallmentPayment {
         this.installmentPlan = installmentPlan;
     }
 
-    public List<Payment> getPayments() {
-        return payments;
+    public Payment getPayment() {
+        return payment;
     }
 
-    public void setPayments(List<Payment> payments) {
-        this.payments = payments;
+    public void setPayment(Payment payment) {
+        this.payment = payment;
     }
 }
