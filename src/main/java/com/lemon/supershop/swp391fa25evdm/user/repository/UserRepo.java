@@ -13,4 +13,5 @@ public interface UserRepo extends JpaRepository<User, Long> {
     Optional<User> findById(int id);
     Optional<User> findByIsBlackTrue();
     Optional<User> findByIsBlackFalse();
+
 }

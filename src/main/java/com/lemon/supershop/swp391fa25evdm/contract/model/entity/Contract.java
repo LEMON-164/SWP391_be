@@ -65,4 +65,12 @@ public class Contract {
     public void setOrder(Order order) {
         this.order = order;
     }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 }

@@ -20,14 +20,14 @@ public class Payment {
     @JoinColumn(name = "UserId")
     private User user;
 
-    @Column(name = "Method", nullable = false, columnDefinition = "NVARCHAR(50)")
+    @Column(name = "Method", columnDefinition = "NVARCHAR(50)")
     private String method;
 
-    @Column(name = "Paid_status", nullable = false, columnDefinition = "VARCHAR(20)")
-    private boolean paid_status = false;
+    @Column(name = "PaidStatus", columnDefinition = "VARCHAR(20)")
+    private boolean paidStatus = false;
 
-    @Column(name = "Paid_at", nullable = false, columnDefinition = "DATETIME2")
-    private Date paid_at;
+    @Column(name = "PaidAt", columnDefinition = "DATETIME2")
+    private Date paidAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "OrderId")
@@ -59,20 +59,20 @@ public class Payment {
         this.method = method;
     }
 
-    public boolean isPaid_status() {
-        return paid_status;
+    public boolean isPaidStatus() {
+        return paidStatus;
     }
 
-    public void setPaid_status(boolean paid_status) {
-        this.paid_status = paid_status;
+    public void setPaidStatus(boolean paidStatus) {
+        this.paidStatus = paidStatus;
     }
 
-    public Date getPaid_at() {
-        return paid_at;
+    public Date getPaidAt() {
+        return paidAt;
     }
 
-    public void setPaid_at(Date paid_at) {
-        this.paid_at = paid_at;
+    public void setPaidAt(Date paidAt) {
+        this.paidAt = paidAt;
     }
 
     public Order getOrder() {
@@ -97,5 +97,13 @@ public class Payment {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public PreOrder getPreOrder() {
+        return preOrder;
+    }
+
+    public void setPreOrder(PreOrder preOrder) {
+        this.preOrder = preOrder;
     }
 }

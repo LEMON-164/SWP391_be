@@ -23,23 +23,23 @@ public class Order {
     @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<OrderItem> orderItems;
 
-    @Column(name = "Order_date", nullable = false, columnDefinition = "DATETIME2")
-    private Date order_date;
+    @Column(name = "OrderDate", columnDefinition = "DATETIME2")
+    private Date orderDate;
 
-    @Column(name = "Status", nullable = false, columnDefinition = "VARCHAR(20)")
+    @Column(name = "Status", columnDefinition = "VARCHAR(20)")
     private String status;
 
-    @Column(name = "Total", nullable = false, columnDefinition = "DECIMAL(18,2)")
+    @Column(name = "Total", columnDefinition = "DECIMAL(18,2)")
     private double total;
 
-    @Column(name = "Ship_address", nullable = false, columnDefinition = "NVARCHAR(255)")
-    private String ship_address;
+    @Column(name = "ShipAddress", columnDefinition = "NVARCHAR(255)")
+    private String shipAddress;
 
-    @Column(name = "Ship_status", nullable = false, columnDefinition = "VARCHAR(20)")
-    private String ship_status;
+    @Column(name = "ShipStatus", columnDefinition = "VARCHAR(20)")
+    private String shipStatus;
 
-    @Column(name = "Ship_at", nullable = false, columnDefinition = "DATETIME2")
-    private Date ship_at;
+    @Column(name = "ShipAt", columnDefinition = "DATETIME2")
+    private Date shipAt;
 
     @ManyToOne
     @JoinColumn(name = "UserId")
@@ -51,9 +51,6 @@ public class Order {
 
     @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Promotion> promotions = new ArrayList<>();
-
-    @OneToOne(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private InstallmentPlan installmentPlan;
 
     @OneToOne(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Contract contract;
@@ -88,12 +85,12 @@ public class Order {
         this.orderItems = orderItems;
     }
 
-    public Date getOrder_date() {
-        return order_date;
+    public Date getOrderDate() {
+        return orderDate;
     }
 
-    public void setOrder_date(Date order_date) {
-        this.order_date = order_date;
+    public void setOrderDate(Date order_date) {
+        this.orderDate = order_date;
     }
 
     public String getStatus() {
@@ -120,14 +117,6 @@ public class Order {
         this.payments = payments;
     }
 
-    public InstallmentPlan getInstallmentPlan() {
-        return installmentPlan;
-    }
-
-    public void setInstallmentPlan(InstallmentPlan installmentPlan) {
-        this.installmentPlan = installmentPlan;
-    }
-
     public Contract getContract() {
         return contract;
     }
@@ -136,27 +125,27 @@ public class Order {
         this.contract = contract;
     }
 
-    public String getShip_address() {
-        return ship_address;
+    public String getShipAddress() {
+        return shipAddress;
     }
 
-    public void setShip_address(String ship_address) {
-        this.ship_address = ship_address;
+    public void setShipAddress(String ship_address) {
+        this.shipAddress = ship_address;
     }
 
-    public String getShip_status() {
-        return ship_status;
+    public String getShipStatus() {
+        return shipStatus;
     }
 
-    public void setShip_status(String delivery_status) {
-        this.ship_status = delivery_status;
+    public void setShipStatus(String delivery_status) {
+        this.shipStatus = delivery_status;
     }
 
-    public Date getShip_at() {
-        return ship_at;
+    public Date getShipAt() {
+        return shipAt;
     }
 
-    public void setShip_at(Date ship_at) {
-        this.ship_at = ship_at;
+    public void setShipAt(Date shipAt) {
+        this.shipAt = shipAt;
     }
 }

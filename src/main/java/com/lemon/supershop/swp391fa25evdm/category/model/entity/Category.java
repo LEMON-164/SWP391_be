@@ -48,8 +48,8 @@ public class Category {
     @Column(name = "Warranty", columnDefinition = "INT")
     private int warranty;
 
-    @Column(name = "Is_special", nullable = false, columnDefinition = "VARCHAR(20)")
-    private boolean is_special;
+    @Column(name = "IsSpecial", nullable = false, columnDefinition = "VARCHAR(20)")
+    private boolean isSpecial;
 
     @Column(name = "Description", columnDefinition = "NVARCHAR(MAX)")
     private String description;
@@ -180,12 +180,12 @@ public class Category {
         this.warranty = warranty;
     }
 
-    public boolean isIs_special() {
-        return is_special;
+    public boolean isSpecial() {
+        return isSpecial;
     }
 
-    public void setIs_special(boolean is_special) {
-        this.is_special = is_special;
+    public void setSpecial(boolean special) {
+        isSpecial = special;
     }
 
     public String getStatus() {
