@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.lemon.supershop.swp391fa25evdm.category.model.entity.Category;
 import com.lemon.supershop.swp391fa25evdm.category.model.entity.DealerCategory;
 import com.lemon.supershop.swp391fa25evdm.order.model.entity.OrderItem;
+import com.lemon.supershop.swp391fa25evdm.payment.model.entity.InstallmentPlan;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -30,7 +31,10 @@ public class Product {
     @Column(name = "Manufacture", columnDefinition = "DATETIME2")
     private Date manufacture_date;
 
-    @Column(name = "Image", columnDefinition = "NVARCHAR(MAX)")
+    @Column(name = "DealerPrice", columnDefinition = "DECIMAL(15,2)")
+    private double dealerPrice;
+
+    @Column(name = "Image", columnDefinition = "VARCHAR(MAX)")
     private String image;
 
     @Column(name = "Description", columnDefinition = "NVARCHAR(MAX)")
@@ -44,16 +48,16 @@ public class Product {
     @JsonIgnore
     private Category category;
 
-    @ManyToMany
-    @JoinTable(
-            name = "dealerCategory_product",
-            joinColumns = @JoinColumn(name = "ProductId"),
-            inverseJoinColumns = @JoinColumn(name = "DealerCategoryId")
-    )
-    private List<DealerCategory> dealerCategories = new ArrayList<>();
+    @ManyToOne
+    @JoinColumn(name = "DealerCategoryId")
+    @JsonIgnore
+    private DealerCategory dealerCategory;
 
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<OrderItem> orderItems = new ArrayList<>();
+
+    @OneToOne(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private InstallmentPlan installmentPlan;
 
     public Product() {}
 
@@ -137,11 +141,27 @@ public class Product {
         this.image = image;
     }
 
-    public List<DealerCategory> getDealerCategories() {
-        return dealerCategories;
+    public DealerCategory getDealerCategory() {
+        return dealerCategory;
     }
 
-    public void setDealerCategories(List<DealerCategory> dealerCategories) {
-        this.dealerCategories = dealerCategories;
+    public void setDealerCategory(DealerCategory dealerCategory) {
+        this.dealerCategory = dealerCategory;
+    }
+
+    public InstallmentPlan getInstallmentPlan() {
+        return installmentPlan;
+    }
+
+    public void setInstallmentPlan(InstallmentPlan installmentPlan) {
+        this.installmentPlan = installmentPlan;
+    }
+
+    public double getDealerPrice() {
+        return dealerPrice;
+    }
+
+    public void setDealerPrice(double dealerPrice) {
+        this.dealerPrice = dealerPrice;
     }
 }

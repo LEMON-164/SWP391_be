@@ -18,19 +18,16 @@ public class DealerCategory {
     @Column(name = "Id", columnDefinition = "VARCHAR(20)")
     private String id;
 
-    @Column(name = "Name", nullable = false, columnDefinition = "NVARCHAR(150)")
+    @Column(name = "Name", columnDefinition = "NVARCHAR(150)")
     private String name;
 
-    @Column(name = "Quantity", nullable = false, columnDefinition = "INT")
+    @Column(name = "Quantity", columnDefinition = "INT")
     private int quantity;
-
-    @Column(name = "DealerPrice", nullable = false, columnDefinition = "DECIMAL(15,2)")
-    private double dealerPrice;
 
     @Column(name = "Description", columnDefinition = "NVARCHAR(MAX)")
     private String description;
 
-    @Column(name = "Status", nullable = false, columnDefinition = "VARCHAR(20)")
+    @Column(name = "Status", columnDefinition = "VARCHAR(20)")
     private String status;
 
     @ManyToOne
@@ -42,9 +39,83 @@ public class DealerCategory {
     @JoinColumn(name = "RoleId")
     private Dealer dealer;
 
-    @ManyToMany(mappedBy = "dealerCategories", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Product> products = new ArrayList<>();
+    @OneToMany(mappedBy = "dealerCategory", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Product> products;
 
     @OneToMany(mappedBy = "dealerCategory", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<TestDrive> testDrives;
+
+    public DealerCategory() {}
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
+    public Dealer getDealer() {
+        return dealer;
+    }
+
+    public void setDealer(Dealer dealer) {
+        this.dealer = dealer;
+    }
+
+    public List<Product> getProducts() {
+        return products;
+    }
+
+    public void setProducts(List<Product> products) {
+        this.products = products;
+    }
+
+    public List<TestDrive> getTestDrives() {
+        return testDrives;
+    }
+
+    public void setTestDrives(List<TestDrive> testDrives) {
+        this.testDrives = testDrives;
+    }
 }

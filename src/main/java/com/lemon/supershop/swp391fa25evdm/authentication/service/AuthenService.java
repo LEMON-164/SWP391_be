@@ -40,8 +40,8 @@ public class AuthenService {
         if (dto.getIdentifier() != null){
             if (EMAIL_PATTERN.matcher(dto.getIdentifier()).matches()){
                 user = userRepo.findByEmail(dto.getIdentifier());
-            }else {
-                throw new RuntimeException("Invalid identifier format");
+            } else {
+                user = userRepo.findByUsername(dto.getIdentifier());
             }
         }
 

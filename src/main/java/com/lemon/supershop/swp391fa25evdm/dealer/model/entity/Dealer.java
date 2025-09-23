@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.lemon.supershop.swp391fa25evdm.category.model.entity.DealerCategory;
 import com.lemon.supershop.swp391fa25evdm.distribution.model.entity.Distribution;
 import com.lemon.supershop.swp391fa25evdm.order.model.entity.Order;
+import com.lemon.supershop.swp391fa25evdm.payment.model.entity.InstallmentPlan;
 import com.lemon.supershop.swp391fa25evdm.policies.model.entity.Policy;
 import com.lemon.supershop.swp391fa25evdm.promotion.model.entity.Promotion;
 import com.lemon.supershop.swp391fa25evdm.testdrive.model.entity.TestDrive;
@@ -67,6 +68,9 @@ public class Dealer {
 
     @OneToMany(mappedBy = "dealer", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Promotion> promotions = new ArrayList<>();
+
+    @OneToMany(mappedBy = "dealer", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<InstallmentPlan> installmentPlans;
 
     @OneToMany(mappedBy = "dealer", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<TestDrive> testDrives;

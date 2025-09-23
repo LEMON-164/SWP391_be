@@ -51,4 +51,79 @@ public class TestDrive {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "DealerCategoryId", nullable = false)
     private DealerCategory dealerCategory; // mẫu xe được chạy thử
+
+    public TestDrive() {
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public LocalDateTime getScheduleDate() {
+        return scheduleDate;
+    }
+
+    public void setScheduleDate(LocalDateTime scheduleDate) {
+        this.scheduleDate = scheduleDate;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
+    }
+
+    public Date getCreateAt() {
+        return createAt;
+    }
+
+    public void setCreateAt(Date createAt) {
+        this.createAt = createAt;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Dealer getDealer() {
+        return dealer;
+    }
+
+    public void setDealer(Dealer dealer) {
+        this.dealer = dealer;
+    }
+
+    public DealerCategory getDealerCategory() {
+        return dealerCategory;
+    }
+
+    public void setDealerCategory(DealerCategory dealerCategory) {
+        this.dealerCategory = dealerCategory;
+    }
 }
