@@ -31,7 +31,7 @@ public class Product {
     @Column(name = "Manufacture", columnDefinition = "DATETIME2")
     private Date manufacture_date;
 
-    @Column(name = "DealerPrice", nullable = false, columnDefinition = "DECIMAL(15,2)")
+    @Column(name = "DealerPrice", columnDefinition = "DECIMAL(15,2)")
     private double dealerPrice;
 
     @Column(name = "Image", columnDefinition = "VARCHAR(MAX)")

@@ -18,16 +18,16 @@ public class DealerCategory {
     @Column(name = "Id", columnDefinition = "VARCHAR(20)")
     private String id;
 
-    @Column(name = "Name", nullable = false, columnDefinition = "NVARCHAR(150)")
+    @Column(name = "Name", columnDefinition = "NVARCHAR(150)")
     private String name;
 
-    @Column(name = "Quantity", nullable = false, columnDefinition = "INT")
+    @Column(name = "Quantity", columnDefinition = "INT")
     private int quantity;
 
     @Column(name = "Description", columnDefinition = "NVARCHAR(MAX)")
     private String description;
 
-    @Column(name = "Status", nullable = false, columnDefinition = "VARCHAR(20)")
+    @Column(name = "Status", columnDefinition = "VARCHAR(20)")
     private String status;
 
     @ManyToOne

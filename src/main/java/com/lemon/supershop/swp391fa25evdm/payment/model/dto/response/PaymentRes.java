@@ -5,15 +5,17 @@ import java.util.Date;
 public class PaymentRes {
     private String userName;
     private int orderId;
+    private int preorderId;
     private String method;
     private boolean paidStatus;
     private Date paid_at;
 
     public PaymentRes() {}
 
-    public PaymentRes(String userName, int orderId, String method,boolean paidStatus, Date paid_at) {
+    public PaymentRes(String userName, int orderId, int preorderId, String method,boolean paidStatus, Date paid_at) {
         this.userName = userName;
         this.orderId = orderId;
+        this.preorderId = preorderId;
         this.method = method;
         this.paidStatus = paidStatus;
         this.paid_at = paid_at;

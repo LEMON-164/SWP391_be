@@ -41,7 +41,7 @@ public class PaymentService {
         User user = userRepo.findById(id).get();
         if (user != null) {
             return paymentRepo.findByUserId(id).stream().map(payment -> {
-                PaymentRes paymentRes = new PaymentRes(user.getUsername(), payment.getOrder().getId(), payment.getMethod(), payment.isPaidStatus(), payment.getPaidAt());
+                PaymentRes paymentRes = new PaymentRes(user.getUsername(), payment.getOrder().getId(), payment.getPreOrder().getId(), payment.getMethod(), payment.isPaidStatus(), payment.getPaidAt());
                 return paymentRes;
             }).collect(Collectors.toList());
         } else {
