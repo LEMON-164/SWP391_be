@@ -2,7 +2,7 @@ package com.lemon.supershop.swp391fa25evdm.refra.MOMO.dto;
 
 public class CreateMomoRes {
     private String parnerCode;
-    private int orderId;
+    private String orderId;
     private String requestId;
     private long amount;
     private long responseTime;
@@ -15,7 +15,7 @@ public class CreateMomoRes {
     public CreateMomoRes() {
     }
 
-    public CreateMomoRes(String parnerCode, int orderId, String requestId, long amount, long responseTime, String msg, int resultCode, String payUrl, String deeplink, String qrcodeUrl) {
+    public CreateMomoRes(String parnerCode, String orderId, String requestId, long amount, long responseTime, String msg, int resultCode, String payUrl, String deeplink, String qrcodeUrl) {
         this.parnerCode = parnerCode;
         this.orderId = orderId;
         this.requestId = requestId;
@@ -36,11 +36,11 @@ public class CreateMomoRes {
         this.parnerCode = parnerCode;
     }
 
-    public int getOrderId() {
+    public String getOrderId() {
         return orderId;
     }
 
-    public void setOrderId(int orderId) {
+    public void setOrderId(String orderId) {
         this.orderId = orderId;
     }
 

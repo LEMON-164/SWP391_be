@@ -46,8 +46,21 @@ public class UserController {
 
     @PostMapping("/addUser")
     public ResponseEntity<String> addUser(@RequestBody AddUserReq dto) {
-        userService.addUser(dto);
-        return ResponseEntity.ok("User registered successfully");
+        try {
+            userService.addUser(dto);
+            return ResponseEntity.ok("User registered successfully");
+        } catch (IllegalArgumentException ex) {
+            if ("EMAIL_DUPLICATE".equals(ex.getMessage())) {
+                return ResponseEntity.status(409).body("Email đã tồn tại");
+            }
+            throw ex;
+        }
+    }
+
+    @PostMapping("/addBlackList/{id}")
+    public ResponseEntity<String> addBlackList(@PathVariable("id") int id) {
+        userService.blackList(id);
+        return ResponseEntity.ok("User added into black list successfully");
     }
 
     @PutMapping("profile/{id}")

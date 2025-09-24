@@ -3,8 +3,9 @@ package com.lemon.supershop.swp391fa25evdm.product.model.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.lemon.supershop.swp391fa25evdm.category.model.entity.Category;
 import com.lemon.supershop.swp391fa25evdm.category.model.entity.DealerCategory;
-import com.lemon.supershop.swp391fa25evdm.order.model.entity.OrderItem;
+import com.lemon.supershop.swp391fa25evdm.order.model.entity.Order;
 import com.lemon.supershop.swp391fa25evdm.payment.model.entity.InstallmentPlan;
+import com.lemon.supershop.swp391fa25evdm.preorder.model.entity.PreOrder;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -54,7 +55,10 @@ public class Product {
     private DealerCategory dealerCategory;
 
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<OrderItem> orderItems = new ArrayList<>();
+    private List<Order> orders = new ArrayList<>();
+
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<PreOrder> preOrders = new ArrayList<>();
 
     @OneToOne(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private InstallmentPlan installmentPlan;
@@ -117,12 +121,12 @@ public class Product {
         this.category = category;
     }
 
-    public List<OrderItem> getOrderItems() {
-        return orderItems;
+    public List<Order> getOrders() {
+        return orders;
     }
 
-    public void setOrderItems(List<OrderItem> orderItems) {
-        this.orderItems = orderItems;
+    public void setOrders(List<Order> orderItems) {
+        this.orders = orderItems;
     }
 
     public String getStatus() {
@@ -163,5 +167,13 @@ public class Product {
 
     public void setDealerPrice(double dealerPrice) {
         this.dealerPrice = dealerPrice;
+    }
+
+    public List<PreOrder> getPreOrders() {
+        return preOrders;
+    }
+
+    public void setPreOrders(List<PreOrder> preOrders) {
+        this.preOrders = preOrders;
     }
 }

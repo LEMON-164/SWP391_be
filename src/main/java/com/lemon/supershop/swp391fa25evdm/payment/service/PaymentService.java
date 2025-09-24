@@ -41,7 +41,20 @@ public class PaymentService {
         User user = userRepo.findById(id).get();
         if (user != null) {
             return paymentRepo.findByUserId(id).stream().map(payment -> {
-                PaymentRes paymentRes = new PaymentRes(user.getUsername(), payment.getOrder().getId(), payment.getPreOrder().getId(), payment.getMethod(), payment.isPaidStatus(), payment.getPaidAt());
+                PaymentRes paymentRes = new PaymentRes();
+                if (payment.getOrder() != null){
+                    paymentRes.setOrderId(payment.getOrder().getId());
+                }
+                if (payment.getPreOrder() != null){
+                    paymentRes.setPreorderId(payment.getPreOrder().getId());
+                }
+                if (payment.getMethod() != null){
+                    paymentRes.setMethod(payment.getMethod());
+                }
+                if (payment.getPaidAt() != null){
+                    paymentRes.setPaid_at(payment.getPaidAt());
+                }
+                paymentRes.isPaidStatus(payment.isPaidStatus());
                 return paymentRes;
             }).collect(Collectors.toList());
         } else {
