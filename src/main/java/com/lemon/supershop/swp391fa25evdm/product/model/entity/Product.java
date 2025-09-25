@@ -23,10 +23,10 @@ public class Product {
     @Column(name = "Name", columnDefinition = "VARCHAR(150)")
     private String name;
 
-    @Column(name = "Vin", columnDefinition = "VARCHAR UNIQUE")
+    @Column(name = "Vin", columnDefinition = "VARCHAR(100) UNIQUE")
     private String vinNum;
 
-    @Column(name = "Engine", columnDefinition = "VARCHAR UNIQUE")
+    @Column(name = "Engine", columnDefinition = "VARCHAR(100) UNIQUE")
     private String engineNum;
 
     @Column(name = "Manufacture", columnDefinition = "DATETIME2")

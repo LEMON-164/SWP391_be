@@ -26,8 +26,7 @@ public class InsPaymentService {
         InstallmentPlan installmentPlan = insPlanRepo.findById(id).get();
         if (installmentPlan != null) {
             return insPaymentRepo.findByInstallmentPlan_Id(id).stream().map(installmentPayment -> {
-                InsPaymentRes dto = new InsPaymentRes(installmentPayment.getInstallmentNumber(), installmentPayment.getDueDate(), installmentPayment.getExpectedAmount(), installmentPayment.isPaid());
-                return dto;
+                return convertInstallpaymenttoInsPaymentRes(installmentPayment);
             }).collect(Collectors.toList());
         } else {
             return null;
@@ -52,5 +51,22 @@ public class InsPaymentService {
         if (payment != null) {
             insPaymentRepo.delete(payment);
         }
+    }
+
+    public InsPaymentRes convertInstallpaymenttoInsPaymentRes(InstallmentPayment installmentPayment) {
+        InsPaymentRes insPaymentRes = new InsPaymentRes();
+        if (installmentPayment != null) {
+            if (installmentPayment.getInstallmentNumber() > 0){
+                insPaymentRes.setInstallmentNumber(installmentPayment.getInstallmentNumber());
+            }
+            if (installmentPayment.getDueDate() != null){
+                insPaymentRes.setDueDate(installmentPayment.getDueDate());
+            }
+            if (installmentPayment.getExpectedAmount() >=0){
+                insPaymentRes.setExpectedAmount(installmentPayment.getExpectedAmount());
+            }
+            insPaymentRes.setPaid(installmentPayment.isPaid());
+        }
+        return insPaymentRes;
     }
 }

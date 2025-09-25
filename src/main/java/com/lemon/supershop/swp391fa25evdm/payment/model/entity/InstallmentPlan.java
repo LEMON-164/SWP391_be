@@ -29,7 +29,7 @@ public class InstallmentPlan {
     private List<InstallmentPayment> inspayments;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "DealerId", nullable = false)
+    @JoinColumn(name = "DealerId")
     private Dealer dealer;
 
     public InstallmentPlan() {}

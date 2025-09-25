@@ -39,7 +39,7 @@ public class DealerCategoryController {
         }
     }
     @GetMapping("/{id}")
-    public ResponseEntity<DealerCategoryRes> getDealerCategoryById(@PathVariable String id) {
+    public ResponseEntity<DealerCategoryRes> getDealerCategoryById(@PathVariable int id) {
         try {
             DealerCategoryRes dealerCategory = dealerCategoryService.getDealerCategoryById(id);
             if (dealerCategory != null) {
@@ -55,10 +55,6 @@ public class DealerCategoryController {
     @PostMapping ("/create")
     public ResponseEntity<DealerCategoryRes> createDealerCategory(@RequestBody DealerCategoryReq dealerCategoryReq) {
         try {
-            if (dealerCategoryReq.getId() == null || dealerCategoryReq.getId().isEmpty()) {
-                return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-            }
-            
             DealerCategoryRes createdDealerCategory = dealerCategoryService.createDealerCategory(dealerCategoryReq);
             if (createdDealerCategory != null) {
                 return new ResponseEntity<>(createdDealerCategory, HttpStatus.CREATED);
@@ -71,7 +67,7 @@ public class DealerCategoryController {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<String> updateDealerCategory(@PathVariable String id, @RequestBody DealerCategoryReq dealerCategoryReq) {
+    public ResponseEntity<String> updateDealerCategory(@PathVariable int id, @RequestBody DealerCategoryReq dealerCategoryReq) {
         try {
             DealerCategoryRes existingDealerCategory = dealerCategoryService.getDealerCategoryById(id);
             if (existingDealerCategory == null) {
@@ -91,7 +87,7 @@ public class DealerCategoryController {
 
     // ✅ DELETE - Xóa dealer category
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> deleteDealerCategory(@PathVariable String id) {
+    public ResponseEntity<String> deleteDealerCategory(@PathVariable int id) {
         try {
             DealerCategoryRes existingDealerCategory = dealerCategoryService.getDealerCategoryById(id);
             if (existingDealerCategory == null) {

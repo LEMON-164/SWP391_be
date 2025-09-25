@@ -107,7 +107,7 @@ public class ProductService {
                 product.getDescription(),
                 product.getStatus(),
                 product.getCategory() != null ? product.getCategory().getId() : null,
-                product.getDealerCategory() != null ? String.valueOf(product.getDealerCategory().getId()) : null
+                product.getDealerCategory() != null ? product.getDealerCategory().getId() : null
         );
     }
 
