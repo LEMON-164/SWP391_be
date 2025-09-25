@@ -2,6 +2,8 @@ package com.lemon.supershop.swp391fa25evdm.product.model.dto;
 
 import java.util.Date;
 
+import com.lemon.supershop.swp391fa25evdm.category.model.entity.Category;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,6 +20,6 @@ public class ProductRes {
     private String image;
     private String description;
     private String status;
-    private String categoryId;
+    private Category category;
     private String dealerCategoryId;
 }

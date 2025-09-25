@@ -16,10 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.lemon.supershop.swp391fa25evdm.product.Service.ProductService;
 import com.lemon.supershop.swp391fa25evdm.product.model.dto.ProductReq;
 import com.lemon.supershop.swp391fa25evdm.product.model.dto.ProductRes;
-import com.lemon.supershop.swp391fa25evdm.product.model.entity.Product;
-
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 
 @RestController
 @RequestMapping("/api/products")
@@ -27,9 +23,6 @@ public class ProductController {
 
     @Autowired
     private ProductService productService;
-
-    @PersistenceContext
-    private EntityManager entityManager;
 
     @GetMapping("/listProducts")
     public ResponseEntity<List<ProductRes>> getAllProducts() {
@@ -69,8 +62,7 @@ public class ProductController {
 
     @PostMapping("/addProduct")
     public ResponseEntity<String> addProduct(@RequestBody ProductReq productReq) {
-        Product product = convertReqToEntity(productReq);
-        ProductRes createdProduct = productService.createProduct(product);
+        ProductRes createdProduct = productService.createProduct(productReq);
         if (createdProduct != null) {
             return ResponseEntity.ok("Product created successfully");
         } else {
@@ -80,9 +72,7 @@ public class ProductController {
 
     @PutMapping("/{id}")
     public ResponseEntity<String> updateProduct(@PathVariable int id, @RequestBody ProductReq productReq) {
-        Product product = convertReqToEntity(productReq);
-        product.setId(id);
-        ProductRes updatedProduct = productService.updateProduct(product);
+        ProductRes updatedProduct = productService.updateProduct(id, productReq);
         if (updatedProduct != null) {
             return ResponseEntity.ok("Product updated successfully");
         } else {
@@ -98,67 +88,5 @@ public class ProductController {
         } else {
             return ResponseEntity.badRequest().body("Product not found");
         }
-    }
-
-    // Helper method to convert ProductReq to Product entity
-    private Product convertReqToEntity(ProductReq productReq) {
-        Product product = new Product();
-        product.setName(productReq.getName());
-        product.setVinNum(productReq.getVinNum());
-        product.setEngineNum(productReq.getEngineNum());
-        product.setDescription(productReq.getDescription());
-        product.setStatus(productReq.getStatus());
-        
-        // Set image
-        if (productReq.getImage() != null && !productReq.getImage().isEmpty()) {
-            product.setImage(productReq.getImage());
-        }
-        
-        // Set dealer price
-        if (productReq.getDealerPrice() > 0) {
-            product.setDealerPrice(productReq.getDealerPrice());
-        }
-        
-        // Handle date conversion - assuming manufacture_date is in format "MM/dd/yyyy"
-        if (productReq.getManufacture_date() != null && !productReq.getManufacture_date().isEmpty()) {
-            try {
-                java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("M/d/yyyy");
-                java.util.Date date = sdf.parse(productReq.getManufacture_date());
-                product.setManufacture_date(date);
-            } catch (java.text.ParseException e) {
-                System.err.println("Error parsing date: " + productReq.getManufacture_date());
-                // Try alternative format
-                try {
-                    java.text.SimpleDateFormat sdf2 = new java.text.SimpleDateFormat("MM/dd/yyyy");
-                    java.util.Date date2 = sdf2.parse(productReq.getManufacture_date());
-                    product.setManufacture_date(date2);
-                } catch (java.text.ParseException e2) {
-                    System.err.println("Error parsing date with alternative format: " + productReq.getManufacture_date());
-                }
-            }
-        }
-        
-        // Handle category ID conversion using EntityManager reference
-        if (productReq.getCategoryId() != null && !productReq.getCategoryId().isEmpty()) {
-            try {
-                int categoryId = Integer.parseInt(productReq.getCategoryId());
-                // Use EntityManager to get reference to existing Category
-                com.lemon.supershop.swp391fa25evdm.category.model.entity.Category category = 
-                    entityManager.getReference(com.lemon.supershop.swp391fa25evdm.category.model.entity.Category.class, categoryId);
-                product.setCategory(category);
-            } catch (NumberFormatException e) {
-                System.err.println("Error parsing categoryId: " + productReq.getCategoryId());
-            }
-        }
-        
-        // Handle dealer category ID conversion using EntityManager reference
-        if (productReq.getDealerCategoryId() != null && !productReq.getDealerCategoryId().isEmpty()) {
-            // Use EntityManager to get reference to existing DealerCategory
-            com.lemon.supershop.swp391fa25evdm.category.model.entity.DealerCategory dealerCategory = 
-                entityManager.getReference(com.lemon.supershop.swp391fa25evdm.category.model.entity.DealerCategory.class, productReq.getDealerCategoryId());
-            product.setDealerCategory(dealerCategory);
-        }
-        
-        return product;
     }
 }

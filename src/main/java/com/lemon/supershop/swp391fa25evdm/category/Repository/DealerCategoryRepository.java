@@ -5,6 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface DealerCategoryRepository extends JpaRepository<DealerCategory,Integer> {
+public interface DealerCategoryRepository extends JpaRepository<DealerCategory,String> {
 
 }

@@ -21,7 +21,7 @@ public class DealerCategoryService {
         return dealerCategories.stream().map(this::convertToRes).toList();
     }
 
-    public DealerCategoryRes getDealerCategoryById(int id) {
+    public DealerCategoryRes getDealerCategoryById(String id) {
         return dealerCategoryRepository.findById(id)
                 .map(this::convertToRes)
                 .orElse(null);
@@ -46,11 +46,11 @@ public class DealerCategoryService {
         return convertToRes(savedDealerCategory);
     }
 
-    public void deleteDealerCategory(int id) {
+    public void deleteDealerCategory(String id) {
         dealerCategoryRepository.deleteById(id);
     }
 
-    public void updateDealerCategory(int id, DealerCategoryReq dto) throws Exception {
+    public void updateDealerCategory(String id, DealerCategoryReq dto) throws Exception {
         DealerCategory dealerCategory = dealerCategoryRepository.findById(id)
                 .orElseThrow(() -> new Exception("Dealer Category not found with id: " + id));
         dealerCategory.setName(dto.getName());
@@ -67,7 +67,8 @@ public class DealerCategoryService {
                 dealerCategory.getQuantity(),
                 dealerCategory.getDescription(),
                 dealerCategory.getStatus(),
-                dealerCategory.getCategory().getId()
+                dealerCategory.getCategory(),
+                dealerCategory.getDealer()
         );
     }
 }

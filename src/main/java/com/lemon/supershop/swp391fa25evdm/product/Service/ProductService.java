@@ -6,7 +6,10 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.lemon.supershop.swp391fa25evdm.category.Repository.CategoryRepository;
+import com.lemon.supershop.swp391fa25evdm.category.Repository.DealerCategoryRepository;
 import com.lemon.supershop.swp391fa25evdm.category.model.entity.Category;
+import com.lemon.supershop.swp391fa25evdm.product.model.dto.ProductReq;
 import com.lemon.supershop.swp391fa25evdm.product.model.dto.ProductRes;
 import com.lemon.supershop.swp391fa25evdm.product.model.entity.Product;
 import com.lemon.supershop.swp391fa25evdm.product.repository.ProductRepo;
@@ -16,6 +19,12 @@ public class ProductService {
 
     @Autowired
     private ProductRepo productRepo;
+
+    @Autowired
+    private CategoryRepository categoryRepository;
+
+    @Autowired
+    private DealerCategoryRepository dealerCategoryRepository;
 
     public List<ProductRes> findAllProducts(){
         List<Product> products = productRepo.findAll();
@@ -35,14 +44,6 @@ public class ProductService {
         return true;
     }
 
-    public ProductRes createProduct(Product product){
-        if (product.getId() != 0 && productRepo.existsById(product.getId())) {
-            return null; // Product already exists
-        }   
-        Product savedProduct = productRepo.save(product);
-        return convertToRes(savedProduct);
-    }
-
     public ProductRes updateProduct(Product product){
         if (!productRepo.existsById(product.getId())) {
             return null; // Product not found
@@ -51,32 +52,46 @@ public class ProductService {
         return convertToRes(updatedProduct);
     }
 
+    // New methods accepting ProductReq
+    public ProductRes createProduct(ProductReq productReq) {
+        Product product = convertReqToEntity(productReq);
+        if (product.getId() != 0 && productRepo.existsById(product.getId())) {
+            return null; // Product already exists
+        }
+        Product savedProduct = productRepo.save(product);
+        return convertToRes(savedProduct);
+    }
+
+    public ProductRes updateProduct(int id, ProductReq productReq) {
+        if (!productRepo.existsById(id)) {
+            return null; // Product not found
+        }
+        Product product = convertReqToEntity(productReq);
+        product.setId(id);
+        return updateProduct(product); // Reuse existing method
+    }
+
     public List<ProductRes> getProductByCategory(Category category){
-        // Use efficient repository method instead of findAll + filtering
         List<Product> products = productRepo.findByCategory(category);
         return products.stream().map(this::convertToRes).toList();
     }
 
     public List<ProductRes> getProductByCategoryId(Integer categoryId){
-        // Alternative method using category ID for better performance
         List<Product> products = productRepo.findByCategoryId(categoryId);
         return products.stream().map(this::convertToRes).toList();
     }
 
     public ProductRes getProductByVinNum(String vinNum){
-        // Use efficient repository method instead of findAll + filtering
         Optional<Product> productOpt = productRepo.findByVinNumIgnoreCase(vinNum);
         return productOpt.map(this::convertToRes).orElse(null);
     }
 
     public ProductRes getProductByName(String name){
-        // Use efficient repository method instead of findAll + filtering
         Optional<Product> productOpt = productRepo.findByNameIgnoreCase(name);
         return productOpt.map(this::convertToRes).orElse(null);
     }
 
     public ProductRes getProductByEngineNum(String engineNum){
-        // Use efficient repository method instead of findAll + filtering
         Optional<Product> productOpt = productRepo.findByEngineNumIgnoreCase(engineNum);
         return productOpt.map(this::convertToRes).orElse(null);
     }
@@ -91,8 +106,25 @@ public class ProductService {
                 product.getImage(),
                 product.getDescription(),
                 product.getStatus(),
-                product.getCategory() != null ? String.valueOf(product.getCategory().getId()) : null,
+                product.getCategory(),
                 product.getDealerCategory() != null ? String.valueOf(product.getDealerCategory().getId()) : null
         );
+    }
+
+    // Convert ProductReq to Product entity using Repository
+    private Product convertReqToEntity(ProductReq productReq) {
+        Product product = new Product();
+        product.setName(productReq.getName());
+        product.setVinNum(productReq.getVinNum());
+        product.setEngineNum(productReq.getEngineNum());
+        product.setDescription(productReq.getDescription());
+        product.setStatus(productReq.getStatus());
+        product.setImage(productReq.getImage());
+        product.setDealerPrice(productReq.getDealerPrice());
+        product.setManufacture_date(productReq.getManufacture_date());
+        categoryRepository.findById(productReq.getCategoryId()).ifPresent(product::setCategory);
+        dealerCategoryRepository.findById(productReq.getDealerCategoryId()).ifPresent(product::setDealerCategory);
+        
+        return product;
     }
 }
