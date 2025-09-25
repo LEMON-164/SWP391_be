@@ -5,13 +5,13 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.lemon.supershop.swp391fa25evdm.category.Repository.CategoryRepository;
 import com.lemon.supershop.swp391fa25evdm.category.Repository.DealerCategoryRepository;
 import com.lemon.supershop.swp391fa25evdm.category.model.dto.DealerCategoryReq;
 import com.lemon.supershop.swp391fa25evdm.category.model.dto.DealerCategoryRes;
 import com.lemon.supershop.swp391fa25evdm.category.model.entity.Category;
 import com.lemon.supershop.swp391fa25evdm.category.model.entity.DealerCategory;
 import com.lemon.supershop.swp391fa25evdm.dealer.repository.DealerRepo;
-import com.lemon.supershop.swp391fa25evdm.dealer.service.DealerService;
 
 @Service
 public class DealerCategoryService {
@@ -20,6 +20,9 @@ public class DealerCategoryService {
 
     @Autowired
     private DealerRepo dealerRepo;
+
+    @Autowired
+    private CategoryRepository categoryRepository;
 
     public List<DealerCategoryRes> getAllDealerCategories() {
         List<DealerCategory> dealerCategories = dealerCategoryRepository.findAll();
@@ -52,32 +55,66 @@ public class DealerCategoryService {
         return convertToRes(savedDealerCategory);
     }
 
-    public void deleteDealerCategory(String id) {
-        dealerCategoryRepository.deleteById(id);
+    public DealerCategoryRes deleteDealerCategory(String id) {
+        DealerCategory dealerCategory = dealerCategoryRepository.findById(id)
+                .orElse(null);
+        if (dealerCategory != null) {
+            dealerCategoryRepository.deleteById(id);
+            return convertToRes(dealerCategory);
+        }
+        return null;
     }
 
-    public void updateDealerCategory(String id, DealerCategoryReq dto) throws Exception {
+    public DealerCategoryRes updateDealerCategory(String id, DealerCategoryReq dto) throws Exception {
         DealerCategory dealerCategory = dealerCategoryRepository.findById(id)
                 .orElseThrow(() -> new Exception("Dealer Category not found with id: " + id));
         dealerCategory.setName(dto.getName());
         dealerCategory.setQuantity(dto.getQuantity());
         dealerCategory.setDescription(dto.getDescription());
         dealerCategory.setStatus(dto.getStatus());
-        dealerCategoryRepository.save(dealerCategory);
+
+        if (dto.getCategoryId() > 0) {
+            categoryRepository.findById(dto.getCategoryId())
+                .ifPresentOrElse(
+                    dealerCategory::setCategory,
+                    () -> dealerCategory.setCategory(null)
+                );
+        } else {
+            dealerCategory.setCategory(null);
+        }
+        
+        if (dto.getDealerId() > 0) {
+            dealerRepo.findById(dto.getDealerId())
+                .ifPresentOrElse(
+                    dealerCategory::setDealer,
+                    () -> dealerCategory.setDealer(null)
+                );
+        } else {
+            dealerCategory.setDealer(null);
+        }
+
+        DealerCategory updatedDealerCategory = dealerCategoryRepository.save(dealerCategory);
+        return convertToRes(updatedDealerCategory);
     }
 
     private DealerCategoryRes convertToRes (DealerCategory dealerCategory) {
         if (dealerCategory == null) {
             return null;
         }
+        Integer categoryId = dealerCategory.getCategory() != null ? 
+            dealerCategory.getCategory().getId() : 0;
+        
+        Integer dealerId = dealerCategory.getDealer() != null ? 
+            dealerCategory.getDealer().getId() : 0;
+        
         return new DealerCategoryRes(
-                dealerCategory.getId(),
-                dealerCategory.getName(),
-                dealerCategory.getQuantity(),
-                dealerCategory.getDescription(),
-                dealerCategory.getStatus(),
-                dealerCategory.getCategory().getId(),
-                dealerCategory.getDealer().getId()
+            dealerCategory.getId(),
+            dealerCategory.getName(),
+            dealerCategory.getQuantity(),
+            dealerCategory.getDescription(),
+            dealerCategory.getStatus(),
+            categoryId, 
+            dealerId     
         );
     }
 }
