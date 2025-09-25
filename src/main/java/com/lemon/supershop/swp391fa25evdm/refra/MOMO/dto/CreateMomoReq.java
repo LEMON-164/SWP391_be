@@ -3,12 +3,13 @@ package com.lemon.supershop.swp391fa25evdm.refra.MOMO.dto;
 
 public class CreateMomoReq {
     private String parnerCode;
-    private String reqType;
-    private String ipnUrl;
-    private String orderId;
-    private long amount;
     private String requestId;
+    private long amount;
+    private String orderId;
+    private String orderInfo;
     private String redirectUrl;
+    private String ipnUrl;
+    private String reqType;
     private String extraData;
     private String lang;
     private String signature;
@@ -16,14 +17,15 @@ public class CreateMomoReq {
     public CreateMomoReq() {
     }
 
-    public CreateMomoReq(String parnerCode, String reqType, String ipnUrl, String orderId, long amount, String requestId, String redirectUrl, String extraData, String lang, String signature) {
+    public CreateMomoReq(String parnerCode, String requestId, long amount, String orderId, String orderInfo, String redirectUrl, String ipnUrl, String reqType, String extraData, String lang, String signature) {
         this.parnerCode = parnerCode;
-        this.reqType = reqType;
-        this.ipnUrl = ipnUrl;
-        this.orderId = orderId;
-        this.amount = amount;
         this.requestId = requestId;
+        this.amount = amount;
+        this.orderId = orderId;
+        this.orderInfo = orderInfo;
         this.redirectUrl = redirectUrl;
+        this.ipnUrl = ipnUrl;
+        this.reqType = reqType;
         this.extraData = extraData;
         this.lang = lang;
         this.signature = signature;
@@ -67,5 +69,9 @@ public class CreateMomoReq {
 
     public String getLang() {
         return lang;
+    }
+
+    public String getOrderInfo() {
+        return orderInfo;
     }
 }

@@ -44,7 +44,7 @@ public class MomoService {
         if (order != null) {
             String strOrderId = String.valueOf(order.getId());
             String reqId = UUID.randomUUID().toString();
-
+            String orderInfo = order.getUser().getUsername() + order.getProduct().getName() + order.getTotal();
             String rawSignature = String.format(
                     "accessKey=$accessKey&amount=$amount&orderId=$orderId\n" +
                             "&partnerCode=$partnerCode&payUrl=&payUrl&requestId=\n" +
@@ -62,7 +62,7 @@ public class MomoService {
 
             CreateMomoReq req = null;
             if (!prettySignature.isBlank()) {
-                req = new CreateMomoReq(PARTNER_CODE, REQUEST_TYPE, IPN_URL, strOrderId, Math.round(order.getTotal()), reqId, REDIRECT_URL, extra, "vi", prettySignature);
+                req = new CreateMomoReq(PARTNER_CODE, reqId, Math.round(order.getTotal()), strOrderId, orderInfo, REDIRECT_URL, IPN_URL, REQUEST_TYPE, extra, "vi", prettySignature);
             }
             return momoApi.create(req);
         } else {
