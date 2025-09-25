@@ -20,6 +20,6 @@ public class ProductRes {
     private String image;
     private String description;
     private String status;
-    private Category category;
+    private int categoryId;
     private String dealerCategoryId;
 }

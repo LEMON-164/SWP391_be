@@ -10,11 +10,16 @@ import com.lemon.supershop.swp391fa25evdm.category.model.dto.DealerCategoryReq;
 import com.lemon.supershop.swp391fa25evdm.category.model.dto.DealerCategoryRes;
 import com.lemon.supershop.swp391fa25evdm.category.model.entity.Category;
 import com.lemon.supershop.swp391fa25evdm.category.model.entity.DealerCategory;
+import com.lemon.supershop.swp391fa25evdm.dealer.repository.DealerRepo;
+import com.lemon.supershop.swp391fa25evdm.dealer.service.DealerService;
 
 @Service
 public class DealerCategoryService {
     @Autowired
     private DealerCategoryRepository dealerCategoryRepository;
+
+    @Autowired
+    private DealerRepo dealerRepo;
 
     public List<DealerCategoryRes> getAllDealerCategories() {
         List<DealerCategory> dealerCategories = dealerCategoryRepository.findAll();
@@ -41,7 +46,8 @@ public class DealerCategoryService {
             category.setId(dto.getCategoryId());
             dealerCategory.setCategory(category);
         }
-        
+        dealerCategory.setDealer(dealerRepo.findById(dto.getDealerId()).orElse(null));
+
         DealerCategory savedDealerCategory = dealerCategoryRepository.save(dealerCategory);
         return convertToRes(savedDealerCategory);
     }
@@ -61,14 +67,17 @@ public class DealerCategoryService {
     }
 
     private DealerCategoryRes convertToRes (DealerCategory dealerCategory) {
+        if (dealerCategory == null) {
+            return null;
+        }
         return new DealerCategoryRes(
                 dealerCategory.getId(),
                 dealerCategory.getName(),
                 dealerCategory.getQuantity(),
                 dealerCategory.getDescription(),
                 dealerCategory.getStatus(),
-                dealerCategory.getCategory(),
-                dealerCategory.getDealer()
+                dealerCategory.getCategory().getId(),
+                dealerCategory.getDealer().getId()
         );
     }
 }

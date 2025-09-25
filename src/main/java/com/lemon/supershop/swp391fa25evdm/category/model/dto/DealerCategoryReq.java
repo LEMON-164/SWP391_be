@@ -14,4 +14,5 @@ public class DealerCategoryReq {
     private String description;
     private String status;
     private int categoryId;
+    private int dealerId;
 }

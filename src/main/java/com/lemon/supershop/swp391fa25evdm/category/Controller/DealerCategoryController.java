@@ -19,7 +19,7 @@ public class DealerCategoryController {
     @Autowired
     DealerCategoryService dealerCategoryService;
 
-    @GetMapping
+    @GetMapping ("/all")
     public List<DealerCategoryRes> getAllDealerCategories() {
         return dealerCategoryService.getAllDealerCategories();
     }
