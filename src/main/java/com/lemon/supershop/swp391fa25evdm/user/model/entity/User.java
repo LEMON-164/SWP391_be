@@ -36,7 +36,7 @@ public class User {
     @Column(name = "Address", columnDefinition = "NVARCHAR(255)")
     private String address;
 
-    @Column(name = "IsBlack", columnDefinition = "VARCHAR(20)")
+    @Column(name = "IsBlack")
     private boolean isBlack;
 
     @Column(insertable = false, updatable = false, name = "Create_at", columnDefinition = "DATETIME2 DEFAULT GETDATE()" )

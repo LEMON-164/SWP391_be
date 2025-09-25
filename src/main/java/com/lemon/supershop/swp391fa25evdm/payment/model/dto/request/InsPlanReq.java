@@ -2,7 +2,7 @@ package com.lemon.supershop.swp391fa25evdm.payment.model.dto.request;
 
 public class InsPlanReq {
     private int months;
-    private double interestRate;
+    private double InterestRate;
     private int productId;
 
     public InsPlanReq() {
@@ -13,7 +13,7 @@ public class InsPlanReq {
     }
 
     public double getInterestRate() {
-        return interestRate;
+        return InterestRate;
     }
 
     public int getProductId() {

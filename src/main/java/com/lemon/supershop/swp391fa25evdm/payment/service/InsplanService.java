@@ -23,7 +23,7 @@ public class InsplanService {
     public List<InsPlanRes> getAllInstallmentPlans() {
         return insPlanRepo.findAll().stream().map(installmentPlan -> {
             InsPlanRes dto = new InsPlanRes(installmentPlan.getMonths(), installmentPlan.getInterestRate(), installmentPlan.getProduct().getName());
-            dto.setMonthPrice(installmentPlan.getProduct().getDealerPrice()/installmentPlan.getMonths() * installmentPlan.getInterestRate());
+            dto.setMonthPrice((installmentPlan.getProduct().getDealerPrice()/installmentPlan.getMonths() * installmentPlan.getInterestRate()) + installmentPlan.getProduct().getDealerPrice()/installmentPlan.getMonths());
             return dto;
         }).collect(Collectors.toList());
     }
@@ -33,7 +33,7 @@ public class InsplanService {
         if (product != null) {
             return insPlanRepo.findByProductId(id).stream().map(installmentPlan -> {
                 InsPlanRes dto = new InsPlanRes(installmentPlan.getMonths(), installmentPlan.getInterestRate(), product.getName());
-                dto.setMonthPrice(product.getDealerPrice()/installmentPlan.getMonths() * installmentPlan.getInterestRate());
+                dto.setMonthPrice((product.getDealerPrice()/installmentPlan.getMonths() * installmentPlan.getInterestRate())+product.getDealerPrice()/installmentPlan.getMonths());
                 return dto;
             }).collect(Collectors.toList());
         } else {
@@ -43,7 +43,7 @@ public class InsplanService {
 
     public void addInstallmentPlan(InsPlanReq dto) {
         InstallmentPlan installmentPlan = new InstallmentPlan();
-        if (dto.getProductId() >= 0){
+        if (dto.getProductId() > 0){
             Product product = productRepo.findById(dto.getProductId()).get();
             if (product != null) {
                 installmentPlan.setProduct(product);
