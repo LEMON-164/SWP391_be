@@ -88,16 +88,16 @@ public class CategoryService {
         return convertToRes(updatedCategory);
     }
 
-    public void deleteCategory(Integer id) {
+    public CategoryRes deleteCategory (Integer id) {
         if (id == null) {
             throw new IllegalArgumentException("Category ID cannot be null");
         }
 
-        if (!categoryRepository.existsById(id)) {
-            throw new RuntimeException("Category not found with id: " + id);
-        }
+        Category existingCategory = categoryRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Category not found with id: " + id));
 
-        categoryRepository.deleteById(id);
+        categoryRepository.delete(existingCategory);
+        return convertToRes(existingCategory);
     }
 
     public List<CategoryRes> getSpecialCategories() {
@@ -166,6 +166,22 @@ public class CategoryService {
         category.setSpecial(dto.getIsSpecial() != null ? dto.getIsSpecial() : Boolean.FALSE);
         category.setDescription(dto.getDescription());
         category.setStatus(dto.getStatus() != null ? dto.getStatus() : "ACTIVE");
+    }
+
+    public CategoryRes updateCategoryBasePrice(Integer id, Double newBasePrice) {
+        if (id == null) {
+            throw new IllegalArgumentException("Category ID cannot be null");
+        }
+        if (newBasePrice == null || newBasePrice < 0) {
+            throw new IllegalArgumentException("Base price must be a positive number");
+        }
+
+        Category existingCategory = categoryRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Category not found with id: " + id));
+
+        existingCategory.setBasePrice(newBasePrice);
+        Category updatedCategory = categoryRepository.save(existingCategory);
+        return convertToRes(updatedCategory);
     }
 
     private CategoryRes convertToRes(Category category) {

@@ -1,7 +1,5 @@
 package com.lemon.supershop.swp391fa25evdm.product.model.dto;
 
-import java.util.Date;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,15 +7,16 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductRes {
-    private int id;
+public class ProductReq {
     private String name;
     private String vinNum;
     private String engineNum;
-    private Date manufacture_date;
-    private String image;
+    private String manufacture_date;
+    private double dealerPrice;
     private String description;
     private String status;
     private String categoryId;
     private String dealerCategoryId;
+    private String image;
+
 }

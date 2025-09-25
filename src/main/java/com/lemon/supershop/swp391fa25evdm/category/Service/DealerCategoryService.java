@@ -1,13 +1,15 @@
 package com.lemon.supershop.swp391fa25evdm.category.Service;
 
-import com.lemon.supershop.swp391fa25evdm.category.Repository.DealerCategoryRepository;
-import com.lemon.supershop.swp391fa25evdm.category.model.dto.DealerCategoryReq;
-import com.lemon.supershop.swp391fa25evdm.category.model.dto.DealerCategoryRes;
-import com.lemon.supershop.swp391fa25evdm.category.model.entity.DealerCategory;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import com.lemon.supershop.swp391fa25evdm.category.Repository.DealerCategoryRepository;
+import com.lemon.supershop.swp391fa25evdm.category.model.dto.DealerCategoryReq;
+import com.lemon.supershop.swp391fa25evdm.category.model.dto.DealerCategoryRes;
+import com.lemon.supershop.swp391fa25evdm.category.model.entity.Category;
+import com.lemon.supershop.swp391fa25evdm.category.model.entity.DealerCategory;
 
 @Service
 public class DealerCategoryService {
@@ -25,13 +27,23 @@ public class DealerCategoryService {
                 .orElse(null);
     }
 
-    public void createDealerCategory(DealerCategoryReq dto) {
+    public DealerCategoryRes createDealerCategory(DealerCategoryReq dto) {
         DealerCategory dealerCategory = new DealerCategory();
+        dealerCategory.setId(dto.getId());
         dealerCategory.setName(dto.getName());
         dealerCategory.setQuantity(dto.getQuantity());
         dealerCategory.setDescription(dto.getDescription());
         dealerCategory.setStatus(dto.getStatus());
-        dealerCategoryRepository.save(dealerCategory);
+        
+        // Set Category reference using EntityManager if categoryId is provided
+        if (dto.getCategoryId() > 0) {
+            Category category = new Category();
+            category.setId(dto.getCategoryId());
+            dealerCategory.setCategory(category);
+        }
+        
+        DealerCategory savedDealerCategory = dealerCategoryRepository.save(dealerCategory);
+        return convertToRes(savedDealerCategory);
     }
 
     public void deleteDealerCategory(int id) {
@@ -54,7 +66,8 @@ public class DealerCategoryService {
                 dealerCategory.getName(),
                 dealerCategory.getQuantity(),
                 dealerCategory.getDescription(),
-                dealerCategory.getStatus()
+                dealerCategory.getStatus(),
+                dealerCategory.getCategory().getId()
         );
     }
 }
