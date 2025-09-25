@@ -29,7 +29,7 @@ public class DealerCategoryService {
         return dealerCategories.stream().map(this::convertToRes).toList();
     }
 
-    public DealerCategoryRes getDealerCategoryById(String id) {
+    public DealerCategoryRes getDealerCategoryById(int id) {
         return dealerCategoryRepository.findById(id)
                 .map(this::convertToRes)
                 .orElse(null);
@@ -37,7 +37,6 @@ public class DealerCategoryService {
 
     public DealerCategoryRes createDealerCategory(DealerCategoryReq dto) {
         DealerCategory dealerCategory = new DealerCategory();
-        dealerCategory.setId(dto.getId());
         dealerCategory.setName(dto.getName());
         dealerCategory.setQuantity(dto.getQuantity());
         dealerCategory.setDescription(dto.getDescription());
@@ -55,7 +54,7 @@ public class DealerCategoryService {
         return convertToRes(savedDealerCategory);
     }
 
-    public DealerCategoryRes deleteDealerCategory(String id) {
+    public DealerCategoryRes deleteDealerCategory(int id) {
         DealerCategory dealerCategory = dealerCategoryRepository.findById(id)
                 .orElse(null);
         if (dealerCategory != null) {
@@ -65,7 +64,7 @@ public class DealerCategoryService {
         return null;
     }
 
-    public DealerCategoryRes updateDealerCategory(String id, DealerCategoryReq dto) throws Exception {
+    public DealerCategoryRes updateDealerCategory(int id, DealerCategoryReq dto) throws Exception {
         DealerCategory dealerCategory = dealerCategoryRepository.findById(id)
                 .orElseThrow(() -> new Exception("Dealer Category not found with id: " + id));
         dealerCategory.setName(dto.getName());

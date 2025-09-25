@@ -47,8 +47,7 @@ public class OrderService {
         User user = userRepo.findById(userId).get();
         if (user != null){
             return orderRepo.findByUserId(user.getId()).stream().map(order -> {
-                OrderRes orderRes = new OrderRes(order.getId(), user.getUsername(), order.getProduct().getName(), order.getContract().getId(), order.getTotal(), order.getStatus());
-                return orderRes;
+                return convertOrderToOrderRes(order);
             }).collect(Collectors.toList());
         }else {
             return null;
@@ -57,8 +56,7 @@ public class OrderService {
 
     public List<OrderRes> ListAllOrders() {
             return orderRepo.findAll().stream().map(order -> {
-                OrderRes orderRes = new OrderRes(order.getId(), order.getUser().getUsername(), order.getProduct().getName(), order.getContract().getId(), order.getTotal(), order.getStatus());
-                return orderRes;
+                return convertOrderToOrderRes(order);
             }).collect(Collectors.toList());
     }
 
@@ -176,5 +174,33 @@ public class OrderService {
             order.getShipAt(null);
             order.setShipStatus(null);
         }
+    }
+
+    public OrderRes convertOrderToOrderRes(Order order) {
+        OrderRes orderRes = new OrderRes();
+        if (order != null){
+            orderRes.setOrderId(order.getId());
+            if (order.getUser() != null){
+                orderRes.setCustomerName(order.getUser().getUsername());
+            }
+            if (order.getContract() != null){
+                orderRes.setContractId(order.getContract().getId());
+            }
+            if (order.getProduct() != null){
+                orderRes.setProductName(order.getProduct().getName());
+            }
+            if (order.getDealer() != null){
+                orderRes.setDealerId(order.getDealer().getId());
+            }
+            if (order.getTotal() >= 0){
+                orderRes.setTotalPrice(order.getTotal());
+            }
+            if (order.getStatus() != null){
+                orderRes.setStatus(order.getStatus());
+            } else {
+                orderRes.setStatus("Chờ xử lý");
+            }
+        }
+        return orderRes;
     }
 }

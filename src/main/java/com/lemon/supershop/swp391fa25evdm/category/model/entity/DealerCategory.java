@@ -13,8 +13,9 @@ import jakarta.persistence.*;
 @Table(name = "dealerdategory")
 public class DealerCategory {
     @Id
-    @Column(name = "Id", columnDefinition = "VARCHAR(20)")
-    private String id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "Id", columnDefinition = "BIGINT")
+    private int id;
 
     @Column(name = "Name", columnDefinition = "NVARCHAR(150)")
     private String name;
@@ -45,11 +46,11 @@ public class DealerCategory {
 
     public DealerCategory() {}
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 

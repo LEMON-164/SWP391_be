@@ -19,9 +19,9 @@ public class ProductRes {
     private String description;
     private String status;
     private int categoryId;
-    private String dealerCategoryId;
+    private int dealerCategoryId;
 
-    public ProductRes(int id, String name, String vinNum, String engineNum, Date manufacture_date, String image, String description, String status, int categoryId, String dealerCategoryId) {
+    public ProductRes(int id, String name, String vinNum, String engineNum, Date manufacture_date, String image, String description, String status, int categoryId, int dealerCategoryId) {
         this.id = id;
         this.name = name;
         this.vinNum = vinNum;
@@ -106,11 +106,11 @@ public class ProductRes {
         this.categoryId = categoryId;
     }
 
-    public String getDealerCategoryId() {
+    public int getDealerCategoryId() {
         return dealerCategoryId;
     }
 
-    public void setDealerCategoryId(String dealerCategoryId) {
+    public void setDealerCategoryId(int dealerCategoryId) {
         this.dealerCategoryId = dealerCategoryId;
     }
 }

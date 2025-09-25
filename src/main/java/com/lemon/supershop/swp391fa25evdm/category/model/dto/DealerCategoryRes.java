@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 
 
 public class DealerCategoryRes {
-    private String id;
+    private int id;
     private String name;
     private int quantity;
     private String description;
@@ -14,7 +14,7 @@ public class DealerCategoryRes {
     private int categoryId;
     private int dealerId;
 
-    public DealerCategoryRes(String id, String name, int quantity, String description, String status, int categoryId, int dealerId) {
+    public DealerCategoryRes(int id, String name, int quantity, String description, String status, int categoryId, int dealerId) {
         this.id = id;
         this.name = name;
         this.quantity = quantity;
@@ -24,11 +24,11 @@ public class DealerCategoryRes {
         this.dealerId = dealerId;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 

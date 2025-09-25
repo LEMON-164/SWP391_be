@@ -15,7 +15,7 @@ public class ProductReq {
     private String description;
     private String status;
     private int categoryId;
-    private String dealerCategoryId;
+    private int dealerCategoryId;
     private String image;
 
     public String getName() {
@@ -50,7 +50,7 @@ public class ProductReq {
         return categoryId;
     }
 
-    public String getDealerCategoryId() {
+    public int getDealerCategoryId() {
         return dealerCategoryId;
     }
 

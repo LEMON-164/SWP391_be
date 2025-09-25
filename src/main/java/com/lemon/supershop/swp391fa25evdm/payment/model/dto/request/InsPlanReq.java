@@ -4,6 +4,7 @@ public class InsPlanReq {
     private int months;
     private double InterestRate;
     private int productId;
+    private int dealerId;
 
     public InsPlanReq() {
     }
@@ -18,5 +19,9 @@ public class InsPlanReq {
 
     public int getProductId() {
         return productId;
+    }
+
+    public int getDealerId() {
+        return dealerId;
     }
 }
