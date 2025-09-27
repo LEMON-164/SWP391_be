@@ -36,39 +36,33 @@ public class ProductService {
         return productOpt.map(this::convertToRes).orElse(null);
     }
 
-    public boolean deleteProductById(int id){
-        if (!productRepo.existsById(id)) {
-            return false;
+    public void deleteProductById(int id){
+        if (productRepo.existsById(id)) {
+            productRepo.deleteById(id);
         }
-        productRepo.deleteById(id);
-        return true;
     }
 
-    public ProductRes updateProduct(Product product){
-        if (!productRepo.existsById(product.getId())) {
-            return null; // Product not found
-        }
-        Product updatedProduct = productRepo.save(product);
-        return convertToRes(updatedProduct);
-    }
-
-    // New methods accepting ProductReq
-    public ProductRes createProduct(ProductReq productReq) {
+    public void addProduct (ProductReq productReq) {
         Product product = convertReqToEntity(productReq);
-        if (product.getId() != 0 && productRepo.existsById(product.getId())) {
-            return null; // Product already exists
-        }
-        Product savedProduct = productRepo.save(product);
-        return convertToRes(savedProduct);
+        productRepo.save(product);
     }
 
-    public ProductRes updateProduct(int id, ProductReq productReq) {
-        if (!productRepo.existsById(id)) {
-            return null; // Product not found
+    public void updateProduct (int id, ProductReq productReq) {
+        Optional<Product> existingProductOpt = productRepo.findById(id);
+        if (existingProductOpt.isPresent()) {
+            Product existingProduct = existingProductOpt.get();
+            existingProduct.setName(productReq.getName());
+            existingProduct.setVinNum(productReq.getVinNum());
+            existingProduct.setEngineNum(productReq.getEngineNum());
+            existingProduct.setDescription(productReq.getDescription());
+            existingProduct.setStatus(productReq.getStatus());
+            existingProduct.setImage(productReq.getImage());
+            existingProduct.setDealerPrice(productReq.getDealerPrice());
+            existingProduct.setManufacture_date(productReq.getManufacture_date());
+            categoryRepository.findById(productReq.getCategoryId()).ifPresent(existingProduct::setCategory);
+            dealerCategoryRepository.findById(productReq.getDealerCategoryId()).ifPresent(existingProduct::setDealerCategory);
+            productRepo.save(existingProduct);
         }
-        Product product = convertReqToEntity(productReq);
-        product.setId(id);
-        return updateProduct(product); // Reuse existing method
     }
 
     public List<ProductRes> getProductByCategory(Category category){
@@ -124,7 +118,6 @@ public class ProductService {
         product.setManufacture_date(productReq.getManufacture_date());
         categoryRepository.findById(productReq.getCategoryId()).ifPresent(product::setCategory);
         dealerCategoryRepository.findById(productReq.getDealerCategoryId()).ifPresent(product::setDealerCategory);
-        
         return product;
     }
 }
