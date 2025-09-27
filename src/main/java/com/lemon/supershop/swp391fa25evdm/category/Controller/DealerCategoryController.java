@@ -31,7 +31,7 @@ public class DealerCategoryController {
         return ResponseEntity.ok(dealerCategories);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/search/{id}")
     public ResponseEntity<DealerCategoryRes> getDealerCategoryById(@PathVariable String id) {
         DealerCategoryRes dealerCategory = dealerCategoryService.getDealerCategoryById(id);
         return ResponseEntity.ok(dealerCategory);

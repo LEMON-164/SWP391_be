@@ -1,4 +1,4 @@
-package com.lemon.supershop.swp391fa25evdm.contract.Repository;
+package com.lemon.supershop.swp391fa25evdm.contract.repository;
 
 import java.util.List;
 

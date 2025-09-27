@@ -1,14 +1,14 @@
-package com.lemon.supershop.swp391fa25evdm.contract.Service;
+package com.lemon.supershop.swp391fa25evdm.contract.service;
 
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.lemon.supershop.swp391fa25evdm.contract.Repository.ContractRepo;
 import com.lemon.supershop.swp391fa25evdm.contract.model.dto.ContractReq;
 import com.lemon.supershop.swp391fa25evdm.contract.model.dto.ContractRes;
 import com.lemon.supershop.swp391fa25evdm.contract.model.entity.Contract;
+import com.lemon.supershop.swp391fa25evdm.contract.repository.ContractRepo;
 
 @Service
 public class ContractService {
