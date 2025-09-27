@@ -121,7 +121,7 @@ public class CategoryService {
         category.setTorque(dto.getTorque());
         category.setBasePrice(dto.getBasePrice());
         category.setWarranty(dto.getWarranty());
-        category.setSpecial(dto.getIsSpecial() != null ? dto.getIsSpecial() : Boolean.FALSE);
+        category.setSpecial(dto.getSpecial() != null ? dto.getSpecial() : Boolean.FALSE);
         category.setDescription(dto.getDescription());
         category.setStatus(dto.getStatus() != null ? dto.getStatus() : "ACTIVE");
     }

@@ -70,7 +70,11 @@ public class AuthenService {
             user.setPhone(dto.getPhone());
         }
         if (dto.getEmail() != null && EMAIL_PATTERN.matcher(dto.getEmail()).matches()){
-            user.setEmail(dto.getEmail());
+            if ( role != null && userRepo.existsByEmail(dto.getEmail())){
+                throw new RuntimeException("EMAIL_DUPLICATE");
+            } else {
+                user.setEmail(dto.getEmail());
+            }
         }
 
         if (dto.getPassword().equals(dto.getConfirmPassword())){

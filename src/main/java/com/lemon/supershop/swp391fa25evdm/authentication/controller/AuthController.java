@@ -21,8 +21,15 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody RegisterReq dto) {
-        authenService.register(dto);
-        return ResponseEntity.ok("User registered successfully");
+        try {
+            authenService.register(dto);
+            return ResponseEntity.ok("User registered successfully");
+        } catch (IllegalArgumentException ex) {
+            if ("EMAIL_DUPLICATE".equals(ex.getMessage())) {
+                return ResponseEntity.status(409).body("Email đã tồn tại");
+            }
+            throw ex;
+        }
     }
 
     @PostMapping("/registerAdmin")

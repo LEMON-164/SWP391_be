@@ -7,22 +7,15 @@ import com.lemon.supershop.swp391fa25evdm.dealer.model.entity.Dealer;
 import com.lemon.supershop.swp391fa25evdm.product.model.entity.Product;
 import com.lemon.supershop.swp391fa25evdm.testdrive.model.entity.TestDrive;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "dealerdategory")
 public class DealerCategory {
     @Id
-    @Column(name = "Id", columnDefinition = "VARCHAR(20)")
-    private String id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "Id", columnDefinition = "BIGINT")
+    private int id;
 
     @Column(name = "Name", columnDefinition = "NVARCHAR(150)")
     private String name;
@@ -53,11 +46,11 @@ public class DealerCategory {
 
     public DealerCategory() {}
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 

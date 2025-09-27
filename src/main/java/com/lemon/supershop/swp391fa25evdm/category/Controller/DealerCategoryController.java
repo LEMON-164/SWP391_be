@@ -32,19 +32,35 @@ public class DealerCategoryController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<DealerCategoryRes> getDealerCategoryById(@PathVariable String id) {
-        DealerCategoryRes dealerCategory = dealerCategoryService.getDealerCategoryById(id);
-        return ResponseEntity.ok(dealerCategory);
+    public ResponseEntity<DealerCategoryRes> getDealerCategoryById(@PathVariable int id) {
+        try {
+            DealerCategoryRes dealerCategory = dealerCategoryService.getDealerCategoryById(id);
+            if (dealerCategory != null) {
+                return new ResponseEntity<>(dealerCategory, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @PostMapping ("/create")
-    public ResponseEntity<String> createDealerCategory(@RequestBody DealerCategoryReq dealerCategoryReq) {
-        dealerCategoryService.createDealerCategory(dealerCategoryReq);
-        return ResponseEntity.ok("Dealer Category created successfully");
+    public ResponseEntity<DealerCategoryRes> createDealerCategory(@RequestBody DealerCategoryReq dealerCategoryReq) {
+        try {
+            DealerCategoryRes createdDealerCategory = dealerCategoryService.createDealerCategory(dealerCategoryReq);
+            if (createdDealerCategory != null) {
+                return new ResponseEntity<>(createdDealerCategory, HttpStatus.CREATED);
+            } else {
+                return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<String> updateDealerCategory(@PathVariable String id, @RequestBody DealerCategoryReq dealerCategoryReq) {
+    public ResponseEntity<String> updateDealerCategory(@PathVariable int id, @RequestBody DealerCategoryReq dealerCategoryReq) {
         try {
             dealerCategoryService.updateDealerCategory(id, dealerCategoryReq);
             return ResponseEntity.ok("Dealer Category updated successfully");
@@ -54,8 +70,21 @@ public class DealerCategoryController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> deleteDealerCategory(@PathVariable String id) {
-        dealerCategoryService.deleteDealerCategory(id);
-        return ResponseEntity.ok("Dealer Category deleted successfully");
+    public ResponseEntity<String> deleteDealerCategory(@PathVariable int id) {
+        try {
+            DealerCategoryRes existingDealerCategory = dealerCategoryService.getDealerCategoryById(id);
+            if (existingDealerCategory == null) {
+                return new ResponseEntity<>("Dealer Category not found with id: " + id, HttpStatus.NOT_FOUND);
+            }
+            
+            DealerCategoryRes deletedDealerCategory = dealerCategoryService.deleteDealerCategory(id);
+            if (deletedDealerCategory != null) {
+                return new ResponseEntity<>("Dealer Category deleted successfully", HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>("Failed to delete dealer category", HttpStatus.BAD_REQUEST);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>("Error deleting dealer category: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }

@@ -3,8 +3,8 @@ package com.lemon.supershop.swp391fa25evdm.order.model.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.lemon.supershop.swp391fa25evdm.contract.model.entity.Contract;
 import com.lemon.supershop.swp391fa25evdm.dealer.model.entity.Dealer;
-import com.lemon.supershop.swp391fa25evdm.payment.model.entity.InstallmentPlan;
 import com.lemon.supershop.swp391fa25evdm.payment.model.entity.Payment;
+import com.lemon.supershop.swp391fa25evdm.product.model.entity.Product;
 import com.lemon.supershop.swp391fa25evdm.promotion.model.entity.Promotion;
 import com.lemon.supershop.swp391fa25evdm.user.model.entity.User;
 import jakarta.persistence.*;
@@ -20,11 +20,10 @@ public class Order {
     @Column(name = "Id", columnDefinition = "BIGINT")
     private int id;
 
-    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<OrderItem> orderItems;
-
-    @Column(name = "OrderDate", columnDefinition = "DATETIME2")
-    private Date orderDate;
+    @ManyToOne
+    @JoinColumn(name = "ProductId")
+    @JsonIgnore
+    private Product product;
 
     @Column(name = "Status", columnDefinition = "VARCHAR(20)")
     private String status;
@@ -46,13 +45,23 @@ public class Order {
     @JsonIgnore
     private User user;
 
+    @Column(insertable = false, updatable = false, name = "OrderDate", columnDefinition = "DATETIME2 DEFAULT GETDATE()" )
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date orderDate;
+
+    @PrePersist
+    protected void onCreate() {
+        this.orderDate = new Date();
+    }
+
     @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Payment> payments = new ArrayList<>();
 
     @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Promotion> promotions = new ArrayList<>();
 
-    @OneToOne(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne( fetch = FetchType.LAZY)
+    @JoinColumn(name = "ContractId")
     private Contract contract;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -75,14 +84,6 @@ public class Order {
 
     public void setUser(User user) {
         this.user = user;
-    }
-
-    public List<OrderItem> getOrderItems() {
-        return orderItems;
-    }
-
-    public void setOrderItems(List<OrderItem> orderItems) {
-        this.orderItems = orderItems;
     }
 
     public Date getOrderDate() {
@@ -141,11 +142,35 @@ public class Order {
         this.shipStatus = delivery_status;
     }
 
-    public Date getShipAt() {
+    public Date getShipAt(Date shipDate) {
         return shipAt;
     }
 
     public void setShipAt(Date shipAt) {
         this.shipAt = shipAt;
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
+    }
+
+    public List<Promotion> getPromotions() {
+        return promotions;
+    }
+
+    public void setPromotions(List<Promotion> promotions) {
+        this.promotions = promotions;
+    }
+
+    public Dealer getDealer() {
+        return dealer;
+    }
+
+    public void setDealer(Dealer dealer) {
+        this.dealer = dealer;
     }
 }

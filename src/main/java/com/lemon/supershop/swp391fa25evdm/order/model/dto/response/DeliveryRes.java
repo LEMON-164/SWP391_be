@@ -1,4 +1,4 @@
-package com.lemon.supershop.swp391fa25evdm.order.model.dto;
+package com.lemon.supershop.swp391fa25evdm.order.model.dto.response;
 
 import java.util.Date;
 

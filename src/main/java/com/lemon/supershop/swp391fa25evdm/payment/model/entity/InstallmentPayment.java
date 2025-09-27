@@ -34,6 +34,12 @@ public class InstallmentPayment {
 
     public InstallmentPayment() {}
 
+    public InstallmentPayment(int installmentNumber, double expectedAmount, LocalDateTime dueDate) {
+        this.installmentNumber = installmentNumber;
+        this.expectedAmount = expectedAmount;
+        this.dueDate = dueDate;
+    }
+
     public int getId() {
         return id;
     }
