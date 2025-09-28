@@ -1,4 +1,4 @@
-package com.lemon.supershop.swp391fa25evdm.category.Repository;
+package com.lemon.supershop.swp391fa25evdm.category.repository;
 
 import java.util.List;
 import java.util.Optional;

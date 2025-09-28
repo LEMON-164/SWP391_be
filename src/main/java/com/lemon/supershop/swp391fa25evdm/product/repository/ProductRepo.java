@@ -9,7 +9,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
-
 @Repository
 public interface ProductRepo extends JpaRepository<Product, Integer> {
     // Efficient query methods instead of findAll() + filtering

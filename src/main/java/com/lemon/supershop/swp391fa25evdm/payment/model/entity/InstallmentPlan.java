@@ -1,8 +1,6 @@
 package com.lemon.supershop.swp391fa25evdm.payment.model.entity;
 
 import com.lemon.supershop.swp391fa25evdm.dealer.model.entity.Dealer;
-import com.lemon.supershop.swp391fa25evdm.order.model.entity.Order;
-import com.lemon.supershop.swp391fa25evdm.order.model.entity.OrderItem;
 import com.lemon.supershop.swp391fa25evdm.product.model.entity.Product;
 import jakarta.persistence.*;
 
@@ -31,7 +29,7 @@ public class InstallmentPlan {
     private List<InstallmentPayment> inspayments;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "DealerId", nullable = false)
+    @JoinColumn(name = "DealerId")
     private Dealer dealer;
 
     public InstallmentPlan() {}

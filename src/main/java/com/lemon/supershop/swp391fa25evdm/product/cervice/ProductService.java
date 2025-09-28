@@ -1,4 +1,4 @@
-package com.lemon.supershop.swp391fa25evdm.product.Service;
+package com.lemon.supershop.swp391fa25evdm.product.cervice;
 
 import java.util.List;
 import java.util.Optional;
@@ -6,9 +6,9 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.lemon.supershop.swp391fa25evdm.category.Repository.CategoryRepository;
-import com.lemon.supershop.swp391fa25evdm.category.Repository.DealerCategoryRepository;
 import com.lemon.supershop.swp391fa25evdm.category.model.entity.Category;
+import com.lemon.supershop.swp391fa25evdm.category.repository.CategoryRepository;
+import com.lemon.supershop.swp391fa25evdm.category.repository.DealerCategoryRepository;
 import com.lemon.supershop.swp391fa25evdm.product.model.dto.ProductReq;
 import com.lemon.supershop.swp391fa25evdm.product.model.dto.ProductRes;
 import com.lemon.supershop.swp391fa25evdm.product.model.entity.Product;
@@ -101,7 +101,7 @@ public class ProductService {
                 product.getDescription(),
                 product.getStatus(),
                 product.getCategory() != null ? product.getCategory().getId() : null,
-                product.getDealerCategory() != null ? String.valueOf(product.getDealerCategory().getId()) : null
+                product.getDealerCategory() != null ? product.getDealerCategory().getId() : null
         );
     }
 

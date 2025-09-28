@@ -1,4 +1,4 @@
-package com.lemon.supershop.swp391fa25evdm.category.Controller;
+package com.lemon.supershop.swp391fa25evdm.category.controller;
 
 import java.util.List;
 
@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.lemon.supershop.swp391fa25evdm.category.Service.CategoryService;
 import com.lemon.supershop.swp391fa25evdm.category.model.dto.CategoryReq;
 import com.lemon.supershop.swp391fa25evdm.category.model.dto.CategoryRes;
+import com.lemon.supershop.swp391fa25evdm.category.service.CategoryService;
 
 import jakarta.validation.Valid;
 

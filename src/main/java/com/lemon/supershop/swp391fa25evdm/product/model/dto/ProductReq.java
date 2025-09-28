@@ -18,7 +18,6 @@ public class ProductReq {
     private String description;
     private String status;
     private int categoryId;
-    private String dealerCategoryId;
+    private int dealerCategoryId;
     private String image;
-
 }

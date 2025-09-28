@@ -9,12 +9,23 @@ import com.lemon.supershop.swp391fa25evdm.contract.model.dto.ContractReq;
 import com.lemon.supershop.swp391fa25evdm.contract.model.dto.ContractRes;
 import com.lemon.supershop.swp391fa25evdm.contract.model.entity.Contract;
 import com.lemon.supershop.swp391fa25evdm.contract.repository.ContractRepo;
+import com.lemon.supershop.swp391fa25evdm.order.model.entity.Order;
+import com.lemon.supershop.swp391fa25evdm.order.repository.OrderRepo;
+import com.lemon.supershop.swp391fa25evdm.user.model.entity.User;
+import com.lemon.supershop.swp391fa25evdm.user.repository.UserRepo;
+
 
 @Service
 public class ContractService {
 
     @Autowired
     private ContractRepo contractRepo;
+
+    @Autowired
+    private OrderRepo orderRepo;
+
+    @Autowired
+    private UserRepo userRepo;
 
     public List<ContractRes> getAllContracts() {
         List<Contract> contracts = contractRepo.findAll();
@@ -28,17 +39,17 @@ public class ContractService {
     }
 
     public List<ContractRes> getContractsByUserId(int userId) {
-        List<Contract> contracts = contractRepo.findContractByUserId(userId);
+        List<Contract> contracts = contractRepo.findByUserId(userId);
         return contracts.stream().map(this::convertToRes).toList();
     }
 
     public List<ContractRes> getContractsByOrderId(int orderId) {
-        List<Contract> contracts = contractRepo.findContractByOrderId(orderId);
+        List<Contract> contracts = contractRepo.findByOrderId(orderId);
         return contracts.stream().map(this::convertToRes).toList();
     }
 
     public List<ContractRes> getContractsByStatus(String status) {
-        List<Contract> contracts = contractRepo.findContractByStatus(status);
+        List<Contract> contracts = contractRepo.findByStatus(status);
         return contracts.stream().map(this::convertToRes).toList();
     }
 
@@ -46,8 +57,13 @@ public class ContractService {
         Contract contract = new Contract();
         contract.setSignedDate(dto.getSignedDate());
         contract.setFileUrl(dto.getFileUrl());
-        contract.setOrder(contractRepo.findById(dto.getOrderId()).orElse(null).getOrder());
-        contract.setUser(contractRepo.findById(dto.getUserId()).orElse(null).getUser());
+
+        Order order = orderRepo.findById(dto.getOrderId()).orElseThrow(() -> new RuntimeException("Order not found with id: " + dto.getOrderId()));
+        contract.setOrders(List.of(order));
+
+        User user = userRepo.findById(dto.getUserId()).orElseThrow(() -> new RuntimeException("User not found with id: " + dto.getUserId()));
+        contract.setUser(user);
+
         contract.setStatus(dto.getStatus());
         contractRepo.save(contract);
     }
@@ -61,19 +77,40 @@ public class ContractService {
                 .orElseThrow(() -> new Exception("Contract not found with id: " + id));
         existingContract.setSignedDate(dto.getSignedDate());
         existingContract.setFileUrl(dto.getFileUrl());
-        existingContract.setOrder(contractRepo.findById(dto.getOrderId()).orElse(null).getOrder());
-        existingContract.setUser(contractRepo.findById(dto.getUserId()).orElse(null).getUser());
+
+        Order order = orderRepo.findById(dto.getOrderId())
+            .orElseThrow(() -> new RuntimeException("Order not found with id: " + dto.getOrderId()));
+        existingContract.setOrders(List.of(order));
+
+        User user = userRepo.findById(dto.getUserId())
+            .orElseThrow(() -> new RuntimeException("User not found with id: " + dto.getUserId()));
+        existingContract.setUser(user);
+
         existingContract.setStatus(dto.getStatus());
         contractRepo.save(existingContract);
     }
 
+
+    
     private ContractRes convertToRes(Contract contract) {
         ContractRes dto = new ContractRes();
         dto.setId(contract.getId());
         dto.setSignedDate(contract.getSignedDate());
         dto.setFileUrl(contract.getFileUrl());
-        dto.setOrderId(contract.getOrder() != null ? contract.getOrder().getId() : null);
-        dto.setUserId(contract.getUser() != null ? contract.getUser().getId() : null);
+
+        List<Order> orders = contract.getOrders();
+        if (orders != null && !orders.isEmpty()){
+            dto.setOrderId(orders.get(0).getId());
+        } else {
+            dto.setOrderId(null);
+        }
+
+        if (contract.getUser() != null) {
+            dto.setUserId(contract.getUser().getId());
+        } else {
+            dto.setUserId(null);
+        }
+
         dto.setStatus(contract.getStatus());
         return dto;
     }

@@ -14,7 +14,7 @@ public class ContractRes {
     private int id;
     private LocalDateTime signedDate;
     private String fileUrl; // link PDF hợp đồng lưu trên server
-    private int orderId;
-    private int userId;
+    private Integer orderId;
+    private Integer userId;
     private String status;
 }

@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class DealerCategoryRes {
-    private String id;
+    private int id;
     private String name;
     private int quantity;
     private String description;

@@ -8,11 +8,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class DealerCategoryReq {
-    private String id;
     private String name;
     private int quantity;
     private String description;
     private String status;
     private int categoryId;
     private int dealerId;
+
 }

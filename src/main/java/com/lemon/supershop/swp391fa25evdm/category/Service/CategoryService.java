@@ -1,4 +1,4 @@
-package com.lemon.supershop.swp391fa25evdm.category.Service;
+package com.lemon.supershop.swp391fa25evdm.category.service;
 
 import java.util.List;
 import java.util.Optional;
@@ -7,10 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.lemon.supershop.swp391fa25evdm.category.Repository.CategoryRepository;
 import com.lemon.supershop.swp391fa25evdm.category.model.dto.CategoryReq;
 import com.lemon.supershop.swp391fa25evdm.category.model.dto.CategoryRes;
 import com.lemon.supershop.swp391fa25evdm.category.model.entity.Category;
+import com.lemon.supershop.swp391fa25evdm.category.repository.CategoryRepository;
 
 
 

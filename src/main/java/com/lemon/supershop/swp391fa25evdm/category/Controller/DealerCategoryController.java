@@ -1,4 +1,4 @@
-package com.lemon.supershop.swp391fa25evdm.category.Controller;
+package com.lemon.supershop.swp391fa25evdm.category.controller;
 
 import java.util.List;
 
@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.lemon.supershop.swp391fa25evdm.category.Service.DealerCategoryService;
 import com.lemon.supershop.swp391fa25evdm.category.model.dto.DealerCategoryReq;
 import com.lemon.supershop.swp391fa25evdm.category.model.dto.DealerCategoryRes;
+import com.lemon.supershop.swp391fa25evdm.category.service.DealerCategoryService;
 
 @RestController
 @RequestMapping("/api/dealerCategories")
@@ -32,7 +32,7 @@ public class DealerCategoryController {
     }
 
     @GetMapping("/search/{id}")
-    public ResponseEntity<DealerCategoryRes> getDealerCategoryById(@PathVariable String id) {
+    public ResponseEntity<DealerCategoryRes> getDealerCategoryById(@PathVariable int id) {
         DealerCategoryRes dealerCategory = dealerCategoryService.getDealerCategoryById(id);
         return ResponseEntity.ok(dealerCategory);
     }
@@ -41,10 +41,11 @@ public class DealerCategoryController {
     public ResponseEntity<String> createDealerCategory(@RequestBody DealerCategoryReq dealerCategoryReq) {
         dealerCategoryService.createDealerCategory(dealerCategoryReq);
         return ResponseEntity.ok("Dealer Category created successfully");
+
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<String> updateDealerCategory(@PathVariable String id, @RequestBody DealerCategoryReq dealerCategoryReq) {
+    public ResponseEntity<String> updateDealerCategory(@PathVariable int id, @RequestBody DealerCategoryReq dealerCategoryReq) {
         try {
             dealerCategoryService.updateDealerCategory(id, dealerCategoryReq);
             return ResponseEntity.ok("Dealer Category updated successfully");
@@ -54,8 +55,9 @@ public class DealerCategoryController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> deleteDealerCategory(@PathVariable String id) {
+    public ResponseEntity<String> deleteDealerCategory(@PathVariable int id) {
         dealerCategoryService.deleteDealerCategory(id);
         return ResponseEntity.ok("Dealer Category deleted successfully");
+
     }
 }

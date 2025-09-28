@@ -45,8 +45,8 @@ public class PaymentRes {
         this.method = method;
     }
 
-    public boolean isPaidStatus() {
-        return paidStatus;
+    public boolean isPaidStatus(boolean paidStatus) {
+        return this.paidStatus;
     }
 
     public void setPaidStatus(boolean paidStatus) {
@@ -59,5 +59,13 @@ public class PaymentRes {
 
     public void setPaid_at(Date paid_at) {
         this.paid_at = paid_at;
+    }
+
+    public int getPreorderId() {
+        return preorderId;
+    }
+
+    public void setPreorderId(int preorderId) {
+        this.preorderId = preorderId;
     }
 }

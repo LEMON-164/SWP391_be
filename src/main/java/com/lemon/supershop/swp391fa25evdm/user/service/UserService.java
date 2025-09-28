@@ -36,7 +36,7 @@ public class UserService {
             Pattern.compile("^(?:(?:03|05|07|08|09)\\d{8}|01(?:2|6|8|9)\\d{8})$");
 
     public List<UserRes> getAllUsers() {
-        return userRepo.findAll().stream().map(user -> {
+        return userRepo.findByIsBlackFalse().stream().map(user -> {
             UserRes dto = new UserRes(user.getId(), user.getUsername(), user.getEmail(), user.getPhone(), user.getAddress(), user.getRole().getName());
             return dto;
         }).collect(Collectors.toList());
@@ -111,10 +111,11 @@ public class UserService {
     }
 
     public void blackList(int id){
-        Optional<User> user = userRepo.findById(id);
-        if(user.isPresent()){
-            user.get().setBlack(true);
+        User user = userRepo.findById(id).get();
+        if(user != null){
+            user.setBlack(true);
         }
+        userRepo.save(user);
     }
 
     public void removeUser(int id) {
