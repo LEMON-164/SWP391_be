@@ -1,5 +1,6 @@
 package com.lemon.supershop.swp391fa25evdm.contract.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,7 +81,7 @@ public class ContractService {
 
         Order order = orderRepo.findById(dto.getOrderId())
             .orElseThrow(() -> new RuntimeException("Order not found with id: " + dto.getOrderId()));
-        existingContract.setOrders(List.of(order));
+        existingContract.setOrders(new ArrayList<>(List.of(order)));
 
         User user = userRepo.findById(dto.getUserId())
             .orElseThrow(() -> new RuntimeException("User not found with id: " + dto.getUserId()));

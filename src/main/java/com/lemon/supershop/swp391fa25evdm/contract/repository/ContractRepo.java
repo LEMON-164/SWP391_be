@@ -12,6 +12,9 @@ import com.lemon.supershop.swp391fa25evdm.contract.model.entity.Contract;
 @Repository
 public interface ContractRepo extends JpaRepository<Contract, Integer> {
     
+    @Query("SELECT c FROM Contract c LEFT JOIN FETCH c.orders LEFT JOIN FETCH c.user")
+    List<Contract> findAll();
+
     List<Contract> findByUserId(int userId);
     
     @Query("SELECT c FROM Contract c JOIN c.orders o WHERE o.id = :orderId")
