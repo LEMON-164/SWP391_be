@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.lemon.supershop.swp391fa25evdm.product.cervice.ProductService;
 import com.lemon.supershop.swp391fa25evdm.product.model.dto.ProductReq;
 import com.lemon.supershop.swp391fa25evdm.product.model.dto.ProductRes;
+import com.lemon.supershop.swp391fa25evdm.product.service.ProductService;
 
 @RestController
 @RequestMapping("/api/products")

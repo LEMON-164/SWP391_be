@@ -1,4 +1,4 @@
-package com.lemon.supershop.swp391fa25evdm.product.cervice;
+package com.lemon.supershop.swp391fa25evdm.product.service;
 
 import java.util.List;
 import java.util.Optional;
