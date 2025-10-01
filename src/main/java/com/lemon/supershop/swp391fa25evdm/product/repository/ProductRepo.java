@@ -12,10 +12,10 @@ import java.util.Optional;
 @Repository
 public interface ProductRepo extends JpaRepository<Product, Integer> {
     // Efficient query methods instead of findAll() + filtering
-    Optional<Product> findByVinNumIgnoreCase(String vinNum);
-    Optional<Product> findByEngineNumIgnoreCase(String engineNum);
-    Optional<Product> findByNameIgnoreCase(String name);
-    List<Product> findByCategory(Category category);
+    List<Product> findByVinNumContainingIgnoreCase(String vinNum);
+    List<Product> findByEngineNumContainingIgnoreCase(String engineNum);
+    List<Product> findByNameContainingIgnoreCase(String name);
+    List<Product> findByCategoryId(int id);
 
     @Query("SELECT p FROM Product p WHERE p.category.id = :categoryId")
     List<Product> findByCategoryId(@Param("categoryId") Integer categoryId);

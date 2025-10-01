@@ -37,22 +37,20 @@ public class UserService {
 
     public List<UserRes> getAllUsers() {
         return userRepo.findByIsBlackFalse().stream().map(user -> {
-            UserRes dto = new UserRes(user.getId(), user.getUsername(), user.getEmail(), user.getPhone(), user.getAddress(), user.getRole().getName());
-            return dto;
+            return convertUsertoUserRes(user);
         }).collect(Collectors.toList());
     }
 
     public List<UserRes> getBlackList() {
         return userRepo.findByIsBlackTrue().stream().map(user -> {
-            UserRes dto = new UserRes(user.getId(), user.getUsername(), user.getEmail(), user.getPhone(), user.getAddress(), user.getRole().getName());
-            return dto;
+            return convertUsertoUserRes(user);
         }).collect(Collectors.toList());
     }
 
     public UserRes findByUserId(int id) {
         Optional<User> user = userRepo.findById(id);
         if (user.isPresent()) {
-            return new UserRes(user.get().getId(), user.get().getUsername(), user.get().getEmail(), user.get().getPhone(), user.get().getAddress(), user.get().getRole().getName());
+            return convertUsertoUserRes(user.get());
         } else {
             return null;
         }
@@ -60,36 +58,47 @@ public class UserService {
 
     public List<UserRes> findByUsername(String name) {
         return userRepo.findByUsernameContainingIgnoreCase(name).stream().map(user -> {
-            UserRes dto = new UserRes(user.getId(), user.getUsername(), user.getEmail(), user.getPhone(), user.getAddress(), user.getRole().getName());
-            return dto;
+            return convertUsertoUserRes(user);
         }).collect(Collectors.toList());
     }
 
-    public void addUser(AddUserReq dto) {
-        User user = new User();
-        Role role = roleRepo.findByNameContainingIgnoreCase(dto.getRole());
-
-        user.setRole(role);
-
-        if (dto.getPhone() != null && PHONE_PATTERN.matcher(dto.getPhone()).matches()){
-            user.setPhone(dto.getPhone());
-        }
-        if (dto.getEmail() != null && EMAIL_PATTERN.matcher(dto.getEmail()).matches()){
-            user.setEmail(dto.getEmail());
-        }
-
-        Optional<Dealer> dealer = dealerRepo.findByNameContainingIgnoreCase(dto.getDealer());
-        if (dealer.isPresent()) {
-            user.setDealer(dealer.get());
-        }
-        if (dto.getUsername() != null){
-            user.setUsername(dto.getUsername());
-        }
-        role.addUser(user);
-        userRepo.save(user);
+    public List<UserRes> findByDealer(int dealerid) {
+        return userRepo.findUsersByDealer_Id(dealerid).stream().map(user -> {
+            return convertUsertoUserRes(user);
+        }).collect(Collectors.toList());
     }
 
-    public void updateProfile(int id, UserReq dto){
+    public UserRes addUser(AddUserReq dto) {
+        User user = new User();
+        if (dto.getRoleId() > 0) {
+            Optional<Role> role = roleRepo.findById(dto.getRoleId());
+            if (role.isPresent()) {
+                user.setRole(role.get());
+                role.get().addUser(user);
+            }
+        }
+
+        if (dto.getPhone() != null && PHONE_PATTERN.matcher(dto.getPhone()).matches()) {
+            user.setPhone(dto.getPhone());
+        }
+        if (dto.getEmail() != null && EMAIL_PATTERN.matcher(dto.getEmail()).matches()) {
+            user.setEmail(dto.getEmail());
+        }
+        if (dto.getDealerId() > 0) {
+            Optional<Dealer> dealer = dealerRepo.findById(dto.getDealerId());
+            if (dealer.isPresent()) {
+                user.setDealer(dealer.get());
+            }
+        }
+
+        if (dto.getUsername() != null) {
+            user.setUsername(dto.getUsername());
+        }
+        userRepo.save(user);
+        return convertUsertoUserRes(user);
+    }
+
+    public UserRes updateProfile(int id, UserReq dto){
         Optional<User> user = userRepo.findById(id);
         if(user.isPresent()){
 
@@ -105,25 +114,64 @@ public class UserService {
             if(dto.getAddress() != null){
                 user.get().setAddress(dto.getAddress());
             }
-
+            if (dto.getRoleId() > 0){
+                Optional<Role> role = roleRepo.findById(dto.getRoleId());
+                if(role.isPresent()){
+                    user.get().setRole(role.get());
+                }
+            }
+            if(dto.getDealerId() > 0){
+                Optional<Dealer> dealer = dealerRepo.findById(dto.getDealerId());
+                if(dealer.isPresent()){
+                    user.get().setDealer(dealer.get());
+                }
+            }
             userRepo.save(user.get());
+            return convertUsertoUserRes(user.get());
+        } else {
+            return null;
         }
     }
 
     public void blackList(int id){
-        User user = userRepo.findById(id).get();
-        if(user != null){
-            user.setBlack(true);
+        Optional<User> user = userRepo.findById(id);
+        if(user.isPresent()){
+            user.get().setBlack(true);
         }
-        userRepo.save(user);
+        userRepo.save(user.get());
     }
 
     public void removeUser(int id) {
         Optional<User> user = userRepo.findById(id);
-        Role role = roleRepo.findByNameContainingIgnoreCase(user.get().getRole().getName());
-        if(user.isPresent() && role != null){
-            role.removeUser(user.orElse(null));
-            userRepo.delete(user.get());
+        if(user.isPresent()){
+            Optional<Role> role = roleRepo.findById(user.get().getRole().getId());
+            if(role.isPresent()){
+                role.get().removeUser(user.orElse(null));
+                userRepo.delete(user.get());
+            }
         }
+    }
+
+    public UserRes convertUsertoUserRes(User user){
+        UserRes dto = new UserRes();
+        if(user != null){
+            dto.setId(user.getId());
+            if(user.getUsername() != null){
+                dto.setName(user.getUsername());
+            }
+            if(user.getEmail() != null){
+                dto.setEmail(user.getEmail());
+            }
+            if(user.getPhone() != null){
+                dto.setPhone(user.getPhone());
+            }
+            if(user.getAddress() != null){
+                dto.setAddress(user.getAddress());
+            }
+            if(user.getRole() != null){
+                dto.setRole(user.getRole().getName());
+            }
+        }
+        return dto;
     }
 }

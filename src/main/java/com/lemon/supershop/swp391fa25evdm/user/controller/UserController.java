@@ -1,8 +1,5 @@
 package com.lemon.supershop.swp391fa25evdm.user.controller;
 
-import com.lemon.supershop.swp391fa25evdm.authentication.model.dto.RegisterReq;
-import com.lemon.supershop.swp391fa25evdm.authentication.service.AuthenService;
-import com.lemon.supershop.swp391fa25evdm.role.model.dto.RoleDto;
 import com.lemon.supershop.swp391fa25evdm.user.model.dto.AddUserReq;
 import com.lemon.supershop.swp391fa25evdm.user.model.dto.UserReq;
 import com.lemon.supershop.swp391fa25evdm.user.model.dto.UserRes;
@@ -44,14 +41,20 @@ public class UserController {
         return ResponseEntity.ok(users);
     }
 
+    @GetMapping("/dealer/{DealerId}")
+    public ResponseEntity<List<UserRes>> searchDealerEmployee(@PathVariable("DealerId") int dealerId) {
+        List<UserRes> users = userService.findByDealer(dealerId);
+        return ResponseEntity.ok(users);
+    }
+
     @PostMapping("/addUser")
-    public ResponseEntity<String> addUser(@RequestBody AddUserReq dto) {
+    public ResponseEntity<UserRes> addUser(@RequestBody AddUserReq dto) {
         try {
-            userService.addUser(dto);
-            return ResponseEntity.ok("User registered successfully");
+            UserRes user = userService.addUser(dto);
+            return ResponseEntity.ok(user);
         } catch (IllegalArgumentException ex) {
             if ("EMAIL_DUPLICATE".equals(ex.getMessage())) {
-                return ResponseEntity.status(409).body("Email đã tồn tại");
+                return ResponseEntity.badRequest().build();
             }
             throw ex;
         }
@@ -64,9 +67,9 @@ public class UserController {
     }
 
     @PutMapping("profile/{id}")
-    public ResponseEntity<String> updateProfile(@PathVariable("id") int id, @RequestBody UserReq dto) throws Exception {
-        userService.updateProfile(id, dto);
-        return ResponseEntity.ok("User Updated successfully");
+    public ResponseEntity<UserRes> updateProfile(@PathVariable("id") int id, @RequestBody UserReq dto) throws Exception {
+        UserRes user = userService.updateProfile(id, dto);
+        return ResponseEntity.ok(user);
     }
 
     @DeleteMapping("/{id}")

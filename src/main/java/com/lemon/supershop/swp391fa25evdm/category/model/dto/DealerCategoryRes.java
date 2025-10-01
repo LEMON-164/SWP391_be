@@ -14,14 +14,9 @@ public class DealerCategoryRes {
     private int categoryId;
     private int dealerId;
 
-    public DealerCategoryRes(int id, String name, int quantity, String description, String status, int categoryId, int dealerId) {
-        this.id = id;
-        this.name = name;
-        this.quantity = quantity;
-        this.description = description;
-        this.status = status;
-        this.categoryId = categoryId;
-        this.dealerId = dealerId;
+
+
+    public DealerCategoryRes(){
     }
 
     public int getId() {
