@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,18 +28,16 @@ public class InsplanService {
 
     public List<InsPlanRes> getAllInstallmentPlans() {
         return insPlanRepo.findAll().stream().map(installmentPlan -> {
-            InsPlanRes dto = new InsPlanRes(installmentPlan.getMonths(), installmentPlan.getInterestRate(), installmentPlan.getProduct().getName());
-            dto.setMonthPrice((installmentPlan.getProduct().getDealerPrice()/installmentPlan.getMonths() * installmentPlan.getInterestRate()) + installmentPlan.getProduct().getDealerPrice()/installmentPlan.getMonths());
-            return dto;
+            return converttoRes(installmentPlan);
         }).collect(Collectors.toList());
     }
 
     public List<InsPlanRes> getInstallmentPlanByProductId(int id) {
-        Product product = productRepo.findById(id).get();
-        if (product != null) {
+        Optional<Product> product = productRepo.findById(id);
+        if (product.isPresent()) {
             return insPlanRepo.findByProductId(id).stream().map(installmentPlan -> {
-                InsPlanRes dto = new InsPlanRes(installmentPlan.getMonths(), installmentPlan.getInterestRate(), product.getName());
-                dto.setMonthPrice((product.getDealerPrice()/installmentPlan.getMonths() * installmentPlan.getInterestRate())+product.getDealerPrice()/installmentPlan.getMonths());
+                InsPlanRes dto = new InsPlanRes(installmentPlan.getMonths(), installmentPlan.getInterestRate(), product.get().getName());
+                dto.setMonthPrice((product.get().getDealerPrice()/installmentPlan.getMonths() * installmentPlan.getInterestRate())+ product.get().getDealerPrice()/installmentPlan.getMonths());
                 return dto;
             }).collect(Collectors.toList());
         } else {
@@ -46,7 +45,7 @@ public class InsplanService {
         }
     }
 
-    public void addInstallmentPlan(InsPlanReq dto) {
+    public InsPlanRes addInstallmentPlan(InsPlanReq dto) {
         InstallmentPlan installmentPlan = new InstallmentPlan();
         if (dto.getProductId() > 0){
             Product product = productRepo.findById(dto.getProductId()).get();
@@ -67,31 +66,51 @@ public class InsplanService {
             }
         }
         insPlanRepo.save(installmentPlan);
+        return converttoRes(installmentPlan);
     }
 
-    public void updateInstallmentPlan(int id, InsPlanReq dto) {
-        InstallmentPlan installmentPlan = insPlanRepo.findById(id).get();
-        if (installmentPlan != null) {
+    public InsPlanRes updateInstallmentPlan(int id, InsPlanReq dto) {
+        Optional<InstallmentPlan> installmentPlan = insPlanRepo.findById(id);
+        if (installmentPlan.isPresent()) {
             if (dto.getProductId() >= 0){
-                Product product = productRepo.findById(dto.getProductId()).get();
-                if (product != null) {
-                    installmentPlan.setProduct(product);
+                Optional<Product> product = productRepo.findById(dto.getProductId());
+                if (product.isPresent()) {
+                    installmentPlan.get().setProduct(product.orElse(null));
                 }
             }
             if (dto.getMonths() > 0){
-                installmentPlan.setMonths(dto.getMonths());
+                installmentPlan.get().setMonths(dto.getMonths());
             }
             if (dto.getInterestRate() > 0){
-                installmentPlan.setInterestRate(dto.getInterestRate());
+                installmentPlan.get().setInterestRate(dto.getInterestRate());
             }
-            insPlanRepo.save(installmentPlan);
+            insPlanRepo.save(installmentPlan.get());
+            return converttoRes(installmentPlan.orElse(null));
         }
+        return null;
     }
     public void deleteInstallmentPlan(int id) {
-        InstallmentPlan installmentPlan = insPlanRepo.findById(id).get();
-        if (installmentPlan != null) {
-            insPlanRepo.delete(installmentPlan);
+        Optional<InstallmentPlan> installmentPlan = insPlanRepo.findById(id);
+        if (installmentPlan.isPresent()) {
+            insPlanRepo.delete(installmentPlan.get());
         }
     }
 
+    public InsPlanRes converttoRes(InstallmentPlan installmentPlan){
+        if (installmentPlan != null) {
+            InsPlanRes dto = new InsPlanRes();
+            if (installmentPlan.getMonths() > 0){
+                dto.setMonths(installmentPlan.getMonths());
+            }
+            if (installmentPlan.getInterestRate() >= 0){
+                dto.setInterestRate(installmentPlan.getInterestRate());
+            }
+            if (installmentPlan.getProduct() != null){
+                dto.setProductName(installmentPlan.getProduct().getName());
+                dto.setMonthPrice((installmentPlan.getProduct().getDealerPrice()/installmentPlan.getMonths() * installmentPlan.getInterestRate())+installmentPlan.getProduct().getDealerPrice()/installmentPlan.getMonths());
+            }
+            return dto;
+        }
+        return null;
+    }
 }

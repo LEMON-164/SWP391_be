@@ -2,7 +2,9 @@ package com.lemon.supershop.swp391fa25evdm.product.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+import com.lemon.supershop.swp391fa25evdm.category.model.entity.DealerCategory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,104 +29,189 @@ public class ProductService {
     private DealerCategoryRepository dealerCategoryRepository;
 
     public List<ProductRes> findAllProducts(){
-        List<Product> products = productRepo.findAll();
-        return products.stream().map(this::convertToRes).toList();
+        return productRepo.findAll().stream().map(product -> {
+            return convertToRes(product);
+        }).collect(Collectors.toList());
     }
 
     public ProductRes findProductById(int id){
         Optional<Product> productOpt = productRepo.findById(id);
-        return productOpt.map(this::convertToRes).orElse(null);
+        if(productOpt.isPresent()){
+            return convertToRes(productOpt.get());
+        } else {
+            return null;
+        }
     }
 
     public boolean deleteProductById(int id){
-        if (!productRepo.existsById(id)) {
+        if (productRepo.existsById(id)) {
+            productRepo.deleteById(id);
+            return true;
+        } else {
             return false;
         }
-        productRepo.deleteById(id);
-        return true;
     }
 
-    public ProductRes updateProduct(Product product){
-        if (!productRepo.existsById(product.getId())) {
-            return null; // Product not found
+    public ProductRes updateProduct(int id, ProductReq productReq){
+        Optional<Product> productOpt = productRepo.findById(id);
+        if(productOpt.isPresent()){
+            Product product = productOpt.get();
+            if (productReq.getName() != null){
+                product.setName(productReq.getName());
+            }
+            if (productReq.getVinNum() != null){
+                product.setVinNum(productReq.getVinNum());
+            }
+            if (productReq.getEngineNum() != null){
+                product.setEngineNum(productReq.getEngineNum());
+            }
+            if (productReq.getManufacture_date() != null){
+                product.setManufacture_date(productReq.getManufacture_date());
+            }
+            if (productReq.getDealerPrice() > 0){
+                product.setDealerPrice(productReq.getDealerPrice());
+            }
+            if (productReq.getImage() != null){
+                product.setImage(productReq.getImage());
+            }
+            if (productReq.getDescription() != null){
+                product.setDescription(productReq.getDescription());
+            }
+            if (productReq.getStatus() != null){
+                product.setStatus(productReq.getStatus());
+            }
+            if (productReq.getCategoryId() > 0){
+                Optional<Category> category = categoryRepository.findById(productReq.getCategoryId());
+                if (category.isPresent()){
+                    product.setCategory(category.get());
+                }
+            }
+            if (productReq.getDealerCategoryId() > 0){
+                Optional<DealerCategory> dealerCategory = dealerCategoryRepository.findById(productReq.getDealerCategoryId());
+                if (dealerCategory.isPresent()){
+                    product.setDealerCategory(dealerCategory.get());
+                }
+            }
+            productRepo.save(product);
+            return convertToRes(product);
+        } else {
+            return null;
         }
-        Product updatedProduct = productRepo.save(product);
-        return convertToRes(updatedProduct);
     }
 
     // New methods accepting ProductReq
     public ProductRes createProduct(ProductReq productReq) {
-        Product product = convertReqToEntity(productReq);
-        if (product.getId() != 0 && productRepo.existsById(product.getId())) {
-            return null; // Product already exists
+        Product product = new Product();
+        if (productReq != null) {
+            if (productReq.getName() != null){
+                product.setName(productReq.getName());
+            }
+            if (productReq.getVinNum() != null){
+                product.setVinNum(productReq.getVinNum());
+            }
+            if (productReq.getEngineNum() != null){
+                product.setEngineNum(productReq.getEngineNum());
+            }
+            if (productReq.getManufacture_date() != null){
+                product.setManufacture_date(productReq.getManufacture_date());
+            }
+            if (productReq.getDealerPrice() > 0){
+                product.setDealerPrice(productReq.getDealerPrice());
+            }
+            if (productReq.getImage() != null){
+                product.setImage(productReq.getImage());
+            }
+            if (productReq.getDescription() != null){
+                product.setDescription(productReq.getDescription());
+            }
+            if (productReq.getStatus() != null){
+                product.setStatus(productReq.getStatus());
+            }
+            if (productReq.getCategoryId() > 0){
+                Optional<Category> category = categoryRepository.findById(productReq.getCategoryId());
+                if (category.isPresent()){
+                    product.setCategory(category.get());
+                }
+            }
+            if (productReq.getDealerCategoryId() > 0){
+                Optional<DealerCategory> dealerCategory = dealerCategoryRepository.findById(productReq.getDealerCategoryId());
+                if (dealerCategory.isPresent()){
+                    product.setDealerCategory(dealerCategory.get());
+                }
+            }
         }
-        Product savedProduct = productRepo.save(product);
-        return convertToRes(savedProduct);
+        return convertToRes(productRepo.save(product));
     }
 
-    public ProductRes updateProduct(int id, ProductReq productReq) {
-        if (!productRepo.existsById(id)) {
-            return null; // Product not found
-        }
-        Product product = convertReqToEntity(productReq);
-        product.setId(id);
-        return updateProduct(product); // Reuse existing method
-    }
-
-    public List<ProductRes> getProductByCategory(Category category){
-        List<Product> products = productRepo.findByCategory(category);
+    public List<ProductRes> getProductByCategory(int id){
+        List<Product> products = productRepo.findByCategoryId(id);
         return products.stream().map(this::convertToRes).toList();
     }
 
-    public List<ProductRes> getProductByCategoryId(Integer categoryId){
-        List<Product> products = productRepo.findByCategoryId(categoryId);
-        return products.stream().map(this::convertToRes).toList();
+    public List<ProductRes> getProductByCategoryId(int categoryId){
+        Optional<Category> category = categoryRepository.findById(categoryId);
+        if(category.isPresent()){
+            return productRepo.findByCategoryId(categoryId).stream().map(product -> {
+                return convertToRes(product);
+            }).collect(Collectors.toList());
+        } else {
+            return null;
+        }
     }
 
-    public ProductRes getProductByVinNum(String vinNum){
-        Optional<Product> productOpt = productRepo.findByVinNumIgnoreCase(vinNum);
-        return productOpt.map(this::convertToRes).orElse(null);
+    public List<ProductRes> getProductByVinNum(String vinNum){
+        return productRepo.findByVinNumContainingIgnoreCase(vinNum).stream().map(product -> {
+            return convertToRes(product);
+        }).collect(Collectors.toList());
     }
 
-    public ProductRes getProductByName(String name){
-        Optional<Product> productOpt = productRepo.findByNameIgnoreCase(name);
-        return productOpt.map(this::convertToRes).orElse(null);
+    public List<ProductRes> getProductByName(String name){
+        return productRepo.findByNameContainingIgnoreCase(name).stream().map(product -> {
+            return convertToRes(product);
+        }).collect(Collectors.toList());
     }
 
-    public ProductRes getProductByEngineNum(String engineNum){
-        Optional<Product> productOpt = productRepo.findByEngineNumIgnoreCase(engineNum);
-        return productOpt.map(this::convertToRes).orElse(null);
+    public List<ProductRes> getProductByEngineNum(String engineNum){
+        return productRepo.findByEngineNumContainingIgnoreCase(engineNum).stream().map(product -> {
+            return convertToRes(product);
+        }).collect(Collectors.toList());
     }
 
     private ProductRes convertToRes(Product product) {
-        return new ProductRes(
-                product.getId(),
-                product.getName(),
-                product.getVinNum(),
-                product.getEngineNum(),
-                product.getManufacture_date(),
-                product.getImage(),
-                product.getDescription(),
-                product.getStatus(),
-                product.getCategory() != null ? product.getCategory().getId() : null,
-                product.getDealerCategory() != null ? product.getDealerCategory().getId() : null
-        );
-    }
-
-    // Convert ProductReq to Product entity using Repository
-    private Product convertReqToEntity(ProductReq productReq) {
-        Product product = new Product();
-        product.setName(productReq.getName());
-        product.setVinNum(productReq.getVinNum());
-        product.setEngineNum(productReq.getEngineNum());
-        product.setDescription(productReq.getDescription());
-        product.setStatus(productReq.getStatus());
-        product.setImage(productReq.getImage());
-        product.setDealerPrice(productReq.getDealerPrice());
-        product.setManufacture_date(productReq.getManufacture_date());
-        categoryRepository.findById(productReq.getCategoryId()).ifPresent(product::setCategory);
-        dealerCategoryRepository.findById(productReq.getDealerCategoryId()).ifPresent(product::setDealerCategory);
-        
-        return product;
+        ProductRes productRes = new ProductRes();
+        if (product != null) {
+            productRes.setId(product.getId());
+            if (product.getName() != null) {
+                productRes.setName(product.getName());
+            }
+            if (product.getVinNum() != null) {
+                productRes.setVinNum(product.getVinNum());
+            }
+            if (product.getEngineNum() != null) {
+                productRes.setEngineNum(product.getEngineNum());
+            }
+            if (product.getManufacture_date() != null){
+                productRes.setManufacture_date(product.getManufacture_date());
+            }
+            if (product.getDealerPrice() > 0){
+                productRes.setPrice(product.getDealerPrice());
+            }
+            if (product.getImage() != null) {
+                productRes.setImage(product.getImage());
+            }
+            if (product.getDescription() != null) {
+                productRes.setDescription(product.getDescription());
+            }
+            if (product.getStatus() != null){
+                productRes.setStatus(product.getStatus());
+            }
+            if (product.getCategory() != null) {
+                productRes.setCategoryId(product.getCategory().getId());
+            }
+            if (product.getDealerCategory() != null) {
+                productRes.setDealerCategoryId(product.getDealerCategory().getId());
+            }
+        }
+        return productRes;
     }
 }

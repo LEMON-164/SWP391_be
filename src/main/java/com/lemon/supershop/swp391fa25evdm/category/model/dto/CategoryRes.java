@@ -1,12 +1,6 @@
 package com.lemon.supershop.swp391fa25evdm.category.model.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
 public class CategoryRes {
     private Integer id;
     private String name;
@@ -23,22 +17,7 @@ public class CategoryRes {
     private String description;
     private String status;
 
-    public CategoryRes(Integer id, String name, String brand, String version, String type, Double battery, Integer range, Integer hp, Integer torque, Double basePrice, Integer warranty, Boolean isSpecial, String description, String status) {
-        this.id = id;
-        this.name = name;
-        this.brand = brand;
-        this.version = version;
-        this.type = type;
-        this.battery = battery;
-        this.range = range;
-        this.hp = hp;
-        this.torque = torque;
-        this.basePrice = basePrice;
-        this.warranty = warranty;
-        this.isSpecial = isSpecial;
-        this.description = description;
-        this.status = status;
-    }
+    public CategoryRes(){}
 
     public Integer getId() {
         return id;

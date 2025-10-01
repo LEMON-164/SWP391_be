@@ -94,8 +94,8 @@ public class DealerCategoryController {
                 return new ResponseEntity<>("Dealer Category not found with id: " + id, HttpStatus.NOT_FOUND);
             }
             
-            DealerCategoryRes deletedDealerCategory = dealerCategoryService.deleteDealerCategory(id);
-            if (deletedDealerCategory != null) {
+            Boolean deletedDealerCategory = dealerCategoryService.deleteDealerCategory(id);
+            if (deletedDealerCategory) {
                 return new ResponseEntity<>("Dealer Category deleted successfully", HttpStatus.OK);
             } else {
                 return new ResponseEntity<>("Failed to delete dealer category", HttpStatus.BAD_REQUEST);
