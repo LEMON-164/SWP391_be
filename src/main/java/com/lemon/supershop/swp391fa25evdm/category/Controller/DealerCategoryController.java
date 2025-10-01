@@ -25,7 +25,7 @@ public class DealerCategoryController {
     @Autowired
     private DealerCategoryService dealerCategoryService;
 
-    @GetMapping ("/all")
+    @GetMapping ("/listDealerCategories")
     public ResponseEntity<List<DealerCategoryRes>> getAllDealerCategories() {
         List<DealerCategoryRes> dealerCategories = dealerCategoryService.getAllDealerCategories();
         return ResponseEntity.ok(dealerCategories);
