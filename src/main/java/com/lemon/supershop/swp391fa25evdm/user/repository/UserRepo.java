@@ -1,11 +1,12 @@
 package com.lemon.supershop.swp391fa25evdm.user.repository;
 
-import com.lemon.supershop.swp391fa25evdm.user.model.entity.User;
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-import java.util.Optional;
+import com.lemon.supershop.swp391fa25evdm.user.model.entity.User;
 @Repository
 public interface UserRepo extends JpaRepository<User, Long> {
     Optional<User> findByEmail(String email);

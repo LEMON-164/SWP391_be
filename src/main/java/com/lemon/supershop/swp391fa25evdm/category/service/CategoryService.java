@@ -1,4 +1,4 @@
-package com.lemon.supershop.swp391fa25evdm.category.Service;
+package com.lemon.supershop.swp391fa25evdm.category.service;
 
 import java.util.List;
 import java.util.Objects;
@@ -8,12 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.lemon.supershop.swp391fa25evdm.category.Repository.CategoryRepository;
 import com.lemon.supershop.swp391fa25evdm.category.model.dto.CategoryReq;
 import com.lemon.supershop.swp391fa25evdm.category.model.dto.CategoryRes;
 import com.lemon.supershop.swp391fa25evdm.category.model.entity.Category;
-
-
+import com.lemon.supershop.swp391fa25evdm.category.repository.CategoryRepository;
 
 @Service
 @Transactional
@@ -27,65 +25,48 @@ public class CategoryService {
         return categories.stream().map(this::convertToRes).toList();
     }
 
-    public List<CategoryRes> getAllCategoriesByName(String name) {
+    public List<CategoryRes> getCategoryByName(String name) {
         List<Category> categories = categoryRepository.findByNameContainingIgnoreCase(name);
         return categories.stream().map(this::convertToRes).toList();
     }
 
     public CategoryRes getCategoryById(Integer id) {
-        if (id == null) {
-            throw new IllegalArgumentException("Category ID cannot be null");
+        if (id != null) {
+            Optional<Category> categoryOpt = categoryRepository.findById(id);
+            return categoryOpt.map(this::convertToRes).orElse(null);
         }
-        return categoryRepository.findById(id)
-                .map(this::convertToRes)
-                .orElseThrow(() -> new RuntimeException("Category not found with id: " + id));
+        return null;
     }
 
-    public CategoryRes getCategoryByName(String name) {
-        if (name == null || name.trim().isEmpty()) {
-            throw new IllegalArgumentException("Category name cannot be null or empty");
-        }
-        return categoryRepository.findByNameIgnoreCase(name.trim())
-                .map(this::convertToRes)
-                .orElseThrow(() -> new RuntimeException("Category not found with name: " + name));
-    }
-
-    public CategoryRes createCategory(CategoryReq dto) {
+    public void createCategory(CategoryReq dto) {
         if (dto == null) {
-            throw new IllegalArgumentException("Category request cannot be null");
+            throw new IllegalArgumentException("Category data cannot be null");
         }
-
-        // Check if category with same name already exists
-        Optional<Category> existing = categoryRepository.findByNameIgnoreCase(dto.getName());
-        if (existing.isPresent()) {
+        if (dto.getName() != null && categoryRepository.existsByNameIgnoreCase(dto.getName())) {
             throw new RuntimeException("Category with name '" + dto.getName() + "' already exists");
         }
-
         Category category = convertToEntity(dto);
-        Category savedCategory = categoryRepository.save(category);
-        return convertToRes(savedCategory);
+        categoryRepository.save(category);
     }
-
+  
     public CategoryRes updateCategory(int id, CategoryReq dto) {
         if (dto == null) {
             throw new IllegalArgumentException("Category request cannot be null");
         }
-
-        Category existingCategory = categoryRepository.findById(id)
+        Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Category not found with id: " + id));
-
 
         Optional<Category> nameCheck = categoryRepository.findByNameIgnoreCase(dto.getName());
         if (nameCheck.isPresent() && !Objects.equals(nameCheck.get().getId(), id)) {
             throw new RuntimeException("Category with name '" + dto.getName() + "' already exists");
         }
 
-        updateEntityFromDto(existingCategory, dto);
-        Category updatedCategory = categoryRepository.save(existingCategory);
+        updateEntityFromDto(category, dto);
+        Category updatedCategory = categoryRepository.save(category);
         return convertToRes(updatedCategory);
     }
 
-    public CategoryRes deleteCategory (Integer id) {
+    public void deleteCategory(Integer id) {
         if (id == null) {
             throw new IllegalArgumentException("Category ID cannot be null");
         }
@@ -94,7 +75,6 @@ public class CategoryService {
                 .orElseThrow(() -> new RuntimeException("Category not found with id: " + id));
 
         categoryRepository.delete(existingCategory);
-        return convertToRes(existingCategory);
     }
 
     public List<CategoryRes> getSpecialCategories() {
@@ -120,25 +100,6 @@ public class CategoryService {
 
     public List<CategoryRes> getActiveCategories() {
         List<Category> categories = categoryRepository.findActiveCategories();
-        return categories.stream().map(this::convertToRes).toList();
-    }
-
-    public List<CategoryRes> filterCategories(Integer id, String name, String brand, String version, String type,
-                                            Double minBattery, Double maxBattery,
-                                            Integer minRange, Integer maxRange,
-                                            Integer minHp, Integer maxHp,
-                                            Integer minTorque, Integer maxTorque,
-                                            Double minBasePrice, Double maxBasePrice,
-                                            Integer minWarranty, Integer maxWarranty,
-                                            Boolean isSpecial, String status) {
-
-        List<Category> categories = categoryRepository.filterCategories(
-                id, name, brand, version, type,
-                minBattery, maxBattery, minRange, maxRange,
-                minHp, maxHp, minTorque, maxTorque,
-                minBasePrice, maxBasePrice, minWarranty, maxWarranty,
-                isSpecial, status
-        );
         return categories.stream().map(this::convertToRes).toList();
     }
 

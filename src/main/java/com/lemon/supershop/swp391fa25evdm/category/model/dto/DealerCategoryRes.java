@@ -1,9 +1,5 @@
 package com.lemon.supershop.swp391fa25evdm.category.model.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 
 public class DealerCategoryRes {
     private int id;
@@ -13,7 +9,6 @@ public class DealerCategoryRes {
     private String status;
     private int categoryId;
     private int dealerId;
-
 
 
     public DealerCategoryRes(){

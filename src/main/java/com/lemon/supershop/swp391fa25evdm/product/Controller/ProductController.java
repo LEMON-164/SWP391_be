@@ -1,4 +1,4 @@
-package com.lemon.supershop.swp391fa25evdm.product.Controller;
+package com.lemon.supershop.swp391fa25evdm.product.controller;
 
 import java.util.List;
 
@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.lemon.supershop.swp391fa25evdm.product.Service.ProductService;
 import com.lemon.supershop.swp391fa25evdm.product.model.dto.ProductReq;
 import com.lemon.supershop.swp391fa25evdm.product.model.dto.ProductRes;
+import com.lemon.supershop.swp391fa25evdm.product.service.ProductService;
 
 @RestController
 @RequestMapping("/api/products")
@@ -30,7 +30,7 @@ public class ProductController {
         return ResponseEntity.ok(products);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/search/id/{id}")
     public ResponseEntity<ProductRes> getProductById(@PathVariable int id) {
         ProductRes product = productService.findProductById(id);
         return ResponseEntity.ok(product);
@@ -54,7 +54,7 @@ public class ProductController {
         return ResponseEntity.ok(products);
     }
 
-    @GetMapping("/category/{categoryId}")
+    @GetMapping("/search/category/{categoryId}")
     public ResponseEntity<List<ProductRes>> getProductsByCategoryId(@PathVariable Integer categoryId) {
         List<ProductRes> products = productService.getProductByCategoryId(categoryId);
         return ResponseEntity.ok(products);
@@ -62,7 +62,7 @@ public class ProductController {
 
     @PostMapping("/addProduct")
     public ResponseEntity<ProductRes> addProduct(@RequestBody ProductReq productReq) {
-        ProductRes createdProduct = productService.createProduct(productReq);
+        ProductRes createdProduct = productService.addProduct(productReq);
         if (createdProduct != null) {
             return ResponseEntity.ok(createdProduct);
         } else {
@@ -80,13 +80,9 @@ public class ProductController {
         }
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteProduct(@PathVariable int id) {
-        boolean deleted = productService.deleteProductById(id);
-        if (deleted) {
-            return ResponseEntity.ok("Product deleted successfully");
-        } else {
-            return ResponseEntity.badRequest().body("Product not found");
-        }
+        productService.deleteProductById(id);
+        return ResponseEntity.ok("Product deleted successfully");
     }
 }

@@ -1,5 +1,11 @@
 package com.lemon.supershop.swp391fa25evdm.order.service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.lemon.supershop.swp391fa25evdm.contract.model.entity.Contract;
 import com.lemon.supershop.swp391fa25evdm.contract.repository.ContractRepo;
 import com.lemon.supershop.swp391fa25evdm.dealer.model.entity.Dealer;
@@ -16,11 +22,6 @@ import com.lemon.supershop.swp391fa25evdm.promotion.model.entity.Promotion;
 import com.lemon.supershop.swp391fa25evdm.promotion.repository.PromotionRepo;
 import com.lemon.supershop.swp391fa25evdm.user.model.entity.User;
 import com.lemon.supershop.swp391fa25evdm.user.repository.UserRepo;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class OrderService {
@@ -70,12 +71,6 @@ public class OrderService {
                 if (product != null){
                     order.setProduct(product);
                     order.setTotal(product.getDealerPrice());
-                }
-            }
-            if (dto.getContractId() > 0 ){
-                Contract contract = contractRepo.findById(dto.getContractId()).get();
-                if (contract != null){
-                    order.setContract(contract);
                 }
             }
             if (dto.getDealerId() > 0){
@@ -198,7 +193,7 @@ public class OrderService {
             if (order.getStatus() != null){
                 orderRes.setStatus(order.getStatus());
             } else {
-                orderRes.setStatus("Chờ xử lý");
+                orderRes.setStatus("Processing");
             }
         }
         return orderRes;
