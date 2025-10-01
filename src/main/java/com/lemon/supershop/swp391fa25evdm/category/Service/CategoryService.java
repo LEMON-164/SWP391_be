@@ -12,8 +12,6 @@ import com.lemon.supershop.swp391fa25evdm.category.model.dto.CategoryRes;
 import com.lemon.supershop.swp391fa25evdm.category.model.entity.Category;
 import com.lemon.supershop.swp391fa25evdm.category.repository.CategoryRepository;
 
-
-
 @Service
 @Transactional
 public class CategoryService {
@@ -26,37 +24,29 @@ public class CategoryService {
         return categories.stream().map(this::convertToRes).toList();
     }
 
-    public List<CategoryRes> getCategoriesByName(String name) {
+    public List<CategoryRes> getCategoryByName(String name) {
         List<Category> categories = categoryRepository.findByNameContainingIgnoreCase(name);
         return categories.stream().map(this::convertToRes).toList();
     }
 
     public CategoryRes getCategoryById(Integer id) {
-        if (id != null){
-            Optional <Category> categoryOpt = categoryRepository.findById(id);
+        if (id != null) {
+            Optional<Category> categoryOpt = categoryRepository.findById(id);
             return categoryOpt.map(this::convertToRes).orElse(null);
         }
         return null;
     }
 
-    public List<CategoryRes> getCategoryByName(String name) {
-        if (name != null) {
-            Optional <Category> categories = categoryRepository.findByNameIgnoreCase(name);
-            return categories.stream().map(this::convertToRes).toList();
-        }
-        return null;
-    }
-
     public void createCategory(CategoryReq dto) {
-        if (checkExitCategory(convertToEntity(dto))) {
-            throw new RuntimeException("Category with ID '" + dto.getName() + "' already exists");
-        } else {
-            Category category = convertToEntity(dto);
-            Category savedCategory = categoryRepository.save(category);
-            if (!checkExitCategory(savedCategory)) {
-                throw new RuntimeException("Failed to create category");
-            }
+        if (dto == null) {
+            throw new IllegalArgumentException("Category data cannot be null");
         }
+        if (dto.getName() != null && categoryRepository.existsByNameIgnoreCase(dto.getName())) {
+            throw new RuntimeException("Category with name '" + dto.getName() + "' already exists");
+        }
+        Category category = convertToEntity(dto);
+        categoryRepository.save(category);
+
     }
 
     public void updateCategory(Integer id, CategoryReq dto) {
@@ -66,7 +56,7 @@ public class CategoryService {
         categoryRepository.save(category);
     }
 
-    public void deleteCategory (Integer id) {
+    public void deleteCategory(Integer id) {
         if (id == null) {
             throw new IllegalArgumentException("Category ID cannot be null");
         }
@@ -163,9 +153,5 @@ public class CategoryService {
                 category.getDescription(),
                 category.getStatus()
         );
-    }
-
-    private boolean checkExitCategory (Category category){
-        return categoryRepository.existsById(category.getId());
     }
 }

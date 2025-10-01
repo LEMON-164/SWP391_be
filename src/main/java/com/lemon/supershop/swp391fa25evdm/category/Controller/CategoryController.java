@@ -36,7 +36,7 @@ public class CategoryController {
 
     @GetMapping("/search/name/{name}")
     public ResponseEntity<List<CategoryRes>> getAllCategoriesByName(@PathVariable String name) {
-        List<CategoryRes> categories = categoryService.getCategoriesByName(name);
+        List<CategoryRes> categories = categoryService.getCategoryByName(name);
         return ResponseEntity.ok(categories);
     }
 

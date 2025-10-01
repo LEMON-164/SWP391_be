@@ -33,6 +33,9 @@ public interface CategoryRepository extends JpaRepository<Category, Integer> {
     // Find by price range
     List<Category> findByBasePriceBetween(Double minPrice, Double maxPrice);
 
+    //Check existence by name
+    boolean existsByNameIgnoreCase(String name);
+
     // Find active categories
     @Query("SELECT c FROM Category c WHERE c.status = 'ACTIVE'")
     List<Category> findActiveCategories();
