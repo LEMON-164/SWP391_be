@@ -1,4 +1,4 @@
-package com.lemon.supershop.swp391fa25evdm.category.Service;
+package com.lemon.supershop.swp391fa25evdm.category.service;
 
 import java.util.List;
 import java.util.Optional;
@@ -7,12 +7,11 @@ import com.lemon.supershop.swp391fa25evdm.dealer.model.entity.Dealer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.lemon.supershop.swp391fa25evdm.category.Repository.CategoryRepository;
-import com.lemon.supershop.swp391fa25evdm.category.Repository.DealerCategoryRepository;
 import com.lemon.supershop.swp391fa25evdm.category.model.dto.DealerCategoryReq;
 import com.lemon.supershop.swp391fa25evdm.category.model.dto.DealerCategoryRes;
-import com.lemon.supershop.swp391fa25evdm.category.model.entity.Category;
 import com.lemon.supershop.swp391fa25evdm.category.model.entity.DealerCategory;
+import com.lemon.supershop.swp391fa25evdm.category.repository.CategoryRepository;
+import com.lemon.supershop.swp391fa25evdm.category.repository.DealerCategoryRepository;
 import com.lemon.supershop.swp391fa25evdm.dealer.repository.DealerRepo;
 
 @Service
@@ -37,7 +36,7 @@ public class DealerCategoryService {
                 .orElse(null);
     }
 
-    public DealerCategoryRes createDealerCategory(DealerCategoryReq dto) {
+    public void createDealerCategory(DealerCategoryReq dto) {
         DealerCategory dealerCategory = new DealerCategory();
         if (dto.getName() != null){
             dealerCategory.setName(dto.getName());
@@ -78,36 +77,29 @@ public class DealerCategoryService {
         }
     }
 
-    public DealerCategoryRes updateDealerCategory(int id, DealerCategoryReq dto) throws Exception {
-        DealerCategory dealerCategory = dealerCategoryRepository.findById(id)
-                .orElseThrow(() -> new Exception("Dealer Category not found with id: " + id));
-        dealerCategory.setName(dto.getName());
-        dealerCategory.setQuantity(dto.getQuantity());
-        dealerCategory.setDescription(dto.getDescription());
-        dealerCategory.setStatus(dto.getStatus());
+    public void updateDealerCategory(int id, DealerCategoryReq dto) throws Exception {
+        DealerCategory existingDealerCategory = dealerCategoryRepository.findById(id)
+                .orElseThrow(() -> new Exception("DealerCategory not found with id: " + id));
+        if (dto.getName() != null) {
+            existingDealerCategory.setName(dto.getName());
 
-        if (dto.getCategoryId() > 0) {
-            categoryRepository.findById(dto.getCategoryId())
-                .ifPresentOrElse(
-                    dealerCategory::setCategory,
-                    () -> dealerCategory.setCategory(null)
-                );
-        } else {
-            dealerCategory.setCategory(null);
         }
-        
-        if (dto.getDealerId() > 0) {
-            dealerRepo.findById(dto.getDealerId())
-                .ifPresentOrElse(
-                    dealerCategory::setDealer,
-                    () -> dealerCategory.setDealer(null)
-                );
-        } else {
-            dealerCategory.setDealer(null);
+        if (dto.getQuantity() != 0) {
+            existingDealerCategory.setQuantity(dto.getQuantity());
         }
-
-        DealerCategory updatedDealerCategory = dealerCategoryRepository.save(dealerCategory);
-        return convertToRes(updatedDealerCategory);
+        if (dto.getDescription() != null) {
+            existingDealerCategory.setDescription(dto.getDescription());
+        }
+        if (dto.getStatus() != null) {
+            existingDealerCategory.setStatus(dto.getStatus());
+        }
+        if (dto.getCategoryId() != 0) {
+            existingDealerCategory.setCategory(categoryRepository.findById(dto.getCategoryId()).orElse(null));
+        }
+        if (dto.getDealerId() != 0) {
+            existingDealerCategory.setDealer(dealerRepo.findById(dto.getDealerId()).orElse(null));
+        }
+        dealerCategoryRepository.save(existingDealerCategory);
     }
 
     private DealerCategoryRes convertToRes (DealerCategory dealerCategory) {

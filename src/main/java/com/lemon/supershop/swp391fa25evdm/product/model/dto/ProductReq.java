@@ -6,6 +6,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class ProductReq {
     private String name;
     private String vinNum;
@@ -17,44 +20,4 @@ public class ProductReq {
     private int categoryId;
     private int dealerCategoryId;
     private String image;
-
-    public String getName() {
-        return name;
-    }
-
-    public String getVinNum() {
-        return vinNum;
-    }
-
-    public String getEngineNum() {
-        return engineNum;
-    }
-
-    public Date getManufacture_date() {
-        return manufacture_date;
-    }
-
-    public double getDealerPrice() {
-        return dealerPrice;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public int getCategoryId() {
-        return categoryId;
-    }
-
-    public int getDealerCategoryId() {
-        return dealerCategoryId;
-    }
-
-    public String getImage() {
-        return image;
-    }
 }
