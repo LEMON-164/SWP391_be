@@ -129,37 +129,39 @@ public class ProductService {
 
     // Convert ProductReq to Product entity using Repository
     private Product convertReqToEntity(Product product, ProductReq productReq) {
-        Product product1 = product;
-        if (productReq.getName() != null){
-            product1.setName(productReq.getName());
+        if (product != null || productReq != null){
+            if (productReq.getName() != null){
+                product.setName(productReq.getName());
+            }
+            if (productReq.getVinNum() != null){
+                product.setVinNum(productReq.getVinNum());
+            }
+            if (productReq.getEngineNum() != null){
+                product.setEngineNum(productReq.getEngineNum());
+            }
+            if (productReq.getDescription() != null){
+                product.setDescription(productReq.getDescription());
+            }
+            if (productReq.getStatus() != null){
+                product.setStatus(productReq.getStatus());
+            }
+            if (productReq.getImage() != null){
+                product.setImage(productReq.getImage());
+            }
+            if (productReq.getManufacture_date() != null){
+                product.setManufacture_date(productReq.getManufacture_date());
+            }
+            if (productReq.getDealerPrice() > 0){
+                product.setDealerPrice(productReq.getDealerPrice());
+            }
+            if (productReq.getCategoryId() > 0){
+                categoryRepository.findById(productReq.getCategoryId()).ifPresent(product::setCategory);
+            }
+            if (productReq.getDealerCategoryId() > 0){
+                dealerCategoryRepository.findById(productReq.getDealerCategoryId()).ifPresent(product::setDealerCategory);
+            }
+            return product;
         }
-        if (productReq.getVinNum() != null){
-            product1.setVinNum(productReq.getVinNum());
-        }
-        if (productReq.getEngineNum() != null){
-            product1.setEngineNum(productReq.getEngineNum());
-        }
-        if (productReq.getDescription() != null){
-            product1.setDescription(productReq.getDescription());
-        }
-        if (productReq.getStatus() != null){
-            product1.setStatus(productReq.getStatus());
-        }
-        if (productReq.getImage() != null){
-            product1.setImage(productReq.getImage());
-        }
-        if (productReq.getManufacture_date() != null){
-            product1.setManufacture_date(productReq.getManufacture_date());
-        }
-        if (productReq.getDealerPrice() > 0){
-            product1.setDealerPrice(productReq.getDealerPrice());
-        }
-        if (productReq.getCategoryId() > 0){
-            categoryRepository.findById(productReq.getCategoryId()).ifPresent(product::setCategory);
-        }
-        if (productReq.getDealerCategoryId() > 0){
-            dealerCategoryRepository.findById(productReq.getDealerCategoryId()).ifPresent(product::setDealerCategory);
-        }
-        return product;
+        return null;
     }
 }
