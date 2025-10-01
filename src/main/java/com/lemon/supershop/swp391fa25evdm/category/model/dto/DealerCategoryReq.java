@@ -4,6 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class DealerCategoryReq {
     private String name;
     private int quantity;
@@ -12,27 +15,4 @@ public class DealerCategoryReq {
     private int categoryId;
     private int dealerId;
 
-    public String getName() {
-        return name;
-    }
-
-    public int getQuantity() {
-        return quantity;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public int getCategoryId() {
-        return categoryId;
-    }
-
-    public int getDealerId() {
-        return dealerId;
-    }
 }

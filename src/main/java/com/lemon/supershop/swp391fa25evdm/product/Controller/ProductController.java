@@ -1,4 +1,4 @@
-package com.lemon.supershop.swp391fa25evdm.product.Controller;
+package com.lemon.supershop.swp391fa25evdm.product.controller;
 
 import java.util.List;
 
@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.lemon.supershop.swp391fa25evdm.product.Service.ProductService;
 import com.lemon.supershop.swp391fa25evdm.product.model.dto.ProductReq;
 import com.lemon.supershop.swp391fa25evdm.product.model.dto.ProductRes;
+import com.lemon.supershop.swp391fa25evdm.product.service.ProductService;
 
 @RestController
 @RequestMapping("/api/products")
@@ -30,7 +30,7 @@ public class ProductController {
         return ResponseEntity.ok(products);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/search/id/{id}")
     public ResponseEntity<ProductRes> getProductById(@PathVariable int id) {
         ProductRes product = productService.findProductById(id);
         return ResponseEntity.ok(product);
@@ -54,7 +54,7 @@ public class ProductController {
         return ResponseEntity.ok(product);
     }
 
-    @GetMapping("/category/{categoryId}")
+    @GetMapping("/search/category/{categoryId}")
     public ResponseEntity<List<ProductRes>> getProductsByCategoryId(@PathVariable Integer categoryId) {
         List<ProductRes> products = productService.getProductByCategoryId(categoryId);
         return ResponseEntity.ok(products);
@@ -62,31 +62,19 @@ public class ProductController {
 
     @PostMapping("/addProduct")
     public ResponseEntity<String> addProduct(@RequestBody ProductReq productReq) {
-        ProductRes createdProduct = productService.createProduct(productReq);
-        if (createdProduct != null) {
-            return ResponseEntity.ok("Product created successfully");
-        } else {
-            return ResponseEntity.badRequest().body("Product already exists or invalid data");
-        }
+        productService.addProduct(productReq);
+        return ResponseEntity.ok("Product added successfully");
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<String> updateProduct(@PathVariable int id, @RequestBody ProductReq productReq) {
-        ProductRes updatedProduct = productService.updateProduct(id, productReq);
-        if (updatedProduct != null) {
-            return ResponseEntity.ok("Product updated successfully");
-        } else {
-            return ResponseEntity.badRequest().body("Product not found");
-        }
+        productService.updateProduct(id, productReq);
+        return ResponseEntity.ok("Product updated successfully");
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteProduct(@PathVariable int id) {
-        boolean deleted = productService.deleteProductById(id);
-        if (deleted) {
-            return ResponseEntity.ok("Product deleted successfully");
-        } else {
-            return ResponseEntity.badRequest().body("Product not found");
-        }
+        productService.deleteProductById(id);
+        return ResponseEntity.ok("Product deleted successfully");
     }
 }
