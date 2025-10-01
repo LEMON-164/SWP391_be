@@ -14,7 +14,8 @@ public interface UserRepo extends JpaRepository<User, Long> {
     Optional<User> findByUsername(String username);
     List<User> findByUsernameContainingIgnoreCase(String username);
     Optional<User> findById(int id);
-    Optional<User> findByIsBlackTrue();
-    Optional<User> findByIsBlackFalse();
+    List<User> findByIsBlackTrue();
+    List<User> findByIsBlackFalse();
+    Optional<User> findUsersByDealer_Id(int dealerId);
 
 }

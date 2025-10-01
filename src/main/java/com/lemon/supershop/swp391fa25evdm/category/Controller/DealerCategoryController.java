@@ -56,8 +56,20 @@ public class DealerCategoryController {
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteDealerCategory(@PathVariable int id) {
-        dealerCategoryService.deleteDealerCategory(id);
-        return ResponseEntity.ok("Dealer Category deleted successfully");
-
+        try {
+            DealerCategoryRes existingDealerCategory = dealerCategoryService.getDealerCategoryById(id);
+            if (existingDealerCategory == null) {
+                return new ResponseEntity<>("Dealer Category not found with id: " + id, HttpStatus.NOT_FOUND);
+            }
+            
+            Boolean deletedDealerCategory = dealerCategoryService.deleteDealerCategory(id);
+            if (deletedDealerCategory) {
+                return new ResponseEntity<>("Dealer Category deleted successfully", HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>("Failed to delete dealer category", HttpStatus.BAD_REQUEST);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>("Error deleting dealer category: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }

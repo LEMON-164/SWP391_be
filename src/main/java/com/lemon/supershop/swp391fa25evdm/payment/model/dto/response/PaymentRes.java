@@ -1,5 +1,7 @@
 package com.lemon.supershop.swp391fa25evdm.payment.model.dto.response;
 
+import com.lemon.supershop.swp391fa25evdm.payment.model.enums.PaymentStatus;
+
 import java.util.Date;
 
 public class PaymentRes {
@@ -7,12 +9,12 @@ public class PaymentRes {
     private int orderId;
     private int preorderId;
     private String method;
-    private boolean paidStatus;
+    private PaymentStatus paidStatus;
     private Date paid_at;
 
     public PaymentRes() {}
 
-    public PaymentRes(String userName, int orderId, int preorderId, String method,boolean paidStatus, Date paid_at) {
+    public PaymentRes(String userName, int orderId, int preorderId, String method, PaymentStatus paidStatus, Date paid_at) {
         this.userName = userName;
         this.orderId = orderId;
         this.preorderId = preorderId;
@@ -45,11 +47,11 @@ public class PaymentRes {
         this.method = method;
     }
 
-    public boolean isPaidStatus(boolean paidStatus) {
+    public PaymentStatus getPaidStatus(boolean paidStatus) {
         return this.paidStatus;
     }
 
-    public void setPaidStatus(boolean paidStatus) {
+    public void setPaidStatus(PaymentStatus paidStatus) {
         this.paidStatus = paidStatus;
     }
 
