@@ -38,7 +38,7 @@ public class CategoryService {
         return null;
     }
 
-    public void createCategory(CategoryReq dto) {
+    public CategoryRes createCategory(CategoryReq dto) {
         if (dto == null) {
             throw new IllegalArgumentException("Category data cannot be null");
         }
@@ -47,6 +47,7 @@ public class CategoryService {
         }
         Category category = convertToEntity(dto);
         categoryRepository.save(category);
+        return convertToRes(category);
     }
   
     public CategoryRes updateCategory(int id, CategoryReq dto) {

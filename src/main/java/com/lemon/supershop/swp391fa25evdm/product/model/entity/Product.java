@@ -3,6 +3,7 @@ package com.lemon.supershop.swp391fa25evdm.product.model.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.lemon.supershop.swp391fa25evdm.category.model.entity.Category;
 import com.lemon.supershop.swp391fa25evdm.category.model.entity.DealerCategory;
+import com.lemon.supershop.swp391fa25evdm.distribution.model.entity.Distribution;
 import com.lemon.supershop.swp391fa25evdm.order.model.entity.Order;
 import com.lemon.supershop.swp391fa25evdm.payment.model.entity.InstallmentPlan;
 import com.lemon.supershop.swp391fa25evdm.preorder.model.entity.PreOrder;
@@ -56,6 +57,9 @@ public class Product {
 
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Order> orders = new ArrayList<>();
+
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Distribution> distributions = new ArrayList<>();
 
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<PreOrder> preOrders = new ArrayList<>();
@@ -175,5 +179,13 @@ public class Product {
 
     public void setPreOrders(List<PreOrder> preOrders) {
         this.preOrders = preOrders;
+    }
+
+    public List<Distribution> getDistributions() {
+        return distributions;
+    }
+
+    public void setDistributions(List<Distribution> distributions) {
+        this.distributions = distributions;
     }
 }

@@ -31,9 +31,13 @@ public class OrderController {
     }
 
     @PostMapping("/user/{userId}")
-    public ResponseEntity<String> createOrder(@PathVariable int userId, @RequestBody OrderReq dto) {
-        orderService.createOrder(userId, dto);
-        return ResponseEntity.ok("Order created successfully!");
+    public ResponseEntity<OrderRes> createOrder(@PathVariable int userId, @RequestBody OrderReq dto) {
+        OrderRes order = orderService.createOrder(userId, dto);
+        if (order != null) {
+            return ResponseEntity.ok(order);
+        } else {
+            return ResponseEntity.badRequest().body(order);
+        }
     }
 
     @PostMapping("/{orderId}/delivery")

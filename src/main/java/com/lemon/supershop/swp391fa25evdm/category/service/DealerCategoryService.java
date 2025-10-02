@@ -78,7 +78,7 @@ public class DealerCategoryService {
         }
     }
 
-    public void updateDealerCategory(int id, DealerCategoryReq dto) throws Exception {
+    public DealerCategoryRes updateDealerCategory(int id, DealerCategoryReq dto) throws Exception {
         DealerCategory existingDealerCategory = dealerCategoryRepository.findById(id)
                 .orElseThrow(() -> new Exception("DealerCategory not found with id: " + id));
         if (dto.getName() != null) {
@@ -101,6 +101,7 @@ public class DealerCategoryService {
             existingDealerCategory.setDealer(dealerRepo.findById(dto.getDealerId()).orElse(null));
         }
         dealerCategoryRepository.save(existingDealerCategory);
+        return convertToRes(existingDealerCategory);
     }
 
     private DealerCategoryRes convertToRes (DealerCategory dealerCategory) {
