@@ -108,6 +108,9 @@ public class DealerCategoryService {
     private DealerCategoryRes convertToRes (DealerCategory dealerCategory) {
         if (dealerCategory != null) {
             DealerCategoryRes dto = new DealerCategoryRes();
+            if (dealerCategory.getId() > 0){
+                dto.setId(dealerCategory.getId());
+            }
             if (dealerCategory.getName() != null){
                 dto.setName(dealerCategory.getName());
             }

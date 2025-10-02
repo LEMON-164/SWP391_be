@@ -138,6 +138,8 @@ public class ProductService {
             }
             if (product.getStatus() != null) {
                 productRes.setStatus(product.getStatus());
+            } else {
+                productRes.setStatus("Available");
             }
             if (product.getImage() != null) {
                 productRes.setImage(product.getImage());

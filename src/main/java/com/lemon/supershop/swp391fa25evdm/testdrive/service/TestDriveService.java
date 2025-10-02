@@ -5,12 +5,15 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.lemon.supershop.swp391fa25evdm.category.model.entity.DealerCategory;
 import com.lemon.supershop.swp391fa25evdm.category.repository.DealerCategoryRepository;
+import com.lemon.supershop.swp391fa25evdm.dealer.model.entity.Dealer;
 import com.lemon.supershop.swp391fa25evdm.dealer.repository.DealerRepo;
 import com.lemon.supershop.swp391fa25evdm.testdrive.model.dto.TestDriveReq;
 import com.lemon.supershop.swp391fa25evdm.testdrive.model.dto.TestDriveRes;
 import com.lemon.supershop.swp391fa25evdm.testdrive.model.entity.TestDrive;
 import com.lemon.supershop.swp391fa25evdm.testdrive.repository.TestDriveRepository;
+import com.lemon.supershop.swp391fa25evdm.user.model.entity.User;
 import com.lemon.supershop.swp391fa25evdm.user.repository.UserRepo;
 
 @Service
@@ -88,9 +91,12 @@ public class TestDriveService {
         testDrive.setStatus(req.getStatus());
         testDrive.setNotes(req.getNotes());
 
-        userRepo.findById(req.getUserId()).ifPresent(testDrive::setUser);
-        dealerRepo.findById(req.getDealerId()).ifPresent(testDrive::setDealer);
-        dealerCategoryRepository.findById(req.getDealerCategoryId()).ifPresent(testDrive::setDealerCategory);
+        User user = userRepo.findById(req.getUserId()).orElseThrow(() -> new RuntimeException("User not found with id: " + req.getUserId()));
+        testDrive.setUser(user);
+        Dealer dealer = dealerRepo.findById(req.getDealerId()).orElseThrow(() -> new RuntimeException("Dealer not found with id: " + req.getDealerId()));
+        testDrive.setDealer(dealer);
+        DealerCategory dealerCategory = dealerCategoryRepository.findById(req.getDealerCategoryId()).orElseThrow(() -> new RuntimeException("DealerCategory not found with id: " + req.getDealerCategoryId()));
+        testDrive.setDealerCategory(dealerCategory);
         return testDrive;
     }
 

@@ -48,7 +48,7 @@ public class CategoryService {
         Category category = convertToEntity(dto);
         categoryRepository.save(category);
     }
-  
+
     public CategoryRes updateCategory(int id, CategoryReq dto) {
         if (dto == null) {
             throw new IllegalArgumentException("Category request cannot be null");
@@ -61,7 +61,20 @@ public class CategoryService {
             throw new RuntimeException("Category with name '" + dto.getName() + "' already exists");
         }
 
-        updateEntityFromDto(category, dto);
+        category.setName(dto.getName());
+        category.setBrand(dto.getBrand());
+        category.setVersion(dto.getVersion());
+        category.setType(dto.getType());
+        category.setBattery(dto.getBattery());
+        category.setRange(dto.getRange());
+        category.setHp(dto.getHp());
+        category.setTorque(dto.getTorque());
+        category.setBasePrice(dto.getBasePrice());
+        category.setWarranty(dto.getWarranty());
+        category.setDescription(dto.getDescription());
+        category.setStatus(dto.getStatus());
+        
+        category.setSpecial(dto.isSpecial());
         Category updatedCategory = categoryRepository.save(category);
         return convertToRes(updatedCategory);
     }
@@ -106,11 +119,7 @@ public class CategoryService {
     // Helper methods for conversion
     private Category convertToEntity(CategoryReq dto) {
         Category category = new Category();
-        updateEntityFromDto(category, dto);
-        return category;
-    }
 
-    private void updateEntityFromDto(Category category, CategoryReq dto) {
         category.setName(dto.getName());
         category.setBrand(dto.getBrand());
         category.setVersion(dto.getVersion());
@@ -121,9 +130,10 @@ public class CategoryService {
         category.setTorque(dto.getTorque());
         category.setBasePrice(dto.getBasePrice());
         category.setWarranty(dto.getWarranty());
-        category.setSpecial(dto.getSpecial() != null ? dto.getSpecial() : Boolean.FALSE);
         category.setDescription(dto.getDescription());
-        category.setStatus(dto.getStatus() != null ? dto.getStatus() : "ACTIVE");
+        category.setStatus(dto.getStatus());
+        category.setSpecial(dto.isSpecial());
+        return category;
     }
 
     public CategoryRes updateCategoryBasePrice(Integer id, Double newBasePrice) {
@@ -145,48 +155,20 @@ public class CategoryService {
     private CategoryRes convertToRes(Category category) {
         if (category != null) {
             CategoryRes categoryRes = new CategoryRes();
-            if (category.getId() > 0){
-                categoryRes.setId(category.getId());
-            }
-            if (category.getName() != null) {
-                categoryRes.setName(category.getName());
-            }
-            if (category.getBrand() != null) {
-                categoryRes.setBrand(category.getBrand());
-            }
-            if (category.getVersion() != null) {
-                categoryRes.setVersion(category.getVersion());
-            }
-            if (category.getType() != null) {
-                categoryRes.setType(category.getType());
-            }
-            if (category.getBattery() > 0){
-                categoryRes.setBattery(category.getBattery());
-            }
-            if (category.getRange() > 0){
-                categoryRes.setRange(category.getRange());
-            }
-            if (category.getHp() > 0){
-                categoryRes.setHp(category.getHp());
-            }
-            if (category.getTorque() > 0){
-                categoryRes.setTorque(category.getTorque());
-            }
-            if (category.getBasePrice() > 0){
-                categoryRes.setBasePrice(category.getBasePrice());
-            }
-            if (category.getWarranty() > 0){
-                categoryRes.setWarranty(category.getWarranty());
-            }
-            if (category.isSpecial()){
-                categoryRes.setSpecial(true);
-            }
-            if (category.getDescription() != null){
-                categoryRes.setDescription(category.getDescription());
-            }
-            if (category.getStatus() != null){
-                categoryRes.setStatus(category.getStatus());
-            }
+            categoryRes.setId(category.getId());
+            categoryRes.setName(category.getName());
+            categoryRes.setBrand(category.getBrand());
+            categoryRes.setVersion(category.getVersion());
+            categoryRes.setType(category.getType());
+            categoryRes.setDescription(category.getDescription());
+            categoryRes.setStatus(category.getStatus());
+            categoryRes.setBattery(category.getBattery());
+            categoryRes.setRange(category.getRange());
+            categoryRes.setHp(category.getHp());
+            categoryRes.setTorque(category.getTorque());
+            categoryRes.setBasePrice(category.getBasePrice());
+            categoryRes.setWarranty(category.getWarranty());
+            categoryRes.setSpecial(category.isSpecial());
             return categoryRes;
         } else {
             return null;

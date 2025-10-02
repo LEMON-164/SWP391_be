@@ -15,7 +15,6 @@ import com.lemon.supershop.swp391fa25evdm.order.repository.OrderRepo;
 import com.lemon.supershop.swp391fa25evdm.user.model.entity.User;
 import com.lemon.supershop.swp391fa25evdm.user.repository.UserRepo;
 
-
 @Service
 public class ContractService {
 
@@ -54,7 +53,7 @@ public class ContractService {
         return contracts.stream().map(this::convertToRes).toList();
     }
 
-    public void createContract (ContractReq dto) {
+    public void createContract(ContractReq dto) {
         Contract contract = new Contract();
         contract.setSignedDate(dto.getSignedDate());
         contract.setFileUrl(dto.getFileUrl());
@@ -68,11 +67,13 @@ public class ContractService {
         contract.setStatus(dto.getStatus());
         contractRepo.save(contract);
     }
+
     public void deleteContract(int id) {
-        if (contractRepo.existsById(id) && id != 0){
+        if (contractRepo.existsById(id) && id != 0) {
             contractRepo.deleteById(id);
         }
     }
+
     public void updateContract(int id, ContractReq dto) throws Exception {
         Contract existingContract = contractRepo.findById(id)
                 .orElseThrow(() -> new Exception("Contract not found with id: " + id));
@@ -80,19 +81,17 @@ public class ContractService {
         existingContract.setFileUrl(dto.getFileUrl());
 
         Order order = orderRepo.findById(dto.getOrderId())
-            .orElseThrow(() -> new RuntimeException("Order not found with id: " + dto.getOrderId()));
+                .orElseThrow(() -> new RuntimeException("Order not found with id: " + dto.getOrderId()));
         existingContract.setOrders(new ArrayList<>(List.of(order)));
 
         User user = userRepo.findById(dto.getUserId())
-            .orElseThrow(() -> new RuntimeException("User not found with id: " + dto.getUserId()));
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + dto.getUserId()));
         existingContract.setUser(user);
 
         existingContract.setStatus(dto.getStatus());
         contractRepo.save(existingContract);
     }
 
-
-    
     private ContractRes convertToRes(Contract contract) {
         ContractRes dto = new ContractRes();
         dto.setId(contract.getId());
@@ -100,7 +99,7 @@ public class ContractService {
         dto.setFileUrl(contract.getFileUrl());
 
         List<Order> orders = contract.getOrders();
-        if (orders != null && !orders.isEmpty()){
+        if (orders != null && !orders.isEmpty()) {
             dto.setOrderId(orders.get(0).getId());
         } else {
             dto.setOrderId(null);
