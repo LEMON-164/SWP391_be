@@ -54,7 +54,7 @@ public class ContractService {
         return contracts.stream().map(this::convertToRes).toList();
     }
 
-    public void createContract (ContractReq dto) {
+    public ContractRes createContract (ContractReq dto) {
         Contract contract = new Contract();
         contract.setSignedDate(dto.getSignedDate());
         contract.setFileUrl(dto.getFileUrl());
@@ -67,6 +67,7 @@ public class ContractService {
 
         contract.setStatus(dto.getStatus());
         contractRepo.save(contract);
+        return convertToRes(contract);
     }
     public void deleteContract(int id) {
         if (contractRepo.existsById(id) && id != 0){

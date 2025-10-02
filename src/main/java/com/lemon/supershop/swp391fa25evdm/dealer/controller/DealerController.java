@@ -41,15 +41,23 @@ public class DealerController {
     }
 
     @PostMapping("/registerDealer")
-    public ResponseEntity<String> registerDealer(@RequestBody DealerReq dto) {
-        dealerService.registerDealer(dto);
-        return ResponseEntity.ok("Dealer registered successfully");
+    public ResponseEntity<DealerRes> registerDealer(@RequestBody DealerReq dto) {
+        DealerRes dealer = dealerService.registerDealer(dto);
+        if (dealer != null) {
+            return ResponseEntity.ok(dealer);
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @PutMapping("dealerHome/{id}")
-    public ResponseEntity<String> updateDealer(@PathVariable("id") int id, @RequestBody DealerReq dto) throws Exception {
-        dealerService.updateDealer(id, dto);
-        return ResponseEntity.ok("Dealer Updated successfully");
+    public ResponseEntity<DealerRes> updateDealer(@PathVariable("id") int id, @RequestBody DealerReq dto) throws Exception {
+        DealerRes dealer = dealerService.updateDealer(id, dto);
+        if (dealer != null) {
+            return ResponseEntity.ok(dealer);
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @DeleteMapping("/{id}")

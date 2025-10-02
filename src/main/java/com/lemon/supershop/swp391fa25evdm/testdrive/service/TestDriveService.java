@@ -1,7 +1,11 @@
 package com.lemon.supershop.swp391fa25evdm.testdrive.service;
 
 import java.util.List;
+import java.util.Optional;
 
+import com.lemon.supershop.swp391fa25evdm.category.model.entity.DealerCategory;
+import com.lemon.supershop.swp391fa25evdm.dealer.model.entity.Dealer;
+import com.lemon.supershop.swp391fa25evdm.user.model.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -51,23 +55,22 @@ public class TestDriveService {
         return testDrives.stream().map(this::convertToRes).toList();
     }
 
-    public void createTestDrive(TestDriveReq req) {
-        TestDrive testDrive = convertToEntity(req);
-        testDriveRepository.save(testDrive);
+    public TestDriveRes createTestDrive(TestDriveReq req) {
+        TestDrive testDrive = new TestDrive();
+        TestDrive testDrive1 = convertToEntity(testDrive, req);
+        testDriveRepository.save(testDrive1);
+        return convertToRes(testDrive1);
     }
 
-    public void updateTestDrive(int id, TestDriveReq req) {
+    public TestDriveRes updateTestDrive(int id, TestDriveReq req) {
         TestDrive testDrive = testDriveRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Test drive not found with id: " + id));
-        testDrive.setScheduleDate(req.getScheduleDate());
-        testDrive.setLocation(req.getLocation());
-        testDrive.setStatus(req.getStatus());
-        testDrive.setNotes(req.getNotes());
-
-        userRepo.findById(req.getUserId()).ifPresent(testDrive::setUser);
-        dealerRepo.findById(req.getDealerId()).ifPresent(testDrive::setDealer);
-        dealerCategoryRepository.findById(req.getDealerCategoryId()).ifPresent(testDrive::setDealerCategory);
-        testDriveRepository.save(testDrive);
+        if (testDrive != null) {
+            TestDrive testDrive1 = convertToEntity(testDrive, req);
+            testDriveRepository.save(testDrive1);
+            return convertToRes(testDrive1);
+        }
+        return null;
     }
 
     public void deleteTestDrive(int id) {
@@ -81,40 +84,72 @@ public class TestDriveService {
     //method refference: object::method 
     //tham chiếu đến một phương thức của object và sử dụng nó như một biểu thức lambda.
     //không cần thêm logic
-    private TestDrive convertToEntity(TestDriveReq req) {
-        TestDrive testDrive = new TestDrive();
-        testDrive.setScheduleDate(req.getScheduleDate());
-        testDrive.setLocation(req.getLocation());
-        testDrive.setStatus(req.getStatus());
-        testDrive.setNotes(req.getNotes());
-
-        userRepo.findById(req.getUserId()).ifPresent(testDrive::setUser);
-        dealerRepo.findById(req.getDealerId()).ifPresent(testDrive::setDealer);
-        dealerCategoryRepository.findById(req.getDealerCategoryId()).ifPresent(testDrive::setDealerCategory);
-        return testDrive;
+    private TestDrive convertToEntity(TestDrive testDrive, TestDriveReq req) {
+        if (testDrive != null || req != null) {
+            if (req.getScheduleDate() != null) {
+                testDrive.setScheduleDate(req.getScheduleDate());
+            }
+            if (req.getLocation() != null) {
+                testDrive.setLocation(req.getLocation());
+            }
+            if (req.getStatus() != null) {
+                testDrive.setStatus(req.getStatus());
+            }
+            if (req.getNotes() != null) {
+                testDrive.setNotes(req.getNotes());
+            }
+            if (req.getUserId() > 0){
+                userRepo.findById(req.getUserId()).ifPresent(testDrive::setUser);
+            }
+            if (req.getDealerId() > 0){
+                dealerRepo.findById(req.getDealerId()).ifPresent(testDrive::setDealer);
+            }
+            if (req.getDealerCategoryId() > 0){
+                dealerCategoryRepository.findById(req.getDealerCategoryId()).ifPresent(testDrive::setDealerCategory);
+            }
+            return testDrive;
+        }
+        return null;
     }
 
     //lambda expression: (parameters) -> expression
     //cần thêm logic VD: user.getId()
     private TestDriveRes convertToRes(TestDrive testDrive) {
         TestDriveRes res = new TestDriveRes();
-        res.setId(testDrive.getId());
-        res.setScheduleDate(testDrive.getScheduleDate());
-        res.setLocation(testDrive.getLocation());
-        res.setStatus(testDrive.getStatus());
-        res.setNotes(testDrive.getNotes());
-        
-        // Null-safe conversion
-        if (testDrive.getUser() != null) {
-            res.setUserId(testDrive.getUser().getId());
+        if (testDrive != null) {
+            if (testDrive.getScheduleDate() != null) {
+                res.setScheduleDate(testDrive.getScheduleDate());
+            }
+            if (testDrive.getLocation() != null) {
+                res.setLocation(testDrive.getLocation());
+            }
+            if (testDrive.getStatus() != null) {
+                res.setStatus(testDrive.getStatus());
+            }
+            if (testDrive.getNotes() != null) {
+                res.setNotes(testDrive.getNotes());
+            }
+            if (testDrive.getUser() != null) {
+                Optional<User> user = userRepo.findById(testDrive.getUser().getId());
+                if (user.isPresent()){
+                    res.setUserId(user.get().getId());
+                }
+            }
+            if (testDrive.getDealer() != null) {
+                Optional<Dealer> dealer = dealerRepo.findById(testDrive.getDealer().getId());
+                if (dealer.isPresent()){
+                    res.setDealerId(dealer.get().getId());
+                }
+            }
+            if (testDrive.getDealerCategory() != null) {
+                Optional<DealerCategory> category = dealerCategoryRepository.findById(testDrive.getDealerCategory().getId());
+                if (category.isPresent()){
+                    res.setDealerCategoryId(category.get().getId());
+                }
+            }
+            return res;
         }
-        if (testDrive.getDealer() != null) {
-            res.setDealerId(testDrive.getDealer().getId());
-        }
-        if (testDrive.getDealerCategory() != null) {
-            res.setDealerCategoryId(testDrive.getDealerCategory().getId());
-        }
-        return res;
+        return null;
     }
 
 }

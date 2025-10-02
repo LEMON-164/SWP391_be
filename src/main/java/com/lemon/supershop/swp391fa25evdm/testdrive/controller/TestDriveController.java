@@ -54,10 +54,24 @@ public class TestDriveController {
         return ResponseEntity.ok(testDrives);
     }
 
+    @PostMapping("/createTestDrive")
+    public ResponseEntity<TestDriveRes> createTestDrive (@RequestBody TestDriveReq testDriveReq) {
+        TestDriveRes testDriveRes = testDriveService.createTestDrive(testDriveReq);
+        if (testDriveRes != null) {
+            return ResponseEntity.ok(testDriveRes);
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
     @PutMapping("/updateTestDrive/{id}")
-    public ResponseEntity<String> updateTestDrive (@PathVariable int id, @RequestBody TestDriveReq testDriveReq) {
-        testDriveService.updateTestDrive(id, testDriveReq);
-        return ResponseEntity.ok("Test drive updated successfully");
+    public ResponseEntity<TestDriveRes> updateTestDrive (@PathVariable int id, @RequestBody TestDriveReq dto) {
+        TestDriveRes testDriveRes = testDriveService.updateTestDrive(id, dto);
+        if (testDriveRes != null) {
+            return ResponseEntity.ok(testDriveRes);
+        } else {
+            return ResponseEntity.noContent().build();
+        }
     }
 
     @DeleteMapping("/deleteTestDrive/{id}")
@@ -65,12 +79,4 @@ public class TestDriveController {
         testDriveService.deleteTestDrive(id);
         return ResponseEntity.ok("Test drive deleted successfully");
     }
-
-    @PostMapping("/createTestDrive")
-    public ResponseEntity<String> createTestDrive (@RequestBody TestDriveReq testDriveReq) {
-        testDriveService.createTestDrive(testDriveReq);
-        return ResponseEntity.ok("Test drive created successfully");
-    }   
-
-
 }

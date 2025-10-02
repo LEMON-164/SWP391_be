@@ -54,7 +54,7 @@ public class DealerService {
         }).collect(Collectors.toList());
     }
 
-    public void registerDealer(DealerReq dto) {
+    public DealerRes registerDealer(DealerReq dto) {
         Dealer dealer = new Dealer();
         if (dto.getName() !=  null){
             dealer.setName(dto.getName());
@@ -73,9 +73,10 @@ public class DealerService {
         }
         dealer.setStatus(DealerStatus.ACTIVE);
         dealerRepo.save(dealer);
+        return  convertDealertoDealerRes(dealer);
     }
 
-    public void updateDealer(int id, DealerReq dto) {
+    public DealerRes updateDealer(int id, DealerReq dto) {
         Dealer dealer = dealerRepo.findById(id).get();
         if (dealer != null) {
             if (dto.getName() !=  null){
@@ -92,7 +93,9 @@ public class DealerService {
             }
 
             dealerRepo.save(dealer);
+            return  convertDealertoDealerRes(dealer);
         }
+        return null;
     }
     @Transactional
     public void removeDealer(int id) {

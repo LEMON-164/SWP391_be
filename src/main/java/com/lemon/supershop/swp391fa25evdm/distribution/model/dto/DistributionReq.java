@@ -9,14 +9,16 @@ public class DistributionReq {
     private int categoryId;
     private int dealerId;
     private int contractId;
+    private int productId;
 
     public DistributionReq() {
     }
 
-    public DistributionReq(int categoryId, int dealerId, int contractId) {
+    public DistributionReq(int categoryId, int dealerId, int contractId, int productId) {
         this.categoryId = categoryId;
         this.dealerId = dealerId;
         this.contractId = contractId;
+        this.productId = productId;
     }
 
     public int getCategoryId() {
@@ -41,5 +43,13 @@ public class DistributionReq {
 
     public void setContractId(int contractId) {
         this.contractId = contractId;
+    }
+
+    public int getProductId() {
+        return productId;
+    }
+
+    public void setProductId(int productId) {
+        this.productId = productId;
     }
 }

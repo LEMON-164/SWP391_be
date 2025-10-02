@@ -51,7 +51,11 @@ public class UserController {
     public ResponseEntity<UserRes> addUser(@RequestBody AddUserReq dto) {
         try {
             UserRes user = userService.addUser(dto);
-            return ResponseEntity.ok(user);
+            if (user != null) {
+                return ResponseEntity.ok(user);
+            } else {
+                return ResponseEntity.badRequest().build();
+            }
         } catch (IllegalArgumentException ex) {
             if ("EMAIL_DUPLICATE".equals(ex.getMessage())) {
                 return ResponseEntity.badRequest().build();

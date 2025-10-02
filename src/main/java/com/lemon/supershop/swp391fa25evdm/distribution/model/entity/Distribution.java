@@ -5,6 +5,7 @@ import com.lemon.supershop.swp391fa25evdm.category.model.entity.Category;
 import com.lemon.supershop.swp391fa25evdm.contract.model.entity.Contract;
 import com.lemon.supershop.swp391fa25evdm.dealer.model.entity.Dealer;
 
+import com.lemon.supershop.swp391fa25evdm.product.model.entity.Product;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -30,6 +31,11 @@ public class Distribution {
     @JoinColumn(name = "CategoryId")
     @JsonIgnore
     private Category category;
+
+    @ManyToOne
+    @JoinColumn(name = "ProductId")
+    @JsonIgnore
+    private Product product;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "RoleId")
@@ -70,5 +76,13 @@ public class Distribution {
 
     public void setContract(Contract contract) {
         this.contract = contract;
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
     }
 }

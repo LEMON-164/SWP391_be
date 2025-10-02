@@ -38,19 +38,26 @@ public class DealerCategoryController {
     }
 
     @PostMapping ("/create")
-    public ResponseEntity<String> createDealerCategory(@RequestBody DealerCategoryReq dealerCategoryReq) {
-        dealerCategoryService.createDealerCategory(dealerCategoryReq);
-        return ResponseEntity.ok("Dealer Category created successfully");
-
+    public ResponseEntity<DealerCategoryRes> createDealerCategory(@RequestBody DealerCategoryReq dealerCategoryReq) {
+        DealerCategoryRes categoryRes = dealerCategoryService.createDealerCategory(dealerCategoryReq);
+        if (categoryRes != null) {
+            return ResponseEntity.ok(categoryRes);
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<String> updateDealerCategory(@PathVariable int id, @RequestBody DealerCategoryReq dealerCategoryReq) {
+    public ResponseEntity<DealerCategoryRes> updateDealerCategory(@PathVariable int id, @RequestBody DealerCategoryReq dealerCategoryReq) {
         try {
-            dealerCategoryService.updateDealerCategory(id, dealerCategoryReq);
-            return ResponseEntity.ok("Dealer Category updated successfully");
+            DealerCategoryRes categoryRes = dealerCategoryService.updateDealerCategory(id, dealerCategoryReq);
+            if (categoryRes != null) {
+                return ResponseEntity.ok(categoryRes);
+            } else {
+                return ResponseEntity.badRequest().build();
+            }
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Error: " + e.getMessage());
+            return ResponseEntity.badRequest().build();
         }
     }
 

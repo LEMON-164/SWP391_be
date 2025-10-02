@@ -42,22 +42,30 @@ public class DistributionController {
         return ResponseEntity.ok(distributions);
     }
 
-    @GetMapping("/search/contract/{contractId}")
-    public ResponseEntity<List<DistributionRes>> getDistributionsByContract(@PathVariable int contractId) {
-        List<DistributionRes> distributions = distributionService.getDistributionsByContractId(contractId);
-        return ResponseEntity.ok(distributions);
-    }
+//    @GetMapping("/search/contract/{contractId}")
+//    public ResponseEntity<List<DistributionRes>> getDistributionsByContract(@PathVariable int contractId) {
+//        List<DistributionRes> distributions = distributionService.getDistributionsByContractId(contractId);
+//        return ResponseEntity.ok(distributions);
+//    }
 
     @PostMapping("/createDistribution")
-    public ResponseEntity<String> createDistribution(@RequestBody DistributionReq distributionReq) {
-        distributionService.createDistribution(distributionReq);
-        return ResponseEntity.ok("Distribution created successfully");
+    public ResponseEntity<DistributionRes> createDistribution(@RequestBody DistributionReq distributionReq) {
+        DistributionRes distributionRes = distributionService.createDistribution(distributionReq);
+        if (distributionRes != null) {
+            return ResponseEntity.ok(distributionRes);
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @PutMapping("/updateDistribution/{id}")
-    public ResponseEntity<String> updateDistribution(@PathVariable int id, @RequestBody DistributionReq distributionReq) {
-        distributionService.updateDistribution(id, distributionReq);
-        return ResponseEntity.ok("Distribution updated successfully");
+    public ResponseEntity<DistributionRes> updateDistribution(@PathVariable int id, @RequestBody DistributionReq distributionReq) {
+        DistributionRes distributionRes = distributionService.updateDistribution(id, distributionReq);
+        if (distributionRes != null) {
+            return ResponseEntity.ok(distributionRes);
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @DeleteMapping("/deleteDistribution/{id}")
