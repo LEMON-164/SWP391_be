@@ -17,7 +17,7 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
 
-@Data
+
 @Entity
 @Table(name = "distribution")
 public class Distribution {
@@ -39,4 +39,36 @@ public class Distribution {
     private Contract contract;
 
     public Distribution() {}
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
+    public Dealer getDealer() {
+        return dealer;
+    }
+
+    public void setDealer(Dealer dealer) {
+        this.dealer = dealer;
+    }
+
+    public Contract getContract() {
+        return contract;
+    }
+
+    public void setContract(Contract contract) {
+        this.contract = contract;
+    }
 }

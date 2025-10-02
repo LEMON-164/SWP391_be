@@ -1,7 +1,10 @@
 package com.lemon.supershop.swp391fa25evdm.category.service;
 
 import java.util.List;
+import java.util.Optional;
 
+import com.lemon.supershop.swp391fa25evdm.category.model.entity.Category;
+import com.lemon.supershop.swp391fa25evdm.dealer.model.entity.Dealer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,20 +37,44 @@ public class DealerCategoryService {
                 .orElse(null);
     }
 
-    public void createDealerCategory(DealerCategoryReq dto) {
+    public DealerCategoryRes createDealerCategory(DealerCategoryReq dto) {
         DealerCategory dealerCategory = new DealerCategory();
-        dealerCategory.setName(dto.getName());
-        dealerCategory.setQuantity(dto.getQuantity());
-        dealerCategory.setDescription(dto.getDescription());
-        dealerCategory.setStatus(dto.getStatus());
-        dealerCategory.setCategory(categoryRepository.findById(dto.getCategoryId()).orElse(null));
-        dealerCategory.setDealer(dealerRepo.findById(dto.getDealerId()).orElse(null));
+        if (dto.getName() != null){
+            dealerCategory.setName(dto.getName());
+        }
+        if (dto.getQuantity() > 0){
+            dealerCategory.setQuantity(dto.getQuantity());
+        }
+        if (dto.getDescription() != null){
+            dealerCategory.setDescription(dto.getDescription());
+        }
+        if (dto.getStatus() != null){
+            dealerCategory.setStatus(dto.getStatus());
+        }
+        if (dto.getCategoryId() > 0) {
+            Optional<Category> category = categoryRepository.findById(dto.getCategoryId());
+            if (category.isPresent()) {
+                dealerCategory.setCategory(category.get());
+            }
+        }
+        if (dto.getDealerId() > 0) {
+            Optional<Dealer> dealer = dealerRepo.findById(dto.getDealerId());
+            if (dealer.isPresent()) {
+                dealerCategory.setDealer(dealer.get());
+            }
+        }
+
         dealerCategoryRepository.save(dealerCategory);
+        return convertToRes(dealerCategory);
     }
 
-    public void deleteDealerCategory(int id) {
-        if (dealerCategoryRepository.existsById(id)){
+    public boolean deleteDealerCategory(int id) {
+        Optional<DealerCategory> dealerCategory = dealerCategoryRepository.findById(id);
+        if (dealerCategory.isPresent()) {
             dealerCategoryRepository.deleteById(id);
+            return true;
+        } else {
+            return false;
         }
     }
 
@@ -77,23 +104,29 @@ public class DealerCategoryService {
     }
 
     private DealerCategoryRes convertToRes (DealerCategory dealerCategory) {
-        if (dealerCategory == null) {
+        if (dealerCategory != null) {
+            DealerCategoryRes dto = new DealerCategoryRes();
+            if (dealerCategory.getName() != null){
+                dto.setName(dealerCategory.getName());
+            }
+            if (dealerCategory.getQuantity() >= 0){
+                dto.setQuantity(dealerCategory.getQuantity());
+            }
+            if (dealerCategory.getDescription() != null){
+                dto.setDescription(dealerCategory.getDescription());
+            }
+            if (dealerCategory.getStatus() != null){
+                dto.setStatus(dealerCategory.getStatus());
+            }
+            if (dealerCategory.getCategory() != null){
+                dto.setCategoryId(dealerCategory.getCategory().getId());
+            }
+            if (dealerCategory.getDealer() != null){
+                dto.setDealerId(dealerCategory.getDealer().getId());
+            }
+            return dto;
+        } else {
             return null;
         }
-        Integer categoryId = dealerCategory.getCategory() != null ? 
-            dealerCategory.getCategory().getId() : 0;
-        
-        Integer dealerId = dealerCategory.getDealer() != null ? 
-            dealerCategory.getDealer().getId() : 0;
-        
-        return new DealerCategoryRes(
-            dealerCategory.getId(),
-            dealerCategory.getName(),
-            dealerCategory.getQuantity(),
-            dealerCategory.getDescription(),
-            dealerCategory.getStatus(),
-            categoryId, 
-            dealerId     
-        );
     }
 }

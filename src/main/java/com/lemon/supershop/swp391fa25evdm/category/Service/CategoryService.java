@@ -1,6 +1,7 @@
 package com.lemon.supershop.swp391fa25evdm.category.service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,14 +47,23 @@ public class CategoryService {
         }
         Category category = convertToEntity(dto);
         categoryRepository.save(category);
-
     }
-
-    public void updateCategory(Integer id, CategoryReq dto) {
+  
+    public CategoryRes updateCategory(int id, CategoryReq dto) {
+        if (dto == null) {
+            throw new IllegalArgumentException("Category request cannot be null");
+        }
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Category not found with id: " + id));
+
+        Optional<Category> nameCheck = categoryRepository.findByNameIgnoreCase(dto.getName());
+        if (nameCheck.isPresent() && !Objects.equals(nameCheck.get().getId(), id)) {
+            throw new RuntimeException("Category with name '" + dto.getName() + "' already exists");
+        }
+
         updateEntityFromDto(category, dto);
-        categoryRepository.save(category);
+        Category updatedCategory = categoryRepository.save(category);
+        return convertToRes(updatedCategory);
     }
 
     public void deleteCategory(Integer id) {
@@ -111,7 +121,7 @@ public class CategoryService {
         category.setTorque(dto.getTorque());
         category.setBasePrice(dto.getBasePrice());
         category.setWarranty(dto.getWarranty());
-        category.setSpecial(dto.getIsSpecial() != null ? dto.getIsSpecial() : Boolean.FALSE);
+        category.setSpecial(dto.getSpecial() != null ? dto.getSpecial() : Boolean.FALSE);
         category.setDescription(dto.getDescription());
         category.setStatus(dto.getStatus() != null ? dto.getStatus() : "ACTIVE");
     }
@@ -133,25 +143,53 @@ public class CategoryService {
     }
 
     private CategoryRes convertToRes(Category category) {
-        if (category == null) {
+        if (category != null) {
+            CategoryRes categoryRes = new CategoryRes();
+            if (category.getId() > 0){
+                categoryRes.setId(category.getId());
+            }
+            if (category.getName() != null) {
+                categoryRes.setName(category.getName());
+            }
+            if (category.getBrand() != null) {
+                categoryRes.setBrand(category.getBrand());
+            }
+            if (category.getVersion() != null) {
+                categoryRes.setVersion(category.getVersion());
+            }
+            if (category.getType() != null) {
+                categoryRes.setType(category.getType());
+            }
+            if (category.getBattery() > 0){
+                categoryRes.setBattery(category.getBattery());
+            }
+            if (category.getRange() > 0){
+                categoryRes.setRange(category.getRange());
+            }
+            if (category.getHp() > 0){
+                categoryRes.setHp(category.getHp());
+            }
+            if (category.getTorque() > 0){
+                categoryRes.setTorque(category.getTorque());
+            }
+            if (category.getBasePrice() > 0){
+                categoryRes.setBasePrice(category.getBasePrice());
+            }
+            if (category.getWarranty() > 0){
+                categoryRes.setWarranty(category.getWarranty());
+            }
+            if (category.isSpecial()){
+                categoryRes.setSpecial(true);
+            }
+            if (category.getDescription() != null){
+                categoryRes.setDescription(category.getDescription());
+            }
+            if (category.getStatus() != null){
+                categoryRes.setStatus(category.getStatus());
+            }
+            return categoryRes;
+        } else {
             return null;
         }
-
-        return new CategoryRes(
-                category.getId(),
-                category.getName(),
-                category.getBrand(),
-                category.getVersion(),
-                category.getType(),
-                category.getBattery(),
-                category.getRange(),
-                category.getHp(),
-                category.getTorque(),
-                category.getBasePrice(),
-                category.getWarranty(),
-                category.isSpecial(),
-                category.getDescription(),
-                category.getStatus()
-        );
     }
 }

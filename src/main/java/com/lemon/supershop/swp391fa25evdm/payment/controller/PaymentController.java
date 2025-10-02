@@ -2,6 +2,7 @@ package com.lemon.supershop.swp391fa25evdm.payment.controller;
 
 import com.lemon.supershop.swp391fa25evdm.payment.model.dto.request.PaymentReq;
 import com.lemon.supershop.swp391fa25evdm.payment.model.dto.response.PaymentRes;
+import com.lemon.supershop.swp391fa25evdm.payment.model.entity.Payment;
 import com.lemon.supershop.swp391fa25evdm.payment.service.PaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -23,21 +24,21 @@ public class PaymentController {
     }
 
     @PostMapping("/order")
-    public ResponseEntity<String> createPaymentOrder(@RequestBody PaymentReq dto) {
-        paymentService.createPaymentOrder(dto);
-        return ResponseEntity.ok("Payment for order created successfully.");
+    public ResponseEntity<PaymentRes> createPaymentOrder(@RequestBody PaymentReq dto) {
+        PaymentRes payment = paymentService.createPaymentOrder(dto);
+        return ResponseEntity.ok(payment);
     }
 
     @PostMapping("/preorder")
-    public ResponseEntity<String> createPaymentPreOrder(@RequestBody PaymentReq dto) {
-        paymentService.createPaymentPreOrder(dto);
-        return ResponseEntity.ok("Payment for preorder created successfully.");
+    public ResponseEntity<PaymentRes> createPaymentPreOrder(@RequestBody PaymentReq dto) {
+        PaymentRes payment = paymentService.createPaymentPreOrder(dto);
+        return ResponseEntity.ok(payment);
     }
 
     @PostMapping("/installment")
-    public ResponseEntity<String> createPaymentInstallment(@RequestBody PaymentReq dto) {
-        paymentService.createPaymentInsPayment(dto);
-        return ResponseEntity.ok("Installment payment created successfully.");
+    public ResponseEntity<PaymentRes> createPaymentInstallment(@RequestBody PaymentReq dto) {
+        PaymentRes payment = paymentService.createPaymentInsPayment(dto);
+        return ResponseEntity.ok(payment);
     }
 
     @PutMapping("/{id}/mark-paid")

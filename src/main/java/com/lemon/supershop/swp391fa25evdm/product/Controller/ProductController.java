@@ -37,21 +37,21 @@ public class ProductController {
     }
 
     @GetMapping("/search/name/{name}")
-    public ResponseEntity<ProductRes> getProductByName(@PathVariable String name) {
-        ProductRes product = productService.getProductByName(name);
-        return ResponseEntity.ok(product);
+    public ResponseEntity<List<ProductRes>> getProductByName(@PathVariable String name) {
+        List<ProductRes> products = productService.getProductByName(name);
+        return ResponseEntity.ok(products);
     }
 
     @GetMapping("/search/vin/{vinNum}")
-    public ResponseEntity<ProductRes> getProductByVinNum(@PathVariable String vinNum) {
-        ProductRes product = productService.getProductByVinNum(vinNum);
-        return ResponseEntity.ok(product);
+    public ResponseEntity<List<ProductRes>> getProductByVinNum(@PathVariable String vinNum) {
+        List<ProductRes> products = productService.getProductByVinNum(vinNum);
+        return ResponseEntity.ok(products);
     }
 
     @GetMapping("/search/engine/{engineNum}")
-    public ResponseEntity<ProductRes> getProductByEngineNum(@PathVariable String engineNum) {
-        ProductRes product = productService.getProductByEngineNum(engineNum);
-        return ResponseEntity.ok(product);
+    public ResponseEntity<List<ProductRes>> getProductByEngineNum(@PathVariable String engineNum) {
+        List<ProductRes> products = productService.getProductByEngineNum(engineNum);
+        return ResponseEntity.ok(products);
     }
 
     @GetMapping("/search/category/{categoryId}")
@@ -61,15 +61,23 @@ public class ProductController {
     }
 
     @PostMapping("/addProduct")
-    public ResponseEntity<String> addProduct(@RequestBody ProductReq productReq) {
-        productService.addProduct(productReq);
-        return ResponseEntity.ok("Product added successfully");
+    public ResponseEntity<ProductRes> addProduct(@RequestBody ProductReq productReq) {
+        ProductRes createdProduct = productService.addProduct(productReq);
+        if (createdProduct != null) {
+            return ResponseEntity.ok(createdProduct);
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
-    @PutMapping("/update/{id}")
-    public ResponseEntity<String> updateProduct(@PathVariable int id, @RequestBody ProductReq productReq) {
-        productService.updateProduct(id, productReq);
-        return ResponseEntity.ok("Product updated successfully");
+    @PutMapping("/{id}")
+    public ResponseEntity<ProductRes> updateProduct(@PathVariable int id, @RequestBody ProductReq productReq) {
+        ProductRes updatedProduct = productService.updateProduct(id, productReq);
+        if (updatedProduct != null) {
+            return ResponseEntity.ok(updatedProduct);
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @DeleteMapping("/delete/{id}")

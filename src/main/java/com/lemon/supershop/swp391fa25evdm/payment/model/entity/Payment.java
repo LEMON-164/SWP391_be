@@ -1,6 +1,7 @@
 package com.lemon.supershop.swp391fa25evdm.payment.model.entity;
 
 import com.lemon.supershop.swp391fa25evdm.order.model.entity.Order;
+import com.lemon.supershop.swp391fa25evdm.payment.model.enums.PaymentStatus;
 import com.lemon.supershop.swp391fa25evdm.preorder.model.entity.PreOrder;
 import com.lemon.supershop.swp391fa25evdm.user.model.entity.User;
 import jakarta.persistence.*;
@@ -24,7 +25,8 @@ public class Payment {
     private String method;
 
     @Column(name = "PaidStatus", columnDefinition = "VARCHAR(20)")
-    private boolean paidStatus = false;
+    @Enumerated(EnumType.STRING)
+    private PaymentStatus paidStatus;
 
     @Column(name = "PaidAt", columnDefinition = "DATETIME2")
     private Date paidAt;
@@ -59,11 +61,11 @@ public class Payment {
         this.method = method;
     }
 
-    public boolean isPaidStatus() {
+    public PaymentStatus getPaidStatus() {
         return paidStatus;
     }
 
-    public void setPaidStatus(boolean paidStatus) {
+    public void setPaidStatus(PaymentStatus paidStatus) {
         this.paidStatus = paidStatus;
     }
 

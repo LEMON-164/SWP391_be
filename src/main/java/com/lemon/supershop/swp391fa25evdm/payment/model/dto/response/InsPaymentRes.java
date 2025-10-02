@@ -28,4 +28,20 @@ public class InsPaymentRes {
     public void setPaid(boolean paid) {
         this.paid = paid;
     }
+
+    public int getInstallmentNumber() {
+        return installmentNumber;
+    }
+
+    public LocalDateTime getDueDate() {
+        return dueDate;
+    }
+
+    public double getExpectedAmount() {
+        return expectedAmount;
+    }
+
+    public boolean isPaid() {
+        return paid;
+    }
 }

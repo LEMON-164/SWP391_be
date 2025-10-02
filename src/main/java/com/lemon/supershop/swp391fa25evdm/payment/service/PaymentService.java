@@ -6,6 +6,7 @@ import com.lemon.supershop.swp391fa25evdm.payment.model.dto.request.PaymentReq;
 import com.lemon.supershop.swp391fa25evdm.payment.model.dto.response.PaymentRes;
 import com.lemon.supershop.swp391fa25evdm.payment.model.entity.InstallmentPayment;
 import com.lemon.supershop.swp391fa25evdm.payment.model.entity.Payment;
+import com.lemon.supershop.swp391fa25evdm.payment.model.enums.PaymentStatus;
 import com.lemon.supershop.swp391fa25evdm.payment.repository.InsPaymentRepo;
 import com.lemon.supershop.swp391fa25evdm.payment.repository.PaymentRepo;
 import com.lemon.supershop.swp391fa25evdm.preorder.model.entity.PreOrder;
@@ -38,8 +39,8 @@ public class PaymentService {
     private InsPaymentRepo insPaymentRepo;
 
     public List<PaymentRes> getAllUserPayments(int id) {
-        User user = userRepo.findById(id).get();
-        if (user != null) {
+        Optional<User> user = userRepo.findById(id);
+        if (user.isPresent()) {
             return paymentRepo.findByUserId(id).stream().map(payment -> {
                 return convertPaymentToPaymentRes(payment);
             }).collect(Collectors.toList());
@@ -48,72 +49,79 @@ public class PaymentService {
         }
     }
 
-    public void createPaymentOrder(PaymentReq dto) {
+    public PaymentRes createPaymentOrder(PaymentReq dto) {
         if (dto.getUserId() >= 0){
-            User user = userRepo.findById(dto.getUserId()).get();
-            if (user != null) {
+            Optional<User> user = userRepo.findById(dto.getUserId());
+            if (user.isPresent()) {
                 Payment payment = new Payment();
-                payment.setUser(user);
+                payment.setUser(user.orElse(null));
                 if (dto.getPayforId() >= 0){
-                    Order order = orderRepo.findById(dto.getPayforId()).get();
-                    if (order != null) {
-                        payment.setOrder(order);
+                    Optional<Order> order = orderRepo.findById(dto.getPayforId());
+                    if (order.isPresent()) {
+                        payment.setOrder(order.orElse(null));
                     }
                     if (!dto.getMethod().isEmpty()){
                         payment.setMethod(dto.getMethod());
                     }
+                    payment.setPaidStatus(PaymentStatus.PENDING);
                     paymentRepo.save(payment);
+                    return convertPaymentToPaymentRes(payment);
                 }
             }
         }
-
+        return null;
     }
 
-    public void createPaymentPreOrder(PaymentReq dto) {
+    public PaymentRes createPaymentPreOrder(PaymentReq dto) {
         if (dto.getUserId() >= 0){
-            User user = userRepo.findById(dto.getUserId()).get();
-            if (user != null) {
+            Optional<User> user = userRepo.findById(dto.getUserId());
+            if (user.isPresent()) {
                 Payment payment = new Payment();
-                payment.setUser(user);
+                payment.setUser(user.orElse(null));
                 if (dto.getPayforId() >= 0){
-                    PreOrder preOrder = preOrderRepo.findById(dto.getPayforId()).get();
-                    if (preOrder != null) {
-                        payment.setPreOrder(preOrder);
+                    Optional<PreOrder> preOrder = preOrderRepo.findById(dto.getPayforId());
+                    if (preOrder.isPresent()) {
+                        payment.setPreOrder(preOrder.orElse(null));
                     }
                     if (!dto.getMethod().isEmpty()){
                         payment.setMethod(dto.getMethod());
                     }
+                    payment.setPaidStatus(PaymentStatus.PENDING);
                     paymentRepo.save(payment);
+                    return convertPaymentToPaymentRes(payment);
                 }
             }
         }
+        return null;
     }
 
-    public void createPaymentInsPayment(PaymentReq dto) {
+    public PaymentRes createPaymentInsPayment(PaymentReq dto) {
         if (dto.getUserId() >= 0){
-            User user = userRepo.findById(dto.getUserId()).get();
-            if (user != null) {
+            Optional<User> user = userRepo.findById(dto.getUserId());
+            if (user.isPresent()) {
                 Payment payment = new Payment();
-                payment.setUser(user);
+                payment.setUser(user.orElse(null));
                 if (dto.getPayforId() >= 0){
-                    InstallmentPayment installmentPayment = insPaymentRepo.findById(dto.getPayforId()).get();
-                    if (installmentPayment != null) {
-                        payment.setInstallmentPayment(installmentPayment);
+                    Optional<InstallmentPayment> installmentPayment = insPaymentRepo.findById(dto.getPayforId());
+                    if (installmentPayment.isPresent()) {
+                        payment.setInstallmentPayment(installmentPayment.orElse(null));
                     }
                     if (!dto.getMethod().isEmpty()){
                         payment.setMethod(dto.getMethod());
                     }
                     paymentRepo.save(payment);
+                    return convertPaymentToPaymentRes(payment);
                 }
             }
         }
+        return null;
     }
 
     public void markAsPaid(int id) {
         Payment payment = paymentRepo.findById(id)
                 .orElseThrow(() -> new RuntimeException("Payment not found"));
 
-        payment.setPaidStatus(true);
+        payment.setPaidStatus(PaymentStatus.PAID);
         payment.setPaidAt(new Date());
 
         paymentRepo.save(payment);
@@ -128,23 +136,26 @@ public class PaymentService {
     }
 
     public PaymentRes convertPaymentToPaymentRes(Payment payment) {
-        PaymentRes paymentRes = new PaymentRes();
-        if (payment.getUser() != null){
-            paymentRes.setUserName(payment.getUser().getUsername());
+        if (payment != null) {
+            PaymentRes paymentRes = new PaymentRes();
+            if (payment.getUser() != null){
+                paymentRes.setUserName(payment.getUser().getUsername());
+            }
+            if (payment.getOrder() != null){
+                paymentRes.setOrderId(payment.getOrder().getId());
+            }
+            if (payment.getPreOrder() != null){
+                paymentRes.setPreorderId(payment.getPreOrder().getId());
+            }
+            if (payment.getMethod() != null){
+                paymentRes.setMethod(payment.getMethod());
+            }
+            if (payment.getPaidAt() != null){
+                paymentRes.setPaid_at(payment.getPaidAt());
+            }
+            paymentRes.setPaidStatus(payment.getPaidStatus());
+            return paymentRes;
         }
-        if (payment.getOrder() != null){
-            paymentRes.setOrderId(payment.getOrder().getId());
-        }
-        if (payment.getPreOrder() != null){
-            paymentRes.setPreorderId(payment.getPreOrder().getId());
-        }
-        if (payment.getMethod() != null){
-            paymentRes.setMethod(payment.getMethod());
-        }
-        if (payment.getPaidAt() != null){
-            paymentRes.setPaid_at(payment.getPaidAt());
-        }
-        paymentRes.isPaidStatus(payment.isPaidStatus());
-        return paymentRes;
+        return null;
     }
 }
