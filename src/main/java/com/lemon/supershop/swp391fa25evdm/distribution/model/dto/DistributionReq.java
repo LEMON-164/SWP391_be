@@ -4,13 +4,42 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
 public class DistributionReq {
 
     private int categoryId;
     private int dealerId;
     private int contractId;
 
+    public DistributionReq() {
+    }
+
+    public DistributionReq(int categoryId, int dealerId, int contractId) {
+        this.categoryId = categoryId;
+        this.dealerId = dealerId;
+        this.contractId = contractId;
+    }
+
+    public int getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(int categoryId) {
+        this.categoryId = categoryId;
+    }
+
+    public int getDealerId() {
+        return dealerId;
+    }
+
+    public void setDealerId(int dealerId) {
+        this.dealerId = dealerId;
+    }
+
+    public int getContractId() {
+        return contractId;
+    }
+
+    public void setContractId(int contractId) {
+        this.contractId = contractId;
+    }
 }
