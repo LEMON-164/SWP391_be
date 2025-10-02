@@ -62,8 +62,12 @@ public class ProductController {
 
     @PostMapping("/addProduct")
     public ResponseEntity<ProductRes> addProduct(@RequestBody ProductReq productReq) {
-        productService.createProduct(productReq);
-        return ResponseEntity.ok().build();
+        ProductRes createdProduct = productService.createProduct(productReq);
+        if (createdProduct != null) {
+            return ResponseEntity.ok(createdProduct);
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @PutMapping("/{id}")

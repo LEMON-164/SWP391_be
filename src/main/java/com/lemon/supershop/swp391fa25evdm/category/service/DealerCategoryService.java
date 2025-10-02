@@ -3,6 +3,7 @@ package com.lemon.supershop.swp391fa25evdm.category.service;
 import java.util.List;
 import java.util.Optional;
 
+import com.lemon.supershop.swp391fa25evdm.category.model.entity.Category;
 import com.lemon.supershop.swp391fa25evdm.dealer.model.entity.Dealer;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +39,7 @@ public class DealerCategoryService {
                 .orElse(null);
     }
 
-    public void createDealerCategory(DealerCategoryReq dto) {
+    public DealerCategoryRes createDealerCategory(DealerCategoryReq dto) {
         DealerCategory dealerCategory = new DealerCategory();
         if (dto.getName() != null){
             dealerCategory.setName(dto.getName());
@@ -66,6 +67,7 @@ public class DealerCategoryService {
         }
 
         dealerCategoryRepository.save(dealerCategory);
+        return convertToRes(dealerCategory);
     }
 
     public boolean deleteDealerCategory(int id) {
