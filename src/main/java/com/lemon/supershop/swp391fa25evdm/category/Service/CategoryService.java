@@ -1,6 +1,7 @@
 package com.lemon.supershop.swp391fa25evdm.category.service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,8 +61,8 @@ public class CategoryService {
             throw new RuntimeException("Category with name '" + dto.getName() + "' already exists");
         }
 
-        updateEntityFromDto(existingCategory, dto);
-        Category updatedCategory = categoryRepository.save(existingCategory);
+        updateEntityFromDto(category, dto);
+        Category updatedCategory = categoryRepository.save(category);
         return convertToRes(updatedCategory);
     }
 
