@@ -98,12 +98,14 @@ public class DealerService {
         return null;
     }
     @Transactional
-    public void removeDealer(int id) {
+    public boolean removeDealer(int id) {
         Optional<Dealer> dealer = dealerRepo.findById(id);
         if (dealer.isPresent()) {
             dealerRepo.clearDealerFromUsers(dealer.get().getId());
             dealerRepo.delete(dealer.get());
+            return true;
         }
+        return false;
     }
 
     public DealerRes convertDealertoDealerRes(Dealer dealer){

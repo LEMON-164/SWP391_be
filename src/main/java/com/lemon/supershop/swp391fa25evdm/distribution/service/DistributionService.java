@@ -66,11 +66,12 @@ public class DistributionService {
         return null;
     }
 
-    public void deleteDistribution(int id) {
-        if (!distributionRepo.existsById(id)) {
-            throw new RuntimeException("Distribution not found with id: " + id);
+    public boolean deleteDistribution(int id) {
+        if (distributionRepo.existsById(id)) {
+            distributionRepo.deleteById(id);
+            return true;
         }
-        distributionRepo.deleteById(id);
+        return false;
     }
 
     private Distribution convertToEntity(Distribution distribution ,DistributionReq req) {

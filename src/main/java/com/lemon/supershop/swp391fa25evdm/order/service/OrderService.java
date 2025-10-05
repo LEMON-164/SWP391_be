@@ -159,7 +159,7 @@ public class OrderService {
         return null;
     }
 
-    public void deleteOrder(int orderId) {
+    public boolean deleteOrder(int orderId) {
         Optional<Order> order = orderRepo.findById(orderId);
         if (order.isPresent()){
             contractRepo.delete(order.get().getContract());
@@ -170,17 +170,21 @@ public class OrderService {
             order.get().getUser().getOrders().remove(order);
             userRepo.save(order.get().getUser());
             orderRepo.delete(order.get());
+            return true;
         }
+        return false;
     }
 
-    public void deleteDelivery(int orderId) {
+    public boolean deleteDelivery(int orderId) {
         Optional<Order> order = orderRepo.findById(orderId);
         if (order.isPresent()){
             order.get().setShipAddress(null);
             order.get().getShipAt(null);
             order.get().setShipStatus(null);
             orderRepo.save(order.get());
+            return true;
         }
+        return false;
     }
 
     public OrderRes convertOrderToOrderRes(Order order) {

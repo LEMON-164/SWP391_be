@@ -38,10 +38,12 @@ public class ProductService {
         return productOpt.map(this::convertToRes).orElse(null);
     }
 
-    public void deleteProductById(int id){
+    public boolean deleteProductById(int id){
         if (productRepo.existsById(id)) {
             productRepo.deleteById(id);
+            return true;
         }
+        return false;
     }
 
     public ProductRes addProduct (ProductReq productReq) {

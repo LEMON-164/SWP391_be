@@ -69,11 +69,15 @@ public class ContractService {
         contractRepo.save(contract);
         return convertToRes(contract);
     }
-    public void deleteContract(int id) {
-        if (contractRepo.existsById(id) && id != 0){
+
+    public boolean deleteContract(int id) {
+        if (contractRepo.existsById(id)){
             contractRepo.deleteById(id);
+            return true;
         }
+        return false;
     }
+
     public void updateContract(int id, ContractReq dto) throws Exception {
         Contract existingContract = contractRepo.findById(id)
                 .orElseThrow(() -> new Exception("Contract not found with id: " + id));
@@ -92,8 +96,6 @@ public class ContractService {
         contractRepo.save(existingContract);
     }
 
-
-    
     private ContractRes convertToRes(Contract contract) {
         ContractRes dto = new ContractRes();
         dto.setId(contract.getId());
@@ -116,5 +118,4 @@ public class ContractService {
         dto.setStatus(contract.getStatus());
         return dto;
     }
-
 }

@@ -5,7 +5,7 @@ public class AddUserReq {
     private String phone;
     private String email;
     private String password;
-    private int roleId;
+    private String roleName;
     private int dealerId;
 
     public AddUserReq() {
@@ -27,8 +27,8 @@ public class AddUserReq {
         return password;
     }
 
-    public int getRoleId() {
-        return roleId;
+    public String getRoleName() {
+        return roleName;
     }
 
     public int getDealerId() {

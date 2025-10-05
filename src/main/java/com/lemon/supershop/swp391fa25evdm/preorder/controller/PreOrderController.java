@@ -72,8 +72,11 @@ public class PreOrderController {
 
     @DeleteMapping ("/deletePreOrder/{id}")
     public ResponseEntity<String> deletePreOrder (@PathVariable int id) {
-        preOrderService.deletePreOrder(id);
-        return ResponseEntity.ok("PreOrder deleted successfully");
+        if (preOrderService.deletePreOrder(id)){
+            return ResponseEntity.ok("PreOrder deleted successfully");
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
 }

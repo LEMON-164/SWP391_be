@@ -61,9 +61,13 @@ public class PreOrderService {
         return null;
     }
 
-    public void deletePreOrder (int id) {
-        PreOrder existingPreOrder = preOrderRepo.findById(id).orElseThrow( () -> new RuntimeException("PreOrder not found"));
-        preOrderRepo.delete(existingPreOrder);
+    public boolean deletePreOrder (int id) {
+        Optional<PreOrder> existingPreOrder = preOrderRepo.findById(id);
+        if (existingPreOrder.isPresent()) {
+            preOrderRepo.delete(existingPreOrder.get());
+            return true;
+        }
+        return false;
     }
 
     private PreOrder convertToEntity (PreOrder preOrder, PreOrderRes preOrderRes) {

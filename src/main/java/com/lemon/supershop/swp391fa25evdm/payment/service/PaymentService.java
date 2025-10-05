@@ -127,12 +127,14 @@ public class PaymentService {
         paymentRepo.save(payment);
     }
 
-    public void removePayment(int id) {
+    public boolean removePayment(int id) {
         Optional<Payment> payment = paymentRepo.findById(id);
         if (payment.isPresent()) {
             paymentRepo.clearUserFromPayments(id);
             paymentRepo.delete(payment.get());
+            return true;
         }
+        return false;
     }
 
     public PaymentRes convertPaymentToPaymentRes(Payment payment) {

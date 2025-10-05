@@ -67,15 +67,13 @@ public class CategoryService {
         return convertToRes(updatedCategory);
     }
 
-    public void deleteCategory(Integer id) {
-        if (id == null) {
-            throw new IllegalArgumentException("Category ID cannot be null");
+    public boolean deleteCategory(Integer id) {
+        Optional<Category> existingCategory = categoryRepository.findById(id);
+        if (existingCategory.isPresent()) {
+            categoryRepository.delete(existingCategory.get());
+            return true;
         }
-
-        Category existingCategory = categoryRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Category not found with id: " + id));
-
-        categoryRepository.delete(existingCategory);
+        return false;
     }
 
     public List<CategoryRes> getSpecialCategories() {

@@ -76,7 +76,10 @@ public class TestDriveController {
 
     @DeleteMapping("/deleteTestDrive/{id}")
     public ResponseEntity<String> deleteTestDrive (@PathVariable int id) {
-        testDriveService.deleteTestDrive(id);
-        return ResponseEntity.ok("Test drive deleted successfully");
+        if (testDriveService.deleteTestDrive(id)){
+            return ResponseEntity.ok("Test drive deleted successfully");
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
     }
 }

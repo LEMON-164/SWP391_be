@@ -62,7 +62,10 @@ public class DealerController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteDealer(@PathVariable("id") int id) {
-        dealerService.removeDealer(id);
-        return ResponseEntity.ok("Dealer Removed successfully");
+        if (dealerService.removeDealer(id)){
+            return ResponseEntity.ok("Dealer Removed successfully");
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
     }
 }

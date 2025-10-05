@@ -48,11 +48,13 @@ public class RoleService {
         return new RoleDto(role.get().getName(), role.get().getDescription());
     }
     @Transactional
-    public void removeRole(int id) {
+    public boolean removeRole(int id) {
         Optional<Role> role = roleRepo.findById(id);
         if (role.isPresent()) {
             roleRepo.clearRoleFromUsers(id);
             roleRepo.delete(role.get());
+            return true;
         }
+        return false;
     }
 }

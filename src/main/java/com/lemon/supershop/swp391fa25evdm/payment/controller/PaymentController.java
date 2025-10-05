@@ -49,7 +49,11 @@ public class PaymentController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deletePayment(@PathVariable int id) {
-        paymentService.removePayment(id);
-        return ResponseEntity.ok("Payment removed successfully.");
+        if (paymentService.removePayment(id)){
+            return ResponseEntity.ok("Payment removed successfully.");
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
+
     }
 }
