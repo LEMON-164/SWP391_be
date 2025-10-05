@@ -72,8 +72,10 @@ public class PoliciesController {
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deletePolicy(@PathVariable int id) {
-        policiesService.deletePolicy(id);
-        return ResponseEntity.ok("Policy deleted successfully");
+        if (policiesService.deletePolicy(id)){
+            return ResponseEntity.ok("Policy deleted successfully");
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
     }
-
 }

@@ -60,13 +60,19 @@ public class OrderController {
 
     @DeleteMapping("/{orderId}")
     public ResponseEntity<String> deleteOrder(@PathVariable int orderId) {
-        orderService.deleteOrder(orderId);
-        return ResponseEntity.ok("Order deleted successfully!");
+        if (orderService.deleteOrder(orderId)){
+            return ResponseEntity.ok("Order deleted successfully!");
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @DeleteMapping("/{orderId}/delivery")
     public ResponseEntity<String> deleteDelivery(@PathVariable int orderId) {
-        orderService.deleteDelivery(orderId);
-        return ResponseEntity.ok("Delivery deleted successfully!");
+        if (orderService.deleteDelivery(orderId)){
+            return ResponseEntity.ok("Delivery deleted successfully!");
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
     }
 }

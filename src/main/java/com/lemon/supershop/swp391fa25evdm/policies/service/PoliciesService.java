@@ -63,12 +63,13 @@ public class PoliciesService {
         return null;
     }
 
-    public void deletePolicy(int id) {
+    public boolean deletePolicy(int id) {
         Optional<Policy> policy = policiesRepo.findById(id);
-        if (policy.isEmpty()) {
-            throw new RuntimeException("Policy with ID '" + id + "' not found");
+        if (policy.isPresent()) {
+            policiesRepo.delete(policy.get());
+            return true;
         }
-        policiesRepo.delete(policy.get());
+        return false;
     }
 
     private Policy convertToEntity(Policy policy, PoliciesReq dto) {

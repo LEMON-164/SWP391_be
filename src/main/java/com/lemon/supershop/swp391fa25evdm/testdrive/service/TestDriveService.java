@@ -63,22 +63,21 @@ public class TestDriveService {
     }
 
     public TestDriveRes updateTestDrive(int id, TestDriveReq req) {
-        TestDrive testDrive = testDriveRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Test drive not found with id: " + id));
-        if (testDrive != null) {
-            TestDrive testDrive1 = convertToEntity(testDrive, req);
+        Optional<TestDrive> testDrive = testDriveRepository.findById(id);
+        if (testDrive.isPresent()) {
+            TestDrive testDrive1 = convertToEntity(testDrive.orElse(null), req);
             testDriveRepository.save(testDrive1);
             return convertToRes(testDrive1);
         }
         return null;
     }
 
-    public void deleteTestDrive(int id) {
-        if (!testDriveRepository.findById(id).isPresent()) {
-            throw new RuntimeException("Test drive not found with id: " + id);
-        } else {
+    public boolean deleteTestDrive(int id) {
+        if (testDriveRepository.findById(id).isPresent()) {
             testDriveRepository.deleteById(id);
+            return true;
         }
+        return false;
     }
 
     //method refference: object::method 

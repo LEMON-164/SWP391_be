@@ -70,8 +70,10 @@ public class DistributionController {
 
     @DeleteMapping("/deleteDistribution/{id}")
     public ResponseEntity<String> deleteDistribution(@PathVariable int id) {
-        distributionService.deleteDistribution(id);
-        return ResponseEntity.ok("Distribution deleted successfully");
+        if (distributionService.deleteDistribution(id)){
+            return ResponseEntity.ok("Distribution deleted successfully");
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
     }
-    
 }

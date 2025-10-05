@@ -68,8 +68,11 @@ public class CategoryController {
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteCategory(@PathVariable Integer id) {
-        categoryService.deleteCategory(id);
-        return ResponseEntity.ok("Category deleted successfully");
+        if (categoryService.deleteCategory(id)){
+            return ResponseEntity.ok("Category deleted successfully");
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @GetMapping("/search/special")

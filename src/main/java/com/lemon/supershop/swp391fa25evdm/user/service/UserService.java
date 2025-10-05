@@ -70,9 +70,9 @@ public class UserService {
 
     public UserRes addUser(AddUserReq dto) {
         User user = new User();
-        if (dto.getRoleId() > 0) {
-            Optional<Role> role = roleRepo.findById(dto.getRoleId());
-            if (role.isPresent()) {
+        if (dto.getRoleName() != null){
+            Optional<Role> role = roleRepo.findByNameContainingIgnoreCase(dto.getRoleName());
+            if(role.isPresent()){
                 user.setRole(role.get());
                 role.get().addUser(user);
             }
@@ -114,8 +114,8 @@ public class UserService {
             if(dto.getAddress() != null){
                 user.get().setAddress(dto.getAddress());
             }
-            if (dto.getRoleId() > 0){
-                Optional<Role> role = roleRepo.findById(dto.getRoleId());
+            if (dto.getRoleName() != null){
+                Optional<Role> role = roleRepo.findByNameContainingIgnoreCase(dto.getRoleName());
                 if(role.isPresent()){
                     user.get().setRole(role.get());
                 }
@@ -141,15 +141,17 @@ public class UserService {
         userRepo.save(user.get());
     }
 
-    public void removeUser(int id) {
+    public boolean removeUser(int id) {
         Optional<User> user = userRepo.findById(id);
         if(user.isPresent()){
             Optional<Role> role = roleRepo.findById(user.get().getRole().getId());
             if(role.isPresent()){
                 role.get().removeUser(user.orElse(null));
                 userRepo.delete(user.get());
+                return true;
             }
         }
+        return false;
     }
 
     public UserRes convertUsertoUserRes(User user){

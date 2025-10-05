@@ -5,7 +5,7 @@ public class UserReq {
     private String email;
     private String phone;
     private String address;
-    private int roleId;
+    private String roleName;
     private int dealerId;
 
     public UserReq() {
@@ -27,8 +27,8 @@ public class UserReq {
         return address;
     }
 
-    public int getRoleId() {
-        return roleId;
+    public String getRoleName() {
+        return roleName;
     }
 
     public int getDealerId() {

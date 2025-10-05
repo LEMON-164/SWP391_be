@@ -72,10 +72,10 @@ public class ContractController {
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteContract(@PathVariable int id) {
-        contractService.deleteContract(id);
-        return ResponseEntity.ok("Contract deleted successfully");
+        if (contractService.deleteContract(id)){
+            return ResponseEntity.ok("Contract deleted successfully");
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
     }
-
-    
-
 }
