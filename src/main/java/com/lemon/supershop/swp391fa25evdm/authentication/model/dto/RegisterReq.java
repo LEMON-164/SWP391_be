@@ -5,6 +5,7 @@ public class RegisterReq {
     private String phone;
     private String email;
     private String address;
+    private String roleName;
     private String password;
     private String confirmPassword;
 
@@ -32,5 +33,9 @@ public class RegisterReq {
 
     public String getConfirmPassword() {
         return confirmPassword;
+    }
+
+    public String getRoleName() {
+        return roleName;
     }
 }
