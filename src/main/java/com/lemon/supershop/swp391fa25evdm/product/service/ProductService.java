@@ -87,7 +87,7 @@ public class ProductService {
         }).collect(Collectors.toList());
     }
 
-    private ProductRes convertToRes(Product product) {
+    public ProductRes convertToRes(Product product) {
         if (product != null) {
             ProductRes productRes = new ProductRes();
             productRes.setId(product.getId());
@@ -130,7 +130,7 @@ public class ProductService {
     }
 
     // Convert ProductReq to Product entity using Repository
-    private Product convertReqToEntity(Product product, ProductReq productReq) {
+    public Product convertReqToEntity(Product product, ProductReq productReq) {
         if (product != null || productReq != null){
             if (productReq.getName() != null){
                 product.setName(productReq.getName());
