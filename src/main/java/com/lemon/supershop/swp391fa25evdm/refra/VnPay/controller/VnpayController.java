@@ -24,11 +24,11 @@ public class VnpayController {
     @Autowired
     private VnpayService vnpayService;
 
-//    @GetMapping("/create")
-//    public ResponseEntity<VnpayRes> create() throws UnsupportedEncodingException {
-//        VnpayRes vnpayRes = vnpayService.create();
-//        return ResponseEntity.ok(vnpayRes);
-//    }
+    @GetMapping("/create")
+    public ResponseEntity<VnpayRes> create() throws UnsupportedEncodingException {
+        VnpayRes vnpayRes = vnpayService.create();
+        return ResponseEntity.ok(vnpayRes);
+    }
 
 
 }
