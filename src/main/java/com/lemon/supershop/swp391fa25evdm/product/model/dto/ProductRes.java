@@ -17,6 +17,20 @@ public class ProductRes {
 
     public ProductRes() {}
 
+    public ProductRes(int id, String name, String vinNum, String engineNum, Date manufacture_date, String image, String description, double price, String status, int categoryId, int dealerCategoryId) {
+        this.id = id;
+        this.name = name;
+        this.vinNum = vinNum;
+        this.engineNum = engineNum;
+        this.manufacture_date = manufacture_date;
+        this.image = image;
+        this.description = description;
+        this.price = price;
+        this.status = status;
+        this.categoryId = categoryId;
+        this.dealerCategoryId = dealerCategoryId;
+    }
+
     public void setId(int id) {
         this.id = id;
     }

@@ -58,8 +58,10 @@ public class Product {
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Order> orders = new ArrayList<>();
 
-    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Distribution> distributions = new ArrayList<>();
+    @ManyToOne
+    @JoinColumn(name = "DistributionId")
+    @JsonIgnore
+    private Distribution distribution;
 
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<PreOrder> preOrders = new ArrayList<>();
@@ -181,11 +183,11 @@ public class Product {
         this.preOrders = preOrders;
     }
 
-    public List<Distribution> getDistributions() {
-        return distributions;
+    public Distribution getDistribution() {
+        return distribution;
     }
 
-    public void setDistributions(List<Distribution> distributions) {
-        this.distributions = distributions;
+    public void setDistribution(Distribution distribution) {
+        this.distribution = distribution;
     }
 }
