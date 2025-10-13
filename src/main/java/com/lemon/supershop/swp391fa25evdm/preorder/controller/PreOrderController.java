@@ -51,21 +51,32 @@ public class PreOrderController {
     }
 
     @PostMapping ("/createPreOrder")
-    public ResponseEntity<String> createPreOrder (@RequestBody PreOrderRes preOrderRes) {
-        preOrderService.createPreOrder(preOrderRes);
-        return ResponseEntity.ok("PreOrder created successfully");
+    public ResponseEntity<PreOrderRes> createPreOrder (@RequestBody PreOrderRes dto) {
+        PreOrderRes preOrderRes = preOrderService.createPreOrder(dto);
+        if (preOrderRes != null) {
+            return ResponseEntity.ok(preOrderRes);
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @PutMapping ("/updatePreOrder/{id}")
-    public ResponseEntity<String> updatePreOrder (@PathVariable int id, @RequestBody PreOrderRes preOrderRes) {
-        preOrderService.updatePreOrder(id, preOrderRes);
-        return ResponseEntity.ok("PreOrder updated successfully");
+    public ResponseEntity<PreOrderRes> updatePreOrder (@PathVariable int id, @RequestBody PreOrderRes dto) {
+        PreOrderRes preOrder = preOrderService.updatePreOrder(id, dto);
+        if (preOrder != null) {
+            return ResponseEntity.ok(preOrder);
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @DeleteMapping ("/deletePreOrder/{id}")
     public ResponseEntity<String> deletePreOrder (@PathVariable int id) {
-        preOrderService.deletePreOrder(id);
-        return ResponseEntity.ok("PreOrder deleted successfully");
+        if (preOrderService.deletePreOrder(id)){
+            return ResponseEntity.ok("PreOrder deleted successfully");
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
 }

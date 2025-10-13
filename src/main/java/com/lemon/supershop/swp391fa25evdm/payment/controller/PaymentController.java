@@ -35,11 +35,11 @@ public class PaymentController {
         return ResponseEntity.ok(payment);
     }
 
-    @PostMapping("/installment")
-    public ResponseEntity<PaymentRes> createPaymentInstallment(@RequestBody PaymentReq dto) {
-        PaymentRes payment = paymentService.createPaymentInsPayment(dto);
-        return ResponseEntity.ok(payment);
-    }
+//    @PostMapping("/installment")
+//    public ResponseEntity<PaymentRes> createPaymentInstallment(@RequestBody PaymentReq dto) {
+//        PaymentRes payment = paymentService.createPaymentInsPayment(dto);
+//        return ResponseEntity.ok(payment);
+//    }
 
     @PutMapping("/{id}/mark-paid")
     public ResponseEntity<String> markAsPaid(@PathVariable int id) {
@@ -49,7 +49,11 @@ public class PaymentController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deletePayment(@PathVariable int id) {
-        paymentService.removePayment(id);
-        return ResponseEntity.ok("Payment removed successfully.");
+        if (paymentService.removePayment(id)){
+            return ResponseEntity.ok("Payment removed successfully.");
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
+
     }
 }

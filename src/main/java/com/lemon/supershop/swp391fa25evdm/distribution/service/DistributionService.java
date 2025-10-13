@@ -1,7 +1,17 @@
 package com.lemon.supershop.swp391fa25evdm.distribution.service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+import com.lemon.supershop.swp391fa25evdm.category.model.entity.Category;
+import com.lemon.supershop.swp391fa25evdm.contract.model.entity.Contract;
+import com.lemon.supershop.swp391fa25evdm.dealer.model.entity.Dealer;
+import com.lemon.supershop.swp391fa25evdm.product.model.dto.ProductReq;
+import com.lemon.supershop.swp391fa25evdm.product.model.dto.ProductRes;
+import com.lemon.supershop.swp391fa25evdm.product.model.entity.Product;
+import com.lemon.supershop.swp391fa25evdm.product.repository.ProductRepo;
+import com.lemon.supershop.swp391fa25evdm.product.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +34,11 @@ public class DistributionService {
     private DealerRepo dealerRepo;
     @Autowired
     private ContractRepo contractRepo;
+    @Autowired
+    private ProductRepo productRepo;
+    @Autowired
+    private ProductService productService;
+
 
     public List<DistributionRes> getAllDistributions() {
         List<Distribution> distributions = distributionRepo.findAll();
@@ -45,36 +60,66 @@ public class DistributionService {
         return distributions.stream().map(this::convertToRes).toList();
     }
 
-    public void createDistribution(DistributionReq req) {
-        Distribution distribution = convertToEntity(req);
-        distributionRepo.save(distribution);
-    }
-
-    public void updateDistribution(int id, DistributionReq req) {
-        Distribution distribution = distributionRepo.findById(id)
-                .orElseThrow(() -> new RuntimeException("Distribution not found with id: " + id));
-        distribution.setCategory(categoryRepository.findById(req.getCategoryId())
-                .orElseThrow(() -> new RuntimeException("Category not found with id: " + req.getCategoryId())));
-        distribution.setDealer(dealerRepo.findById(req.getDealerId())
-                .orElseThrow(() -> new RuntimeException("Dealer not found with id: " + req.getDealerId())));
-        distribution.setContract(contractRepo.findById(req.getContractId())
-                .orElseThrow(() -> new RuntimeException("Contract not found with id: " + req.getContractId())));
-        distributionRepo.save(distribution);
-    }
-
-    public void deleteDistribution(int id) {
-        if (!distributionRepo.existsById(id)) {
-            throw new RuntimeException("Distribution not found with id: " + id);
-        }
-        distributionRepo.deleteById(id);
-    }
-
-    private Distribution convertToEntity(DistributionReq req) {
+    public DistributionRes createDistribution(DistributionReq req) {
         Distribution distribution = new Distribution();
-        categoryRepository.findById(req.getCategoryId()).ifPresent(distribution::setCategory);
-        dealerRepo.findById(req.getDealerId()).ifPresent(distribution::setDealer);
-        contractRepo.findById(req.getContractId()).ifPresent(distribution::setContract);
-        return distribution;
+        Distribution distribution1 = convertToEntity(distribution, req);
+        distributionRepo.save(distribution1);
+        return convertToRes(distribution1);
+    }
+
+    public DistributionRes updateDistribution(int id, DistributionReq req) {
+        Optional<Distribution> distribution = distributionRepo.findById(id);
+        if (distribution.isPresent()) {
+            Distribution distribution1 = convertToEntity(distribution.get(), req);
+            distributionRepo.save(distribution1);
+            return convertToRes(distribution1);
+        }
+        return null;
+    }
+
+    public boolean deleteDistribution(int id) {
+        if (distributionRepo.existsById(id)) {
+            distributionRepo.deleteById(id);
+            return true;
+        }
+        return false;
+    }
+
+    private Distribution convertToEntity(Distribution distribution ,DistributionReq req) {
+        if (distribution != null){
+            if (!req.getProductId().isEmpty()){
+                List<Product> validProducts = new ArrayList<>();
+                for (Integer Req : req.getProductId()) {
+                    Optional<Product> productOpt = productRepo.findById(Req);
+                    if (productOpt.isPresent()) {
+                        validProducts.add(productOpt.get());
+                    }
+                }
+                if (!validProducts.isEmpty()){
+                    distribution.setProducts(validProducts);
+                }
+            }
+            if (req.getCategoryId() > 0){
+                Optional<Category> category = categoryRepository.findById(req.getCategoryId());
+                if (category.isPresent()){
+                    distribution.setCategory(category.get());
+                }
+            }
+            if (req.getDealerId() > 0){
+                Optional<Dealer> dealer = dealerRepo.findById(req.getDealerId());
+                if (dealer.isPresent()){
+                    distribution.setDealer(dealer.get());
+                }
+            }
+            if (req.getContractId() > 0){
+                Optional<Contract> contract = contractRepo.findById(req.getContractId());
+                if (contract.isPresent()){
+                    distribution.setContract(contract.get());
+                }
+            }
+            return distribution;
+        }
+        return null;
     }
 
     private DistributionRes convertToRes(Distribution distribution) {
@@ -88,6 +133,19 @@ public class DistributionService {
         }
         if (distribution.getContract() != null) {
             res.setContractId(distribution.getContract().getId());
+        }
+        if (!distribution.getProducts().isEmpty()){
+            List<ProductRes> validProducts = new ArrayList<>();
+            for (Product product : distribution.getProducts()) {
+                Optional<Product> productOpt = productRepo.findById(product.getId());
+                if (productOpt.isPresent()) {
+                    ProductRes productRes = productService.convertToRes(productOpt.get());
+                    validProducts.add(productRes);
+                }
+            }
+            if (!validProducts.isEmpty()){
+                res.setProducts(validProducts);
+            }
         }
         res.setId(distribution.getId());
         return res;

@@ -12,5 +12,4 @@ public interface PoliciesRepo extends JpaRepository<Policy, Integer> {
     List<Policy> findAll();
     List<Policy> findByCategoryId(int categoryId);
     List<Policy> findByDealerId(int dealerId);
-    Policy findById(int id);
 }

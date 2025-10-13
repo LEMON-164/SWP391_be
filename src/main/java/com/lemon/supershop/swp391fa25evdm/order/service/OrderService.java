@@ -1,6 +1,8 @@
 package com.lemon.supershop.swp391fa25evdm.order.service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,114 +63,136 @@ public class OrderService {
             }).collect(Collectors.toList());
     }
 
-    public void createOrder(int userId, OrderReq dto) {
-        User user = userRepo.findById(userId).get();
-        if (user != null){
+    public OrderRes createOrder(int userId, OrderReq dto) {
+        Optional<User> user = userRepo.findById(userId);
+        if (user.isPresent()){
             Order order = new Order();
-            order.setUser(user);
+            order.setUser(user.get());
             if (dto.getProductId() > 0 ){
-                Product product  = productRepo.findById(dto.getProductId()).get();
-                if (product != null){
-                    order.setProduct(product);
-                    order.setTotal(product.getDealerPrice());
+                Optional<Product> product  = productRepo.findById(dto.getProductId());
+                if (product.isPresent()){
+                    order.setProduct(product.orElse(null));
+                    order.setTotal(product.get().getDealerPrice());
+                }
+            }
+            if (dto.getContractId() > 0){
+                Optional<Contract> contract  = contractRepo.findById(dto.getContractId());
+                if (contract.isPresent()){
+                    List<Contract> contracts = new ArrayList<>();
+                    contracts.add(contract.get());
+                    order.setContract(contracts);
                 }
             }
             if (dto.getDealerId() > 0){
-                Dealer dealer = dealerRepo.findById(dto.getDealerId()).get();
-                if (dealer != null){
-                    order.setDealer(dealer);
-                    List<Promotion> promotions = promotionRepo.findByDealer_Id(dealer.getId());
+                Optional<Dealer> dealer = dealerRepo.findById(dto.getDealerId());
+                if (dealer.isPresent()){
+                    order.setDealer(dealer.orElse(null));
+                    List<Promotion> promotions = promotionRepo.findByDealer_Id(dealer.get().getId());
                     if (promotions != null){
                         order.setPromotions(promotions);
                     }
                 }
             }
             orderRepo.save(order);
+            return convertOrderToOrderRes(order);
         }
+        return null;
     }
-    public void createDelivery(int orderId, DeliveryReq dto) {
-        Order order = orderRepo.findById(orderId).get();
-        if (order != null){
+    public OrderRes createDelivery(int orderId, DeliveryReq dto) {
+        Optional<Order> order = orderRepo.findById(orderId);
+        if (order.isPresent()){
             if (dto.getShip_address() != null){
-                order.setShipAddress(dto.getShip_address());
+                order.get().setShipAddress(dto.getShip_address());
             }
             if (dto.getShip_date() != null){
-                order.getShipAt(dto.getShip_date());
+                order.get().getShipAt(dto.getShip_date());
             }
             if (dto.getShip_status() != null){
-                order.setShipStatus(dto.getShip_status());
+                order.get().setShipStatus(dto.getShip_status());
             } else {
-                order.setShipStatus("Wait for delivery");
+                order.get().setShipStatus("Wait for delivery");
             }
+            orderRepo.save(order.get());
+            return convertOrderToOrderRes(order.get());
         }
+        return null;
     }
 
-    public void updateOrder(int orderId, UpdateOrderReq dto) {
-        Order order = orderRepo.findById(orderId).get();
-        if (order != null){
+    public OrderRes updateOrder(int orderId, UpdateOrderReq dto) {
+        Optional<Order> order = orderRepo.findById(orderId);
+        if (order.isPresent()){
             if (dto.getProductId() > 0 ){
-                Product product  = productRepo.findById(dto.getProductId()).get();
-                if (product != null){
-                    order.setProduct(product);
-                    order.setTotal(product.getDealerPrice());
+                Optional<Product> product  = productRepo.findById(dto.getProductId());
+                if (product.isPresent()){
+                    order.get().setProduct(product.orElse(null));
+                    order.get().setTotal(product.get().getDealerPrice());
                 }
             }
             if (dto.getContractId() > 0 ){
-                Contract contract = contractRepo.findById(dto.getContractId()).get();
-                if (contract != null){
-                    order.setContract(contract);
+                Optional<Contract> contract = contractRepo.findById(dto.getContractId());
+                if (contract.isPresent()){
+                    order.get().getContract().add(contract.get());
                 }
             }
             if (dto.getDealerId() > 0){
-                Dealer dealer = dealerRepo.findById(dto.getDealerId()).get();
-                if (dealer != null){
-                    order.setDealer(dealer);
-                    List<Promotion> promotions = promotionRepo.findByDealer_Id(dealer.getId());
+                Optional<Dealer> dealer = dealerRepo.findById(dto.getDealerId());
+                if (dealer.isPresent()){
+                    order.get().setDealer(dealer.orElse(null));
+                    List<Promotion> promotions = promotionRepo.findByDealer_Id(dealer.get().getId());
                     if (promotions != null){
-                        order.setPromotions(promotions);
+                        order.get().setPromotions(promotions);
                     }
                 }
             }
-            orderRepo.save(order);
+            orderRepo.save(order.get());
+            return convertOrderToOrderRes(order.get());
         }
+        return null;
     }
 
-    public void updateDelivery(int orderId, DeliveryReq dto) {
-        Order order = orderRepo.findById(orderId).get();
-        if (order != null){
+    public OrderRes updateDelivery(int orderId, DeliveryReq dto) {
+        Optional<Order> order = orderRepo.findById(orderId);
+        if (order.isPresent()){
             if (dto.getShip_address() != null){
-                order.setShipAddress(dto.getShip_address());
+                order.get().setShipAddress(dto.getShip_address());
             }
             if (dto.getShip_date() != null){
-                order.getShipAt(dto.getShip_date());
+                order.get().getShipAt(dto.getShip_date());
             }
             if (dto.getShip_status() != null){
-                order.setShipStatus(dto.getShip_status());
+                order.get().setShipStatus(dto.getShip_status());
             }
+            orderRepo.save(order.get());
+            return convertOrderToOrderRes(order.get());
         }
+        return null;
     }
 
-    public void deleteOrder(int orderId) {
-        Order order = orderRepo.findById(orderId).get();
-        if (order != null){
-            contractRepo.delete(order.getContract());
-            order.getProduct().getOrders().remove(order);
-            productRepo.save(order.getProduct());
-            order.getDealer().getOrders().remove(order);
-            dealerRepo.save(order.getDealer());
-            order.getUser().getOrders().remove(order);
-            userRepo.save(order.getUser());
-            orderRepo.delete(order);
+    public boolean deleteOrder(int orderId) {
+        Optional<Order> order = orderRepo.findById(orderId);
+        if (order.isPresent()){
+            order.get().getProduct().getOrders().remove(order);
+            productRepo.save(order.get().getProduct());
+            order.get().getDealer().getOrders().remove(order);
+            dealerRepo.save(order.get().getDealer());
+            order.get().getUser().getOrders().remove(order);
+            userRepo.save(order.get().getUser());
+            orderRepo.delete(order.get());
+            return true;
         }
+        return false;
     }
 
-    public void deleteDelivery(int orderId) {
-        Order order = orderRepo.findById(orderId).get();
-        if (order != null){
-            order.setShipAddress(null);
-            order.getShipAt(null);
-            order.setShipStatus(null);
+    public boolean deleteDelivery(int orderId) {
+        Optional<Order> order = orderRepo.findById(orderId);
+        if (order.isPresent()){
+            order.get().setShipAddress(null);
+            order.get().getShipAt(null);
+            order.get().setShipStatus(null);
+            orderRepo.save(order.get());
+            return true;
         }
+        return false;
     }
 
     public OrderRes convertOrderToOrderRes(Order order) {
@@ -179,7 +203,7 @@ public class OrderService {
                 orderRes.setCustomerName(order.getUser().getUsername());
             }
             if (order.getContract() != null){
-                orderRes.setContractId(order.getContract().getId());
+                orderRes.setContracts(order.getContract());
             }
             if (order.getProduct() != null){
                 orderRes.setProductName(order.getProduct().getName());

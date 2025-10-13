@@ -55,9 +55,13 @@ public class ContractController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<String> createContract(@RequestBody ContractReq contractReq) {
-        contractService.createContract(contractReq);
-        return ResponseEntity.ok("Contract created successfully");
+    public ResponseEntity<ContractRes> createContract(@RequestBody ContractReq contractReq) {
+        ContractRes contract = contractService.createContract(contractReq);
+        if (contract != null) {
+            return ResponseEntity.ok(contract);
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @PutMapping("/update/{id}")
@@ -68,10 +72,10 @@ public class ContractController {
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteContract(@PathVariable int id) {
-        contractService.deleteContract(id);
-        return ResponseEntity.ok("Contract deleted successfully");
+        if (contractService.deleteContract(id)){
+            return ResponseEntity.ok("Contract deleted successfully");
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
     }
-
-    
-
 }

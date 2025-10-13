@@ -51,21 +51,31 @@ public class PoliciesController {
     }
 
     @PostMapping ("/create")
-    public ResponseEntity<String> createPolicy(@Valid @RequestBody PoliciesReq policiesReq) {
-        policiesService.createPolicy(policiesReq);
-        return ResponseEntity.ok("Policy created successfully");
+    public ResponseEntity<PoliciesRes> createPolicy(@Valid @RequestBody PoliciesReq dto) {
+        PoliciesRes policiesRes = policiesService.createPolicy(dto);
+        if (policiesRes != null) {
+            return ResponseEntity.ok(policiesRes);
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<String> updatePolicy(@PathVariable int id, @Valid @RequestBody PoliciesReq policiesReq) {
-        policiesService.updatePolicy(id, policiesReq);
-        return ResponseEntity.ok("Policy updated successfully");
+    public ResponseEntity<PoliciesRes> updatePolicy(@PathVariable int id, @Valid @RequestBody PoliciesReq policiesReq) {
+        PoliciesRes policiesRes = policiesService.updatePolicy(id, policiesReq);
+        if (policiesRes != null) {
+            return ResponseEntity.ok(policiesRes);
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deletePolicy(@PathVariable int id) {
-        policiesService.deletePolicy(id);
-        return ResponseEntity.ok("Policy deleted successfully");
+        if (policiesService.deletePolicy(id)){
+            return ResponseEntity.ok("Policy deleted successfully");
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
     }
-
 }

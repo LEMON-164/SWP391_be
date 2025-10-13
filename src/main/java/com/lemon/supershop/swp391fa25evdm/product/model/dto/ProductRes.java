@@ -17,8 +17,7 @@ public class ProductRes {
 
     public ProductRes() {}
 
-    public ProductRes(int id, String name, String vinNum, String engineNum, Date manufacture_date, String image,
-            String description, double price, String status, int categoryId, int dealerCategoryId) {
+    public ProductRes(int id, String name, String vinNum, String engineNum, Date manufacture_date, String image, String description, double price, String status, int categoryId, int dealerCategoryId) {
         this.id = id;
         this.name = name;
         this.vinNum = vinNum;

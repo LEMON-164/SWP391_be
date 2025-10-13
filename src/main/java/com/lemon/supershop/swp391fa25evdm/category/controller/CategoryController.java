@@ -47,21 +47,32 @@ public class CategoryController {
     }
 
     @PostMapping ("/create")
-    public ResponseEntity<String> createCategory(@Valid @RequestBody CategoryReq categoryReq) {
-        categoryService.createCategory(categoryReq);
-        return ResponseEntity.ok("Category created successfully");
+    public ResponseEntity<CategoryRes> createCategory(@Valid @RequestBody CategoryReq categoryReq) {
+        CategoryRes categoryRes = categoryService.createCategory(categoryReq);
+        if (categoryRes != null) {
+            return ResponseEntity.ok(categoryRes);
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<String> updateCategory(@PathVariable Integer id, @Valid @RequestBody CategoryReq categoryReq) {
-        categoryService.updateCategory(id, categoryReq);
-        return ResponseEntity.ok("Category updated successfully");
+    public ResponseEntity<CategoryRes> updateCategory(@PathVariable Integer id, @Valid @RequestBody CategoryReq categoryReq) {
+        CategoryRes categoryRes = categoryService.updateCategory(id, categoryReq);
+        if (categoryRes != null) {
+            return ResponseEntity.ok(categoryRes);
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteCategory(@PathVariable Integer id) {
-        categoryService.deleteCategory(id);
-        return ResponseEntity.ok("Category deleted successfully");
+        if (categoryService.deleteCategory(id)){
+            return ResponseEntity.ok("Category deleted successfully");
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @GetMapping("/search/special")

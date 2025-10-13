@@ -38,10 +38,12 @@ public class ProductService {
         return productOpt.map(this::convertToRes).orElse(null);
     }
 
-    public void deleteProductById(int id){
+    public boolean deleteProductById(int id){
         if (productRepo.existsById(id)) {
             productRepo.deleteById(id);
+            return true;
         }
+        return false;
     }
 
     public ProductRes createProduct (ProductReq productReq) {
@@ -120,7 +122,7 @@ public class ProductService {
         return productOpt.isEmpty() ? null : productOpt.stream().map(this::convertToRes).toList();
     }
 
-    private ProductRes convertToRes(Product product) {
+    public ProductRes convertToRes(Product product) {
         if (product != null) {
             ProductRes productRes = new ProductRes();
             productRes.setId(product.getId());
@@ -165,7 +167,7 @@ public class ProductService {
     }
 
     // Convert ProductReq to Product entity using Repository
-    private Product convertReqToEntity(Product product, ProductReq productReq) {
+    public Product convertReqToEntity(Product product, ProductReq productReq) {
         if (product != null || productReq != null){
             if (productReq.getName() != null){
                 product.setName(productReq.getName());

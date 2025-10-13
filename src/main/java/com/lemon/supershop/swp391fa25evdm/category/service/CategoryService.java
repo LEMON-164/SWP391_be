@@ -38,7 +38,7 @@ public class CategoryService {
         return null;
     }
 
-    public void createCategory(CategoryReq dto) {
+    public CategoryRes createCategory(CategoryReq dto) {
         if (dto == null) {
             throw new IllegalArgumentException("Category data cannot be null");
         }
@@ -47,6 +47,7 @@ public class CategoryService {
         }
         Category category = convertToEntity(dto);
         categoryRepository.save(category);
+        return convertToRes(category);
     }
 
     public CategoryRes updateCategory(int id, CategoryReq dto) {
@@ -79,15 +80,13 @@ public class CategoryService {
         return convertToRes(updatedCategory);
     }
 
-    public void deleteCategory(Integer id) {
-        if (id == null) {
-            throw new IllegalArgumentException("Category ID cannot be null");
+    public boolean deleteCategory(Integer id) {
+        Optional<Category> existingCategory = categoryRepository.findById(id);
+        if (existingCategory.isPresent()) {
+            categoryRepository.delete(existingCategory.get());
+            return true;
         }
-
-        Category existingCategory = categoryRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Category not found with id: " + id));
-
-        categoryRepository.delete(existingCategory);
+        return false;
     }
 
     public List<CategoryRes> getSpecialCategories() {

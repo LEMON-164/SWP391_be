@@ -5,17 +5,11 @@ import com.lemon.supershop.swp391fa25evdm.category.model.entity.Category;
 import com.lemon.supershop.swp391fa25evdm.contract.model.entity.Contract;
 import com.lemon.supershop.swp391fa25evdm.dealer.model.entity.Dealer;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import com.lemon.supershop.swp391fa25evdm.product.model.entity.Product;
+import jakarta.persistence.*;
 import lombok.Data;
+
+import java.util.List;
 
 
 @Entity
@@ -30,6 +24,9 @@ public class Distribution {
     @JoinColumn(name = "CategoryId")
     @JsonIgnore
     private Category category;
+
+    @OneToMany(mappedBy = "distribution", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Product> products;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "RoleId")
@@ -70,5 +67,13 @@ public class Distribution {
 
     public void setContract(Contract contract) {
         this.contract = contract;
+    }
+
+    public List<Product> getProducts() {
+        return products;
+    }
+
+    public void setProducts(List<Product> products) {
+        this.products = products;
     }
 }

@@ -16,7 +16,4 @@ public interface ProductRepo extends JpaRepository<Product, Integer> {
     List<Product> findByEngineNumContainingIgnoreCase(String engineNum);
     List<Product> findByNameContainingIgnoreCase(String name);
     List<Product> findByCategoryId(int id);
-
-    @Query("SELECT p FROM Product p WHERE p.category.id = :categoryId")
-    List<Product> findByCategoryId(@Param("categoryId") Integer categoryId);
 }
