@@ -5,6 +5,7 @@ import com.lemon.supershop.swp391fa25evdm.refra.JwtUtil;
 import com.lemon.supershop.swp391fa25evdm.role.model.entity.Role;
 import com.lemon.supershop.swp391fa25evdm.role.repository.RoleRepo;
 import com.lemon.supershop.swp391fa25evdm.user.model.entity.User;
+import com.lemon.supershop.swp391fa25evdm.user.model.enums.UserStatus;
 import com.lemon.supershop.swp391fa25evdm.user.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -59,48 +60,10 @@ public class AuthenService {
 
     public void register(RegisterReq dto) {
         User user = new User();
-        String requestedRole = dto.getRoleName() != null ? dto.getRoleName() : "Customer";
-        Optional<Role> role = roleRepo.findByNameContainingIgnoreCase("Customer");
-
-        user.setRole(role.orElse(null));
-
-        if (dto.getPhone() != null && PHONE_PATTERN.matcher(dto.getPhone()).matches()){
-            user.setPhone(dto.getPhone());
+        User newUser = converttoEntity(user, dto);
+        if (newUser != null) {
+            userRepo.save(newUser);
         }
-        if (dto.getEmail() != null && EMAIL_PATTERN.matcher(dto.getEmail()).matches()){
-            if ( role.isPresent() && userRepo.existsByEmail(dto.getEmail())){
-                throw new RuntimeException("EMAIL_DUPLICATE");
-            } else {
-                user.setEmail(dto.getEmail());
-            }
-        }
-        if (role.isPresent()) {
-            role.get().addUser(user);
-        }
-        if (dto.getPassword().equals(dto.getConfirmPassword())){
-            user.setPassword(dto.getPassword());
-        }
-        user.setUsername(dto.getUsername());
-        user.setAddress(dto.getAddress());
-        userRepo.save(user);
-    }
-
-    public void registerAmin(RegisterReq dto) {
-        User user = new User();
-        Optional<Role> role = roleRepo.findByNameContainingIgnoreCase("Admin");
-
-        user.setRole(role.get());
-
-        if (dto.getPhone() != null && PHONE_PATTERN.matcher(dto.getPhone()).matches()){
-            user.setPhone(dto.getPhone());
-        }
-
-        if (dto.getPassword().equals(dto.getConfirmPassword())){
-            user.setPassword(dto.getPassword());
-        }
-        user.setUsername(dto.getPhone());
-        role.get().addUser(user);
-        userRepo.save(user);
     }
 
     public void changePassword(int id, ChangePassReq dto){
@@ -115,5 +78,39 @@ public class AuthenService {
             }
         }
         userRepo.save(user.get());
+    }
+
+    public User converttoEntity(User user, RegisterReq dto){
+        if (user != null) {
+            if (dto.getRoleName() != null){
+                Optional<Role> role = roleRepo.findByNameContainingIgnoreCase(dto.getRoleName());
+                if (role.isPresent()) {
+                    user.setRole(role.get());
+                    role.get().addUser(user);
+                }
+            }
+            if (dto.getPhone() != null && PHONE_PATTERN.matcher(dto.getPhone()).matches()){
+                user.setPhone(dto.getPhone());
+            }
+            if (dto.getEmail() != null && EMAIL_PATTERN.matcher(dto.getEmail()).matches()){
+                if (userRepo.existsByEmail(dto.getEmail())){
+                    throw new RuntimeException("EMAIL_DUPLICATE");
+                } else {
+                    user.setEmail(dto.getEmail());
+                }
+            }
+            if (dto.getPassword().equals(dto.getConfirmPassword())){
+                user.setPassword(dto.getPassword());
+            }
+            if (dto.getUsername() != null) {
+                user.setUsername(dto.getUsername());
+            }
+            if (dto.getAddress() != null){
+                user.setAddress(dto.getAddress());
+            }
+            user.setStatus(UserStatus.ACTIVE);
+            return user;
+        }
+        return null;
     }
 }

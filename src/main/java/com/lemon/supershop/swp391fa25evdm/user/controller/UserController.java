@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.lemon.supershop.swp391fa25evdm.user.model.dto.AddUserReq;
 import com.lemon.supershop.swp391fa25evdm.user.model.dto.UserReq;
 import com.lemon.supershop.swp391fa25evdm.user.model.dto.UserRes;
 import com.lemon.supershop.swp391fa25evdm.user.service.UserService;
@@ -29,6 +28,12 @@ public class UserController {
         return ResponseEntity.ok(users);
     }
 
+    @GetMapping("/listActiceUser")
+    public ResponseEntity<List<UserRes>> getAllActiceUsers() {
+        List<UserRes> users = userService.getAllActiveUsers();
+        return ResponseEntity.ok(users);
+    }
+
     @GetMapping("/Profile/{id}")
     public ResponseEntity<UserRes> getUserProfile(@PathVariable("id") int id) {
         UserRes user = userService.findByUserId(id);
@@ -45,23 +50,6 @@ public class UserController {
     public ResponseEntity<List<UserRes>> searchDealerEmployee(@PathVariable("DealerId") int dealerId) {
         List<UserRes> users = userService.findByDealer(dealerId);
         return ResponseEntity.ok(users);
-    }
-
-    @PostMapping("/addUser")
-    public ResponseEntity<UserRes> addUser(@RequestBody AddUserReq dto) {
-        try {
-            UserRes user = userService.addUser(dto);
-            if (user != null) {
-                return ResponseEntity.ok(user);
-            } else {
-                return ResponseEntity.badRequest().build();
-            }
-        } catch (IllegalArgumentException ex) {
-            if ("EMAIL_DUPLICATE".equals(ex.getMessage())) {
-                return ResponseEntity.badRequest().build();
-            }
-            throw ex;
-        }
     }
 
     @PostMapping("/addBlackList/{id}")

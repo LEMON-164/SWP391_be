@@ -34,12 +34,6 @@ public class AuthController {
         }
     }
 
-    @PostMapping("/registerAdmin")
-    public ResponseEntity<String> registerAdmin(@RequestBody RegisterReq dto) {
-        authenService.registerAmin(dto);
-        return ResponseEntity.ok("Admin registered successfully");
-    }
-
     @PutMapping("/changePassword/{id}")
     public ResponseEntity<String> changePassword(@PathVariable("id") int id, ChangePassReq dto){
         authenService.changePassword(id, dto);
