@@ -3,6 +3,7 @@ package com.lemon.supershop.swp391fa25evdm.testdrive.model.entity;
 import java.time.LocalDateTime;
 import java.util.Date;
 
+import com.lemon.supershop.swp391fa25evdm.category.model.entity.Category;
 import com.lemon.supershop.swp391fa25evdm.category.model.entity.DealerCategory;
 import com.lemon.supershop.swp391fa25evdm.dealer.model.entity.Dealer;
 import com.lemon.supershop.swp391fa25evdm.user.model.entity.User;
@@ -60,8 +61,8 @@ public class TestDrive {
     private Dealer dealer; // đại lý tổ chức test drive
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "DealerCategoryId")
-    private DealerCategory dealerCategory; // mẫu xe được chạy thử
+    @JoinColumn(name = "CategoryId")
+    private Category category; // mẫu xe được chạy thử
 
     public TestDrive() {
     }
@@ -130,11 +131,11 @@ public class TestDrive {
         this.dealer = dealer;
     }
 
-    public DealerCategory getDealerCategory() {
-        return dealerCategory;
+    public Category getCategory() {
+        return category;
     }
 
-    public void setDealerCategory(DealerCategory dealerCategory) {
-        this.dealerCategory = dealerCategory;
+    public void setCategory(Category category) {
+        this.category = category;
     }
 }

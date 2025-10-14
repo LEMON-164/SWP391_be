@@ -14,19 +14,9 @@ public class TestDriveReq {
     private String status;
     private int userId;
     private int dealerId;
-    private int dealerCategoryId;
+    private int CategoryId;
 
     public TestDriveReq() {
-    }
-
-    public TestDriveReq(LocalDateTime scheduleDate, String location, String notes, String status, int userId, int dealerId, int dealerCategoryId) {
-        this.scheduleDate = scheduleDate;
-        this.location = location;
-        this.notes = notes;
-        this.status = status;
-        this.userId = userId;
-        this.dealerId = dealerId;
-        this.dealerCategoryId = dealerCategoryId;
     }
 
     public LocalDateTime getScheduleDate() {
@@ -73,15 +63,17 @@ public class TestDriveReq {
         return dealerId;
     }
 
+    public int getCategoryId() {
+        return CategoryId;
+    }
+
+    public void setCategoryId(int categoryId) {
+        CategoryId = categoryId;
+    }
+
     public void setDealerId(int dealerId) {
         this.dealerId = dealerId;
     }
 
-    public int getDealerCategoryId() {
-        return dealerCategoryId;
-    }
 
-    public void setDealerCategoryId(int dealerCategoryId) {
-        this.dealerCategoryId = dealerCategoryId;
-    }
 }

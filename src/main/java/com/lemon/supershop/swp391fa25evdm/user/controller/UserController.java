@@ -11,6 +11,7 @@ import com.lemon.supershop.swp391fa25evdm.user.service.UserService;
 
 @RestController
 @RequestMapping("/api/user")
+@CrossOrigin("*")
 public class UserController {
 
     @Autowired
