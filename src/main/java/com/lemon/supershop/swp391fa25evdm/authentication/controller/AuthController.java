@@ -21,7 +21,7 @@ public class AuthController {
         return ResponseEntity.ok(authenService.login(dto));
     }
 
-    @PostMapping("/register")
+    @PostMapping("u")
     public ResponseEntity<String> register(@RequestBody RegisterReq dto) {
         try {
             authenService.register(dto);
@@ -32,12 +32,6 @@ public class AuthController {
             }
             throw ex;
         }
-    }
-
-    @PostMapping("/registerAdmin")
-    public ResponseEntity<String> registerAdmin(@RequestBody RegisterReq dto) {
-        authenService.registerAmin(dto);
-        return ResponseEntity.ok("Admin registered successfully");
     }
 
     @PutMapping("/changePassword/{id}")
