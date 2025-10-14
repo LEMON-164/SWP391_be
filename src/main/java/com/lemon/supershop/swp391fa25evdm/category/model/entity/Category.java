@@ -29,26 +29,14 @@ public class Category {
     @Column(name = "Type", columnDefinition = "NVARCHAR(50)")
     private String type;
 
-    @Column(name = "Battery", columnDefinition = "DECIMAL")
-    private double battery;
-
-    @Column(name = "Range", columnDefinition = "INT")
-    private int range;
-
-    @Column(name = "HP", columnDefinition = "INT")
-    private int hp;
-
-    @Column(name = "Torque", columnDefinition = "INT")
-    private int torque;
+    @Column(name = "IsSpecial", columnDefinition = "VARCHAR(20)")
+    private boolean isSpecial;
 
     @Column(name = "BasePrice", columnDefinition = "DECIMAL(15,2)")
     private double basePrice;
 
     @Column(name = "Warranty", columnDefinition = "INT")
     private int warranty;
-
-    @Column(name = "IsSpecial", columnDefinition = "VARCHAR(20)")
-    private boolean isSpecial;
 
     @Column(name = "Description", columnDefinition = "NVARCHAR(MAX)")
     private String description;
@@ -131,38 +119,6 @@ public class Category {
         this.type = type;
     }
 
-    public double getBattery() {
-        return battery;
-    }
-
-    public void setBattery(double battery) {
-        this.battery = battery;
-    }
-
-    public int getRange() {
-        return range;
-    }
-
-    public void setRange(int range) {
-        this.range = range;
-    }
-
-    public int getHp() {
-        return hp;
-    }
-
-    public void setHp(int hp) {
-        this.hp = hp;
-    }
-
-    public int getTorque() {
-        return torque;
-    }
-
-    public void setTorque(int torque) {
-        this.torque = torque;
-    }
-
     public double getBasePrice() {
         return basePrice;
     }
@@ -177,14 +133,6 @@ public class Category {
 
     public void setWarranty(int warranty) {
         this.warranty = warranty;
-    }
-
-    public boolean isSpecial() {
-        return isSpecial;
-    }
-
-    public void setSpecial(boolean special) {
-        isSpecial = special;
     }
 
     public String getStatus() {
@@ -225,5 +173,13 @@ public class Category {
 
     public void setPromotions(List<Promotion> promotions) {
         this.promotions = promotions;
+    }
+
+    public boolean isSpecial() {
+        return isSpecial;
+    }
+
+    public void setSpecial(boolean special) {
+        isSpecial = special;
     }
 }

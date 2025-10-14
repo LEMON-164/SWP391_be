@@ -21,7 +21,7 @@ public class AuthController {
         return ResponseEntity.ok(authenService.login(dto));
     }
 
-    @PostMapping("/register")
+    @PostMapping("u")
     public ResponseEntity<String> register(@RequestBody RegisterReq dto) {
         try {
             authenService.register(dto);

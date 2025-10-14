@@ -2,6 +2,7 @@ package com.lemon.supershop.swp391fa25evdm.product.model.dto;
 
 import java.sql.Date;
 
+import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,6 +11,11 @@ public class ProductReq {
     private String name;
     private String vinNum;
     private String engineNum;
+    private double battery;
+    private int range;
+    private int hp;
+    private int torque;
+    private String color;
     private Date manufacture_date;
     private double dealerPrice;
     private String description;
@@ -112,5 +118,45 @@ public class ProductReq {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public double getBattery() {
+        return battery;
+    }
+
+    public void setBattery(double battery) {
+        this.battery = battery;
+    }
+
+    public int getRange() {
+        return range;
+    }
+
+    public void setRange(int range) {
+        this.range = range;
+    }
+
+    public int getHp() {
+        return hp;
+    }
+
+    public void setHp(int hp) {
+        this.hp = hp;
+    }
+
+    public int getTorque() {
+        return torque;
+    }
+
+    public void setTorque(int torque) {
+        this.torque = torque;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
     }
 }

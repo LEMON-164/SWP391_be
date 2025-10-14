@@ -114,13 +114,9 @@ public class CategoryService {
         category.setBrand(dto.getBrand());
         category.setVersion(dto.getVersion());
         category.setType(dto.getType());
-        category.setBattery(dto.getBattery());
-        category.setRange(dto.getRange());
-        category.setHp(dto.getHp());
-        category.setTorque(dto.getTorque());
+        category.setSpecial(dto.getSpecial());
         category.setBasePrice(dto.getBasePrice());
         category.setWarranty(dto.getWarranty());
-        category.setSpecial(dto.getSpecial() != null ? dto.getSpecial() : Boolean.FALSE);
         category.setDescription(dto.getDescription());
         category.setStatus(dto.getStatus() != null ? dto.getStatus() : "ACTIVE");
     }
@@ -159,26 +155,11 @@ public class CategoryService {
             if (category.getType() != null) {
                 categoryRes.setType(category.getType());
             }
-            if (category.getBattery() > 0){
-                categoryRes.setBattery(category.getBattery());
-            }
-            if (category.getRange() > 0){
-                categoryRes.setRange(category.getRange());
-            }
-            if (category.getHp() > 0){
-                categoryRes.setHp(category.getHp());
-            }
-            if (category.getTorque() > 0){
-                categoryRes.setTorque(category.getTorque());
-            }
             if (category.getBasePrice() > 0){
                 categoryRes.setBasePrice(category.getBasePrice());
             }
             if (category.getWarranty() > 0){
                 categoryRes.setWarranty(category.getWarranty());
-            }
-            if (category.isSpecial()){
-                categoryRes.setSpecial(true);
             }
             if (category.getDescription() != null){
                 categoryRes.setDescription(category.getDescription());
