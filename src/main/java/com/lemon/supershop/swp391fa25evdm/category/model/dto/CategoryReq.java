@@ -66,7 +66,7 @@ public class CategoryReq {
         this.warranty = warranty;
     }
 
-    public Boolean getSpecial() {
+    public Boolean isSpecial() {
         return isSpecial;
     }
 

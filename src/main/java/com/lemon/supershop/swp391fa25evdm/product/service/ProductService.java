@@ -47,45 +47,80 @@ public class ProductService {
         return false;
     }
 
-    public ProductRes addProduct (ProductReq productReq) {
-        Product product = new Product();
-        Product product1 = convertReqToEntity(product, productReq);
-        productRepo.save(product1);
-        return convertToRes(product1);
+    public ProductRes createProduct (ProductReq productReq) {
+        Product newProduct = new Product();
+        if (productReq.getName() != null){
+                newProduct.setName(productReq.getName());
+            }
+            if (productReq.getVinNum() != null){
+                newProduct.setVinNum(productReq.getVinNum());
+            }
+            if (productReq.getEngineNum() != null){
+                newProduct.setEngineNum(productReq.getEngineNum());
+            }
+            if (productReq.getDescription() != null){
+                newProduct.setDescription(productReq.getDescription());
+            }
+            if (productReq.getStatus() != null){
+                newProduct.setStatus(productReq.getStatus());
+            }
+            if (productReq.getImage() != null){
+                newProduct.setImage(productReq.getImage());
+            }
+            if (productReq.getManufacture_date() != null){
+                newProduct.setManufacture_date(productReq.getManufacture_date());
+            }
+            if (productReq.getDealerPrice() > 0){
+                newProduct.setDealerPrice(productReq.getDealerPrice());
+            }
+            if (productReq.getCategoryId() > 0){
+                categoryRepository.findById(productReq.getCategoryId()).ifPresent(newProduct::setCategory);
+            }
+            if (productReq.getDealerCategoryId() > 0){
+                dealerCategoryRepository.findById(productReq.getDealerCategoryId()).ifPresent(newProduct::setDealerCategory);
+            }
+        productRepo.save(newProduct);
+        return convertToRes(newProduct);
     }
 
     public ProductRes updateProduct (int id, ProductReq productReq) {
         Optional<Product> existingProductOpt = productRepo.findById(id);
         if (existingProductOpt.isPresent()) {
-            convertReqToEntity(existingProductOpt.get(), productReq);
-            productRepo.save(existingProductOpt.get());
-            return convertToRes(existingProductOpt.get());
+            Product existingProduct = existingProductOpt.get();
+            existingProduct.setName(productReq.getName());
+            existingProduct.setVinNum(productReq.getVinNum());
+            existingProduct.setEngineNum(productReq.getEngineNum());
+            existingProduct.setDescription(productReq.getDescription());
+            existingProduct.setStatus(productReq.getStatus());
+            existingProduct.setImage(productReq.getImage());
+            existingProduct.setDealerPrice(productReq.getDealerPrice());
+            existingProduct.setManufacture_date(productReq.getManufacture_date());
+            categoryRepository.findById(productReq.getCategoryId()).ifPresent(existingProduct::setCategory);
+            dealerCategoryRepository.findById(productReq.getDealerCategoryId()).ifPresent(existingProduct::setDealerCategory);
+            productRepo.save(existingProduct);
+            return convertToRes(existingProduct);
         }
         return null;
     }
 
-    public List<ProductRes> getProductByCategoryId(int categoryId){
-         return productRepo.findByCategoryId(categoryId).stream().map(product -> {
-            return convertToRes(product);
-        }).collect(Collectors.toList());
+    public List<ProductRes> getProductByCategoryId(Integer categoryId){
+        List<Product> products = productRepo.findByCategoryId(categoryId);
+        return products.stream().map(this::convertToRes).toList();
     }
 
     public List<ProductRes> getProductByVinNum(String vinNum){
-        return productRepo.findByVinNumContainingIgnoreCase(vinNum).stream().map(product -> {
-            return convertToRes(product);
-        }).collect(Collectors.toList());
+        List<Product> productOpt = productRepo.findByVinNumContainingIgnoreCase(vinNum);
+        return productOpt.isEmpty() ? null : productOpt.stream().map(this::convertToRes).toList();
     }
 
     public List<ProductRes> getProductByName(String name){
-        return productRepo.findByNameContainingIgnoreCase(name).stream().map(product -> {
-            return convertToRes(product);
-        }).collect(Collectors.toList());
+        List<Product> productOpt = productRepo.findByNameContainingIgnoreCase(name);
+        return productOpt.isEmpty() ? null : productOpt.stream().map(this::convertToRes).toList();
     }
 
     public List<ProductRes> getProductByEngineNum(String engineNum){
-        return productRepo.findByEngineNumContainingIgnoreCase(engineNum).stream().map(product -> {
-            return convertToRes(product);
-        }).collect(Collectors.toList());
+        List<Product> productOpt = productRepo.findByEngineNumContainingIgnoreCase(engineNum);
+        return productOpt.isEmpty() ? null : productOpt.stream().map(this::convertToRes).toList();
     }
 
     public ProductRes convertToRes(Product product) {
@@ -119,6 +154,8 @@ public class ProductService {
             }
             if (product.getStatus() != null) {
                 productRes.setStatus(product.getStatus());
+            } else {
+                productRes.setStatus("Available");
             }
             if (product.getImage() != null) {
                 productRes.setImage(product.getImage());

@@ -49,7 +49,7 @@ public class CategoryService {
         categoryRepository.save(category);
         return convertToRes(category);
     }
-  
+
     public CategoryRes updateCategory(int id, CategoryReq dto) {
         if (dto == null) {
             throw new IllegalArgumentException("Category request cannot be null");
@@ -62,7 +62,20 @@ public class CategoryService {
             throw new RuntimeException("Category with name '" + dto.getName() + "' already exists");
         }
 
-        updateEntityFromDto(category, dto);
+        category.setName(dto.getName());
+        category.setBrand(dto.getBrand());
+        category.setVersion(dto.getVersion());
+        category.setType(dto.getType());
+        category.setBattery(dto.getBattery());
+        category.setRange(dto.getRange());
+        category.setHp(dto.getHp());
+        category.setTorque(dto.getTorque());
+        category.setBasePrice(dto.getBasePrice());
+        category.setWarranty(dto.getWarranty());
+        category.setDescription(dto.getDescription());
+        category.setStatus(dto.getStatus());
+        
+        category.setSpecial(dto.isSpecial());
         Category updatedCategory = categoryRepository.save(category);
         return convertToRes(updatedCategory);
     }
@@ -105,11 +118,7 @@ public class CategoryService {
     // Helper methods for conversion
     private Category convertToEntity(CategoryReq dto) {
         Category category = new Category();
-        updateEntityFromDto(category, dto);
-        return category;
-    }
 
-    private void updateEntityFromDto(Category category, CategoryReq dto) {
         category.setName(dto.getName());
         category.setBrand(dto.getBrand());
         category.setVersion(dto.getVersion());
@@ -118,7 +127,9 @@ public class CategoryService {
         category.setBasePrice(dto.getBasePrice());
         category.setWarranty(dto.getWarranty());
         category.setDescription(dto.getDescription());
-        category.setStatus(dto.getStatus() != null ? dto.getStatus() : "ACTIVE");
+        category.setStatus(dto.getStatus());
+        category.setSpecial(dto.isSpecial());
+        return category;
     }
 
     public CategoryRes updateCategoryBasePrice(Integer id, Double newBasePrice) {

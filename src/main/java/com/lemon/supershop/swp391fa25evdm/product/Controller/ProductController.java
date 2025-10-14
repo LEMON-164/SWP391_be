@@ -56,7 +56,7 @@ public class ProductController {
 
     @PostMapping("/addProduct")
     public ResponseEntity<ProductRes> addProduct(@RequestBody ProductReq productReq) {
-        ProductRes createdProduct = productService.addProduct(productReq);
+        ProductRes createdProduct = productService.createProduct(productReq);
         if (createdProduct != null) {
             return ResponseEntity.ok(createdProduct);
         } else {
