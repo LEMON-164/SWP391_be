@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.lemon.supershop.swp391fa25evdm.category.model.dto.CategoryRes;
 import com.lemon.supershop.swp391fa25evdm.category.model.entity.DealerCategory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -100,6 +101,19 @@ public class ProductService {
             if (product.getEngineNum() != null) {
                 productRes.setEngineNum(product.getEngineNum());
             }
+            if (product.getHp() > 0){
+                productRes.setHp(product.getHp());
+            }
+            if (product.getRange() > 0){
+                productRes.setRange(product.getRange());
+            }
+            if (product.getTorque() > 0) {
+                productRes.setTorque(product.getTorque());
+            }
+            if (product.getBattery() > 0) {
+                productRes.setBattery(product.getBattery());
+            }
+            productRes.setSpecial(product.getCategory().isSpecial());
             if (product.getDescription() != null) {
                 productRes.setDescription(product.getDescription());
             }
@@ -140,6 +154,21 @@ public class ProductService {
             }
             if (productReq.getEngineNum() != null){
                 product.setEngineNum(productReq.getEngineNum());
+            }
+            if (productReq.getHp() > 0){
+                product.setHp(productReq.getHp());
+            }
+            if (productReq.getRange() > 0){
+                product.setRange(productReq.getRange());
+            }
+            if (productReq.getBattery() > 0) {
+                product.setBattery(productReq.getBattery());
+            }
+            if (productReq.getTorque() > 0){
+                product.setTorque(productReq.getTorque());
+            }
+            if (productReq.getColor() != null){
+                product.setColor(productReq.getColor());
             }
             if (productReq.getDescription() != null){
                 product.setDescription(productReq.getDescription());
