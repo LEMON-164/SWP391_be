@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/momo")
+@CrossOrigin("*")
 public class MomoController {
 
     @Autowired
