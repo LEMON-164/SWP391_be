@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import com.lemon.supershop.swp391fa25evdm.category.model.dto.CategoryRes;
 import com.lemon.supershop.swp391fa25evdm.category.model.entity.DealerCategory;
+import com.lemon.supershop.swp391fa25evdm.product.model.enums.ProductStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,52 +41,49 @@ public class ProductService {
     }
 
     public boolean deleteProductById(int id){
-        if (productRepo.existsById(id)) {
-            productRepo.deleteById(id);
+        Optional<Product> productOpt = productRepo.findById(id);
+        if (productOpt.isPresent()) {
+            productOpt.get().setStatus(ProductStatus.INACTIVE);
             return true;
         }
         return false;
     }
 
-    public ProductRes addProduct (ProductReq productReq) {
+    public ProductRes createProduct (ProductReq productReq) {
         Product product = new Product();
-        Product product1 = convertReqToEntity(product, productReq);
-        productRepo.save(product1);
-        return convertToRes(product1);
+        Product newProduct = convertReqToEntity(product, productReq);
+        productRepo.save(newProduct);
+        return convertToRes(newProduct);
     }
 
     public ProductRes updateProduct (int id, ProductReq productReq) {
         Optional<Product> existingProductOpt = productRepo.findById(id);
         if (existingProductOpt.isPresent()) {
-            convertReqToEntity(existingProductOpt.get(), productReq);
-            productRepo.save(existingProductOpt.get());
-            return convertToRes(existingProductOpt.get());
+            Product existingProduct = convertReqToEntity(existingProductOpt.get(), productReq);
+            productRepo.save(existingProduct);
+            return convertToRes(existingProduct);
         }
         return null;
     }
 
-    public List<ProductRes> getProductByCategoryId(int categoryId){
-         return productRepo.findByCategoryId(categoryId).stream().map(product -> {
-            return convertToRes(product);
-        }).collect(Collectors.toList());
+    public List<ProductRes> getProductByCategoryId(Integer categoryId){
+        List<Product> products = productRepo.findByCategoryId(categoryId);
+        return products.stream().map(this::convertToRes).toList();
     }
 
     public List<ProductRes> getProductByVinNum(String vinNum){
-        return productRepo.findByVinNumContainingIgnoreCase(vinNum).stream().map(product -> {
-            return convertToRes(product);
-        }).collect(Collectors.toList());
+        List<Product> productOpt = productRepo.findByVinNumContainingIgnoreCase(vinNum);
+        return productOpt.isEmpty() ? null : productOpt.stream().map(this::convertToRes).toList();
     }
 
     public List<ProductRes> getProductByName(String name){
-        return productRepo.findByNameContainingIgnoreCase(name).stream().map(product -> {
-            return convertToRes(product);
-        }).collect(Collectors.toList());
+        List<Product> productOpt = productRepo.findByNameContainingIgnoreCase(name);
+        return productOpt.isEmpty() ? null : productOpt.stream().map(this::convertToRes).toList();
     }
 
     public List<ProductRes> getProductByEngineNum(String engineNum){
-        return productRepo.findByEngineNumContainingIgnoreCase(engineNum).stream().map(product -> {
-            return convertToRes(product);
-        }).collect(Collectors.toList());
+        List<Product> productOpt = productRepo.findByEngineNumContainingIgnoreCase(engineNum);
+        return productOpt.isEmpty() ? null : productOpt.stream().map(this::convertToRes).toList();
     }
 
     public ProductRes convertToRes(Product product) {
@@ -119,6 +117,8 @@ public class ProductService {
             }
             if (product.getStatus() != null) {
                 productRes.setStatus(product.getStatus());
+            } else {
+                productRes.setStatus(ProductStatus.INACTIVE);
             }
             if (product.getImage() != null) {
                 productRes.setImage(product.getImage());

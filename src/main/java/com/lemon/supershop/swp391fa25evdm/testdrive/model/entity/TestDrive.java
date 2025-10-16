@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.util.Date;
 
 import com.lemon.supershop.swp391fa25evdm.category.model.entity.Category;
-import com.lemon.supershop.swp391fa25evdm.category.model.entity.DealerCategory;
 import com.lemon.supershop.swp391fa25evdm.dealer.model.entity.Dealer;
 import com.lemon.supershop.swp391fa25evdm.user.model.entity.User;
 

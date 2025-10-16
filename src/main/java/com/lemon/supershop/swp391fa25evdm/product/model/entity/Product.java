@@ -7,6 +7,7 @@ import com.lemon.supershop.swp391fa25evdm.distribution.model.entity.Distribution
 import com.lemon.supershop.swp391fa25evdm.order.model.entity.Order;
 import com.lemon.supershop.swp391fa25evdm.payment.model.entity.InstallmentPlan;
 import com.lemon.supershop.swp391fa25evdm.preorder.model.entity.PreOrder;
+import com.lemon.supershop.swp391fa25evdm.product.model.enums.ProductStatus;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -58,7 +59,8 @@ public class Product {
     private String description;
 
     @Column(name = "Status", columnDefinition = "VARCHAR(20)")
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private ProductStatus status;
 
     @ManyToOne
     @JoinColumn(name = "CategoryId")
@@ -140,14 +142,6 @@ public class Product {
 
     public void setCategory(Category category) {
         this.category = category;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
     }
 
     public String getImage() {
@@ -244,5 +238,13 @@ public class Product {
 
     public void setOrder(Order order) {
         this.order = order;
+    }
+
+    public ProductStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(ProductStatus status) {
+        this.status = status;
     }
 }
