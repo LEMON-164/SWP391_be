@@ -66,10 +66,6 @@ public class CategoryService {
         category.setBrand(dto.getBrand());
         category.setVersion(dto.getVersion());
         category.setType(dto.getType());
-        category.setBattery(dto.getBattery());
-        category.setRange(dto.getRange());
-        category.setHp(dto.getHp());
-        category.setTorque(dto.getTorque());
         category.setBasePrice(dto.getBasePrice());
         category.setWarranty(dto.getWarranty());
         category.setDescription(dto.getDescription());
@@ -123,7 +119,7 @@ public class CategoryService {
         category.setBrand(dto.getBrand());
         category.setVersion(dto.getVersion());
         category.setType(dto.getType());
-        category.setSpecial(dto.getSpecial());
+        category.setSpecial(dto.isSpecial());
         category.setBasePrice(dto.getBasePrice());
         category.setWarranty(dto.getWarranty());
         category.setDescription(dto.getDescription());
