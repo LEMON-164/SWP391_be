@@ -1,18 +1,10 @@
 package com.lemon.supershop.swp391fa25evdm.category.model.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 public class CategoryReq {
     private String name;
     private String brand;
     private String version;
     private String type;
-    private Double battery;
-    private Integer range;
-    private Integer hp;
-    private Integer torque;
     private Double basePrice;
     private Integer warranty;
     private Boolean isSpecial;
@@ -20,22 +12,6 @@ public class CategoryReq {
     private String status;
 
     public CategoryReq() {
-    }
-
-    public CategoryReq(String name, String brand, String version, String type, Double battery, Integer range, Integer hp, Integer torque, Double basePrice, Integer warranty, Boolean isSpecial, String description, String status) {
-        this.name = name;
-        this.brand = brand;
-        this.version = version;
-        this.type = type;
-        this.battery = battery;
-        this.range = range;
-        this.hp = hp;
-        this.torque = torque;
-        this.basePrice = basePrice;
-        this.warranty = warranty;
-        this.isSpecial = isSpecial;
-        this.description = description;
-        this.status = status;
     }
 
     public String getName() {
@@ -68,38 +44,6 @@ public class CategoryReq {
 
     public void setType(String type) {
         this.type = type;
-    }
-
-    public Double getBattery() {
-        return battery;
-    }
-
-    public void setBattery(Double battery) {
-        this.battery = battery;
-    }
-
-    public Integer getRange() {
-        return range;
-    }
-
-    public void setRange(Integer range) {
-        this.range = range;
-    }
-
-    public Integer getHp() {
-        return hp;
-    }
-
-    public void setHp(Integer hp) {
-        this.hp = hp;
-    }
-
-    public Integer getTorque() {
-        return torque;
-    }
-
-    public void setTorque(Integer torque) {
-        this.torque = torque;
     }
 
     public Double getBasePrice() {

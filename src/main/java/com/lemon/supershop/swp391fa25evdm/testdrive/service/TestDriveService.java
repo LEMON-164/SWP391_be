@@ -3,7 +3,9 @@ package com.lemon.supershop.swp391fa25evdm.testdrive.service;
 import java.util.List;
 import java.util.Optional;
 
+import com.lemon.supershop.swp391fa25evdm.category.model.entity.Category;
 import com.lemon.supershop.swp391fa25evdm.category.model.entity.DealerCategory;
+import com.lemon.supershop.swp391fa25evdm.category.repository.CategoryRepository;
 import com.lemon.supershop.swp391fa25evdm.dealer.model.entity.Dealer;
 import com.lemon.supershop.swp391fa25evdm.user.model.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +29,7 @@ public class TestDriveService {
     @Autowired
     private DealerRepo dealerRepo;
     @Autowired
-    private DealerCategoryRepository dealerCategoryRepository;
+    private CategoryRepository categoryRepository;
 
     public List<TestDriveRes> getAllTestDrive() {
         List<TestDrive> testDrives = testDriveRepository.findAll();
@@ -51,7 +53,7 @@ public class TestDriveService {
     }
 
     public List<TestDriveRes> getTestDriveByDealerCategoryId(int dealerCategoryId) {
-        List<TestDrive> testDrives = testDriveRepository.findByDealerCategoryId(dealerCategoryId);
+        List<TestDrive> testDrives = testDriveRepository.findByCategoryId(dealerCategoryId);
         return testDrives.stream().map(this::convertToRes).toList();
     }
 
@@ -111,11 +113,11 @@ public class TestDriveService {
                     dealer.get().getTestDrives().add(testDrive);
                 }
             }
-            if (req.getDealerCategoryId() > 0){
-                Optional<DealerCategory> dealerCategory = dealerCategoryRepository.findById(req.getDealerCategoryId());
-                if (dealerCategory.isPresent()) {
-                    testDrive.setDealerCategory(dealerCategory.get());
-                    dealerCategory.get().getTestDrives().add(testDrive);
+            if (req.getCategoryId() > 0){
+                Optional<Category> category = categoryRepository.findById(req.getCategoryId());
+                if (category.isPresent()) {
+                    testDrive.setCategory(category.get());
+                    category.get().getTestDrives().add(testDrive);
                 }
             }
             return testDrive;
@@ -153,8 +155,8 @@ public class TestDriveService {
                     res.setDealerId(dealer.get().getId());
                 }
             }
-            if (testDrive.getDealerCategory() != null) {
-                Optional<DealerCategory> category = dealerCategoryRepository.findById(testDrive.getDealerCategory().getId());
+            if (testDrive.getCategory() != null) {
+                Optional<Category> category = categoryRepository.findById(testDrive.getCategory().getId());
                 if (category.isPresent()){
                     res.setDealerCategoryId(category.get().getId());
                 }

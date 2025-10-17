@@ -7,6 +7,11 @@ public class ProductRes {
     private String name;
     private String vinNum;
     private String engineNum;
+    private double battery;
+    private int range;
+    private int hp;
+    private int torque;
+    private boolean isSpecial;
     private Date manufacture_date;
     private String image;
     private String description;
@@ -16,20 +21,6 @@ public class ProductRes {
     private int dealerCategoryId;
 
     public ProductRes() {}
-
-    public ProductRes(int id, String name, String vinNum, String engineNum, Date manufacture_date, String image, String description, double price, String status, int categoryId, int dealerCategoryId) {
-        this.id = id;
-        this.name = name;
-        this.vinNum = vinNum;
-        this.engineNum = engineNum;
-        this.manufacture_date = manufacture_date;
-        this.image = image;
-        this.description = description;
-        this.price = price;
-        this.status = status;
-        this.categoryId = categoryId;
-        this.dealerCategoryId = dealerCategoryId;
-    }
 
     public void setId(int id) {
         this.id = id;
@@ -117,5 +108,45 @@ public class ProductRes {
 
     public int getDealerCategoryId() {
         return dealerCategoryId;
+    }
+
+    public double getBattery() {
+        return battery;
+    }
+
+    public void setBattery(double battery) {
+        this.battery = battery;
+    }
+
+    public int getRange() {
+        return range;
+    }
+
+    public void setRange(int range) {
+        this.range = range;
+    }
+
+    public int getHp() {
+        return hp;
+    }
+
+    public void setHp(int hp) {
+        this.hp = hp;
+    }
+
+    public int getTorque() {
+        return torque;
+    }
+
+    public void setTorque(int torque) {
+        this.torque = torque;
+    }
+
+    public boolean isSpecial() {
+        return isSpecial;
+    }
+
+    public void setSpecial(boolean special) {
+        isSpecial = special;
     }
 }
