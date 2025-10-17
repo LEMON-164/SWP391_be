@@ -2,6 +2,7 @@ package com.lemon.supershop.swp391fa25evdm.product.model.dto;
 
 import java.sql.Date;
 
+import com.lemon.supershop.swp391fa25evdm.product.model.enums.ProductStatus;
 import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,7 +20,7 @@ public class ProductReq {
     private Date manufacture_date;
     private double dealerPrice;
     private String description;
-    private String status;
+    private ProductStatus status;
     private int categoryId;
     private int dealerCategoryId;
     private String image;
@@ -27,7 +28,7 @@ public class ProductReq {
     public ProductReq() {
     }
 
-    public ProductReq(String name, String vinNum, String engineNum, Date manufacture_date, double dealerPrice, String description, String status, int categoryId, int dealerCategoryId, String image) {
+    public ProductReq(String name, String vinNum, String engineNum, Date manufacture_date, double dealerPrice, String description, ProductStatus status, int categoryId, int dealerCategoryId, String image) {
         this.name = name;
         this.vinNum = vinNum;
         this.engineNum = engineNum;
@@ -88,11 +89,11 @@ public class ProductReq {
         this.description = description;
     }
 
-    public String getStatus() {
+    public ProductStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(ProductStatus status) {
         this.status = status;
     }
 

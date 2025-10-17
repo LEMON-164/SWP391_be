@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import com.lemon.supershop.swp391fa25evdm.category.model.dto.CategoryRes;
 import com.lemon.supershop.swp391fa25evdm.category.model.entity.DealerCategory;
+import com.lemon.supershop.swp391fa25evdm.product.model.enums.ProductStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,45 +41,17 @@ public class ProductService {
     }
 
     public boolean deleteProductById(int id){
-        if (productRepo.existsById(id)) {
-            productRepo.deleteById(id);
+        Optional<Product> productOpt = productRepo.findById(id);
+        if (productOpt.isPresent()) {
+            productOpt.get().setStatus(ProductStatus.INACTIVE);
             return true;
         }
         return false;
     }
 
     public ProductRes createProduct (ProductReq productReq) {
-        Product newProduct = new Product();
-        if (productReq.getName() != null){
-                newProduct.setName(productReq.getName());
-            }
-            if (productReq.getVinNum() != null){
-                newProduct.setVinNum(productReq.getVinNum());
-            }
-            if (productReq.getEngineNum() != null){
-                newProduct.setEngineNum(productReq.getEngineNum());
-            }
-            if (productReq.getDescription() != null){
-                newProduct.setDescription(productReq.getDescription());
-            }
-            if (productReq.getStatus() != null){
-                newProduct.setStatus(productReq.getStatus());
-            }
-            if (productReq.getImage() != null){
-                newProduct.setImage(productReq.getImage());
-            }
-            if (productReq.getManufacture_date() != null){
-                newProduct.setManufacture_date(productReq.getManufacture_date());
-            }
-            if (productReq.getDealerPrice() > 0){
-                newProduct.setDealerPrice(productReq.getDealerPrice());
-            }
-            if (productReq.getCategoryId() > 0){
-                categoryRepository.findById(productReq.getCategoryId()).ifPresent(newProduct::setCategory);
-            }
-            if (productReq.getDealerCategoryId() > 0){
-                dealerCategoryRepository.findById(productReq.getDealerCategoryId()).ifPresent(newProduct::setDealerCategory);
-            }
+        Product product = new Product();
+        Product newProduct = convertReqToEntity(product, productReq);
         productRepo.save(newProduct);
         return convertToRes(newProduct);
     }
@@ -86,17 +59,7 @@ public class ProductService {
     public ProductRes updateProduct (int id, ProductReq productReq) {
         Optional<Product> existingProductOpt = productRepo.findById(id);
         if (existingProductOpt.isPresent()) {
-            Product existingProduct = existingProductOpt.get();
-            existingProduct.setName(productReq.getName());
-            existingProduct.setVinNum(productReq.getVinNum());
-            existingProduct.setEngineNum(productReq.getEngineNum());
-            existingProduct.setDescription(productReq.getDescription());
-            existingProduct.setStatus(productReq.getStatus());
-            existingProduct.setImage(productReq.getImage());
-            existingProduct.setDealerPrice(productReq.getDealerPrice());
-            existingProduct.setManufacture_date(productReq.getManufacture_date());
-            categoryRepository.findById(productReq.getCategoryId()).ifPresent(existingProduct::setCategory);
-            dealerCategoryRepository.findById(productReq.getDealerCategoryId()).ifPresent(existingProduct::setDealerCategory);
+            Product existingProduct = convertReqToEntity(existingProductOpt.get(), productReq);
             productRepo.save(existingProduct);
             return convertToRes(existingProduct);
         }
@@ -155,7 +118,7 @@ public class ProductService {
             if (product.getStatus() != null) {
                 productRes.setStatus(product.getStatus());
             } else {
-                productRes.setStatus("Available");
+                productRes.setStatus(ProductStatus.INACTIVE);
             }
             if (product.getImage() != null) {
                 productRes.setImage(product.getImage());
