@@ -1,5 +1,7 @@
 package com.lemon.supershop.swp391fa25evdm.product.model.dto;
 
+import com.lemon.supershop.swp391fa25evdm.product.model.enums.ProductStatus;
+
 import java.util.Date;
 
 public class ProductRes {
@@ -16,7 +18,7 @@ public class ProductRes {
     private String image;
     private String description;
     private double price;
-    private String status;
+    private ProductStatus status;
     private int categoryId;
     private int dealerCategoryId;
 
@@ -52,10 +54,6 @@ public class ProductRes {
 
     public void setPrice(double price) {
         this.price = price;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
     }
 
     public void setCategoryId(int categoryId) {
@@ -96,10 +94,6 @@ public class ProductRes {
 
     public double getPrice() {
         return price;
-    }
-
-    public String getStatus() {
-        return status;
     }
 
     public int getCategoryId() {
@@ -148,5 +142,13 @@ public class ProductRes {
 
     public void setSpecial(boolean special) {
         isSpecial = special;
+    }
+
+    public ProductStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(ProductStatus status) {
+        this.status = status;
     }
 }
