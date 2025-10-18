@@ -61,9 +61,6 @@ public class Category {
     @OneToMany(mappedBy = "category", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Promotion> promotions = new ArrayList<>();
 
-    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<TestDrive> testDrives;
-
     //cons-get-set
     public Category() {}
 
@@ -185,13 +182,5 @@ public class Category {
 
     public void setSpecial(boolean special) {
         isSpecial = special;
-    }
-
-    public List<TestDrive> getTestDrives() {
-        return testDrives;
-    }
-
-    public void setTestDrives(List<TestDrive> testDrives) {
-        this.testDrives = testDrives;
     }
 }

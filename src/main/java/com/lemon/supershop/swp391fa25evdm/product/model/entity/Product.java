@@ -8,6 +8,7 @@ import com.lemon.supershop.swp391fa25evdm.order.model.entity.Order;
 import com.lemon.supershop.swp391fa25evdm.payment.model.entity.InstallmentPlan;
 import com.lemon.supershop.swp391fa25evdm.preorder.model.entity.PreOrder;
 import com.lemon.supershop.swp391fa25evdm.product.model.enums.ProductStatus;
+import com.lemon.supershop.swp391fa25evdm.testdrive.model.entity.TestDrive;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -85,6 +86,9 @@ public class Product {
 
     @OneToOne(mappedBy = "product")
     private InstallmentPlan installmentPlan;
+
+    @OneToOne(mappedBy = "product")
+    private TestDrive testDrive;
 
     public Product() {}
 
@@ -246,5 +250,13 @@ public class Product {
 
     public void setStatus(ProductStatus status) {
         this.status = status;
+    }
+
+    public TestDrive getTestDrive() {
+        return testDrive;
+    }
+
+    public void setTestDrive(TestDrive testDrive) {
+        this.testDrive = testDrive;
     }
 }

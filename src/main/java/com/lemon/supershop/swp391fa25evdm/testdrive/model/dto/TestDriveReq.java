@@ -9,12 +9,11 @@ import lombok.NoArgsConstructor;
 public class TestDriveReq {
 
     private LocalDateTime scheduleDate;
-    private String location;
     private String notes;
     private String status;
     private int userId;
     private int dealerId;
-    private int CategoryId;
+    private int productId;
 
     public TestDriveReq() {
     }
@@ -25,14 +24,6 @@ public class TestDriveReq {
 
     public void setScheduleDate(LocalDateTime scheduleDate) {
         this.scheduleDate = scheduleDate;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
     }
 
     public String getNotes() {
@@ -63,17 +54,15 @@ public class TestDriveReq {
         return dealerId;
     }
 
-    public int getCategoryId() {
-        return CategoryId;
-    }
-
-    public void setCategoryId(int categoryId) {
-        CategoryId = categoryId;
-    }
-
     public void setDealerId(int dealerId) {
         this.dealerId = dealerId;
     }
 
+    public int getProductId() {
+        return productId;
+    }
 
+    public void setProductId(int productId) {
+        this.productId = productId;
+    }
 }
