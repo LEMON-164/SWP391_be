@@ -42,12 +42,6 @@ public class TestDriveController {
         return ResponseEntity.ok(testDrives);
     }
 
-    @GetMapping("/search/category/{categoryId}")
-    public ResponseEntity<List<TestDriveRes>> getTestDriveByCategoryId(@PathVariable int categoryId) {
-        List<TestDriveRes> testDrives = testDriveService.getTestDriveByDealerCategoryId(categoryId);
-        return ResponseEntity.ok(testDrives);
-    }
-
     @PostMapping("/createTestDrive")
     public ResponseEntity<TestDriveRes> createTestDrive (@RequestBody TestDriveReq testDriveReq) {
         TestDriveRes testDriveRes = testDriveService.createTestDrive(testDriveReq);
