@@ -120,7 +120,7 @@ public class Category {
         this.type = type;
     }
 
-    public Long getBasePrice() {
+    public long getBasePrice() {
         return basePrice;
     }
 

@@ -128,7 +128,7 @@ public class CategoryService {
         return category;
     }
 
-    public CategoryRes updateCategoryBasePrice(Integer id, Double newBasePrice) {
+    public CategoryRes updateCategoryBasePrice(Integer id, Long newBasePrice) {
         if (id == null) {
             throw new IllegalArgumentException("Category ID cannot be null");
         }

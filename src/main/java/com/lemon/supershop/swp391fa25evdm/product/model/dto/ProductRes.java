@@ -17,7 +17,7 @@ public class ProductRes {
     private Date manufacture_date;
     private String image;
     private String description;
-    private double price;
+    private long price;
     private ProductStatus status;
     private int categoryId;
     private int dealerCategoryId;
@@ -52,7 +52,7 @@ public class ProductRes {
         this.description = description;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(long price) {
         this.price = price;
     }
 

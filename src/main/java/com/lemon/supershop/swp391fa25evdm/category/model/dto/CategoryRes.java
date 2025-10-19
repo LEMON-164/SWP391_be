@@ -7,7 +7,7 @@ public class CategoryRes {
     private String brand;
     private String version;
     private String type;
-    private Double basePrice;
+    private Long basePrice;
     private Integer warranty;
     private Boolean isSpecial;
     private String description;
@@ -55,11 +55,11 @@ public class CategoryRes {
         this.type = type;
     }
 
-    public Double getBasePrice() {
+    public Long getBasePrice() {
         return basePrice;
     }
 
-    public void setBasePrice(Double basePrice) {
+    public void setBasePrice(long basePrice) {
         this.basePrice = basePrice;
     }
 

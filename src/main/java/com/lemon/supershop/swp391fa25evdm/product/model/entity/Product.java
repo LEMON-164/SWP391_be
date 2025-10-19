@@ -51,7 +51,7 @@ public class Product {
     private String Color;
 
     @Column(name = "DealerPrice", columnDefinition = "BIGINT")
-    private Long dealerPrice;
+    private long dealerPrice;
 
     @Column(name = "Image", columnDefinition = "VARCHAR(MAX)")
     private String image;
@@ -172,7 +172,7 @@ public class Product {
         this.installmentPlan = installmentPlan;
     }
 
-    public Long getDealerPrice() {
+    public long getDealerPrice() {
         return dealerPrice;
     }
 
