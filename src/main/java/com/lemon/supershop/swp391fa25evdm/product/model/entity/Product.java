@@ -50,8 +50,8 @@ public class Product {
     @Column(name = "Color", columnDefinition = "NVARCHAR(20)")
     private String Color;
 
-    @Column(name = "DealerPrice", columnDefinition = "DECIMAL(15,2)")
-    private double dealerPrice;
+    @Column(name = "DealerPrice", columnDefinition = "BIGINT")
+    private Long dealerPrice;
 
     @Column(name = "Image", columnDefinition = "VARCHAR(MAX)")
     private String image;
@@ -172,11 +172,11 @@ public class Product {
         this.installmentPlan = installmentPlan;
     }
 
-    public double getDealerPrice() {
+    public Long getDealerPrice() {
         return dealerPrice;
     }
 
-    public void setDealerPrice(double dealerPrice) {
+    public void setDealerPrice(long dealerPrice) {
         this.dealerPrice = dealerPrice;
     }
 
