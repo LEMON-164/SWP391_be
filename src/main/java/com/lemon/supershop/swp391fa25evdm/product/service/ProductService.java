@@ -111,7 +111,7 @@ public class ProductService {
             if (product.getBattery() > 0) {
                 productRes.setBattery(product.getBattery());
             }
-            productRes.setSpecial(product.getCategory().isSpecial());
+//            productRes.setSpecial(product.getCategory().isSpecial());
             if (product.getDescription() != null) {
                 productRes.setDescription(product.getDescription());
             }
