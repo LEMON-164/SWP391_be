@@ -18,7 +18,7 @@ public class ProductReq {
     private int torque;
     private String color;
     private Date manufacture_date;
-    private double dealerPrice;
+    private long dealerPrice;
     private String description;
     private ProductStatus status;
     private int categoryId;
@@ -26,19 +26,6 @@ public class ProductReq {
     private String image;
 
     public ProductReq() {
-    }
-
-    public ProductReq(String name, String vinNum, String engineNum, Date manufacture_date, double dealerPrice, String description, ProductStatus status, int categoryId, int dealerCategoryId, String image) {
-        this.name = name;
-        this.vinNum = vinNum;
-        this.engineNum = engineNum;
-        this.manufacture_date = manufacture_date;
-        this.dealerPrice = dealerPrice;
-        this.description = description;
-        this.status = status;
-        this.categoryId = categoryId;
-        this.dealerCategoryId = dealerCategoryId;
-        this.image = image;
     }
 
     public String getName() {
@@ -73,11 +60,11 @@ public class ProductReq {
         this.manufacture_date = manufacture_date;
     }
 
-    public double getDealerPrice() {
+    public long getDealerPrice() {
         return dealerPrice;
     }
 
-    public void setDealerPrice(double dealerPrice) {
+    public void setDealerPrice(long dealerPrice) {
         this.dealerPrice = dealerPrice;
     }
 

@@ -8,6 +8,7 @@ import com.lemon.supershop.swp391fa25evdm.order.model.entity.Order;
 import com.lemon.supershop.swp391fa25evdm.payment.model.entity.InstallmentPlan;
 import com.lemon.supershop.swp391fa25evdm.preorder.model.entity.PreOrder;
 import com.lemon.supershop.swp391fa25evdm.product.model.enums.ProductStatus;
+import com.lemon.supershop.swp391fa25evdm.testdrive.model.entity.TestDrive;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -49,8 +50,8 @@ public class Product {
     @Column(name = "Color", columnDefinition = "NVARCHAR(20)")
     private String Color;
 
-    @Column(name = "DealerPrice", columnDefinition = "DECIMAL(15,2)")
-    private double dealerPrice;
+    @Column(name = "DealerPrice", columnDefinition = "BIGINT")
+    private long dealerPrice;
 
     @Column(name = "Image", columnDefinition = "VARCHAR(MAX)")
     private String image;
@@ -85,6 +86,9 @@ public class Product {
 
     @OneToOne(mappedBy = "product")
     private InstallmentPlan installmentPlan;
+
+    @OneToOne(mappedBy = "product")
+    private TestDrive testDrive;
 
     public Product() {}
 
@@ -168,11 +172,11 @@ public class Product {
         this.installmentPlan = installmentPlan;
     }
 
-    public double getDealerPrice() {
+    public long getDealerPrice() {
         return dealerPrice;
     }
 
-    public void setDealerPrice(double dealerPrice) {
+    public void setDealerPrice(long dealerPrice) {
         this.dealerPrice = dealerPrice;
     }
 
@@ -246,5 +250,13 @@ public class Product {
 
     public void setStatus(ProductStatus status) {
         this.status = status;
+    }
+
+    public TestDrive getTestDrive() {
+        return testDrive;
+    }
+
+    public void setTestDrive(TestDrive testDrive) {
+        this.testDrive = testDrive;
     }
 }

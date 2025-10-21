@@ -111,7 +111,7 @@ public class ProductService {
             if (product.getBattery() > 0) {
                 productRes.setBattery(product.getBattery());
             }
-            productRes.setSpecial(product.getCategory().isSpecial());
+
             if (product.getDescription() != null) {
                 productRes.setDescription(product.getDescription());
             }
@@ -130,6 +130,7 @@ public class ProductService {
                 Optional<Category> category = categoryRepository.findById(product.getCategory().getId());
                 if (category.isPresent()) {
                     productRes.setCategoryId(category.get().getId());
+                    productRes.setSpecial(category.get().isSpecial());
                 }
             }
             if (product.getDealerCategory() != null) {

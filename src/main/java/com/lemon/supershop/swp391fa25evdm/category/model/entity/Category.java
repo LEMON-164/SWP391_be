@@ -33,8 +33,8 @@ public class Category {
     @Column(name = "IsSpecial", columnDefinition = "VARCHAR(20)")
     private boolean isSpecial;
 
-    @Column(name = "BasePrice", columnDefinition = "DECIMAL(15,2)")
-    private double basePrice;
+    @Column(name = "BasePrice", columnDefinition = "BIGINT")
+    private long basePrice;
 
     @Column(name = "Warranty", columnDefinition = "INT")
     private int warranty;
@@ -60,9 +60,6 @@ public class Category {
 
     @OneToMany(mappedBy = "category", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Promotion> promotions = new ArrayList<>();
-
-    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<TestDrive> testDrives;
 
     //cons-get-set
     public Category() {}
@@ -123,11 +120,11 @@ public class Category {
         this.type = type;
     }
 
-    public double getBasePrice() {
+    public long getBasePrice() {
         return basePrice;
     }
 
-    public void setBasePrice(double basePrice) {
+    public void setBasePrice(long basePrice) {
         this.basePrice = basePrice;
     }
 
@@ -185,13 +182,5 @@ public class Category {
 
     public void setSpecial(boolean special) {
         isSpecial = special;
-    }
-
-    public List<TestDrive> getTestDrives() {
-        return testDrives;
-    }
-
-    public void setTestDrives(List<TestDrive> testDrives) {
-        this.testDrives = testDrives;
     }
 }

@@ -12,6 +12,5 @@ public interface TestDriveRepository extends JpaRepository<TestDrive, Integer> {
 
     // JPA sẽ tự động implement các methods này
     List<TestDrive> findByUserId(int userId);
-    List<TestDrive> findByDealerId(int dealerId);  
-    List<TestDrive> findByCategoryId(int dealerCategoryId);
+    List<TestDrive> findByDealerId(int dealerId);
 }
