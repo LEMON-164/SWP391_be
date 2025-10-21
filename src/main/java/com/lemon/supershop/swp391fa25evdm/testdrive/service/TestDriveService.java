@@ -156,6 +156,7 @@ public class TestDriveService {
                 if (dealer.isPresent()){
                     DealerRes dealerRes = dealerService.convertDealertoDealerRes(dealer.get());
                     res.setDealer(dealerRes);
+                    res.setLocation(dealerRes.getAddress());
                 }
             }
             if (testDrive.getProduct() != null) {
