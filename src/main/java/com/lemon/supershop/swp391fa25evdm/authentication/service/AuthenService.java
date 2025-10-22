@@ -73,11 +73,11 @@ public class AuthenService {
                 if (!dto.getNewPass().equals(user.get().getPassword())){
                     if (dto.getNewPass().equals(dto.getConfirmPass())){
                         user.get().setPassword(dto.getNewPass());
+                        userRepo.save(user.get());
                     }
                 }
             }
         }
-        userRepo.save(user.get());
     }
 
     public User converttoEntity(User user, RegisterReq dto){

@@ -99,37 +99,40 @@ public class ProductService {
             if (product.getEngineNum() != null) {
                 productRes.setEngineNum(product.getEngineNum());
             }
-            if (product.getHp() > 0){
-                productRes.setHp(product.getHp());
+            if (product.getBattery() > 0) {
+                productRes.setBattery(product.getBattery());
             }
             if (product.getRange() > 0){
                 productRes.setRange(product.getRange());
             }
+            if (product.getHp() > 0){
+                productRes.setHp(product.getHp());
+            }
             if (product.getTorque() > 0) {
                 productRes.setTorque(product.getTorque());
             }
-            if (product.getBattery() > 0) {
-                productRes.setBattery(product.getBattery());
+            if (product.getManufacture_date() != null){
+                productRes.setManufacture_date(product.getManufacture_date());
             }
-//            productRes.setSpecial(product.getCategory().isSpecial());
+            if (product.getImage() != null) {
+                productRes.setImage(product.getImage());
+            }
             if (product.getDescription() != null) {
                 productRes.setDescription(product.getDescription());
+            }
+            if (product.getDealerPrice() > 0) {
+                productRes.setPrice(product.getDealerPrice());
             }
             if (product.getStatus() != null) {
                 productRes.setStatus(product.getStatus());
             } else {
                 productRes.setStatus(ProductStatus.INACTIVE);
             }
-            if (product.getImage() != null) {
-                productRes.setImage(product.getImage());
-            }
-            if (product.getManufacture_date() != null){
-                productRes.setManufacture_date(product.getManufacture_date());
-            }
             if (product.getCategory() != null) {
                 Optional<Category> category = categoryRepository.findById(product.getCategory().getId());
                 if (category.isPresent()) {
                     productRes.setCategoryId(category.get().getId());
+                    productRes.setSpecial(category.get().isSpecial());
                 }
             }
             if (product.getDealerCategory() != null) {

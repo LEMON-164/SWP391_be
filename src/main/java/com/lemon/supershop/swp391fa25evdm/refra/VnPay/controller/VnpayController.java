@@ -1,5 +1,6 @@
 package com.lemon.supershop.swp391fa25evdm.refra.VnPay.controller;
 
+import com.lemon.supershop.swp391fa25evdm.refra.VnPay.model.dto.VnpayRes;
 import com.lemon.supershop.swp391fa25evdm.refra.VnPay.service.VnpayService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,40 +20,23 @@ public class VnpayController {
     /**
      * Tạo URL thanh toán VNPay
      * POST /api/vnpay/create-payment
-     *
-     * @param amount Số tiền (VNĐ) - sẽ tự động nhân 100 khi gửi VNPay
-     * @param orderInfo Thông tin đơn hàng
      * @param orderId Mã đơn hàng (unique)
      * @param bankCode (Optional) Mã ngân hàng - nếu null, khách chọn tại VNPay
      *                 VD: NCB, VIETCOMBANK, VIETINBANK, AGRIBANK, etc.
      */
     @PostMapping("/create-payment")
-    public ResponseEntity<?> createPayment(
-            @RequestParam long amount,
-            @RequestParam String orderInfo,
+    public ResponseEntity<VnpayRes> createPayment(
             @RequestParam String orderId,
             @RequestParam(required = false) String bankCode,
             HttpServletRequest request
     ) {
         try {
             String ipAddress = vnpayService.getIpAddress(request);
-            String paymentUrl = vnpayService.createPaymentUrl(orderId, amount, orderInfo, ipAddress, bankCode);
-
-            Map<String, String> response = new HashMap<>();
-            response.put("paymentUrl", paymentUrl);
-            response.put("orderId", orderId);
-            response.put("amount", String.valueOf(amount));
-            if (bankCode != null) {
-                response.put("bankCode", bankCode);
-            }
-
+            VnpayRes response = vnpayService.createPaymentUrl(orderId, ipAddress, bankCode);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.badRequest().body(Map.of(
-                    "error", "Failed to create payment URL",
-                    "message", e.getMessage()
-            ));
+            return ResponseEntity.badRequest().build();
         }
     }
 
@@ -85,7 +69,7 @@ public class VnpayController {
                 // Thanh toán thành công
                 // TODO: Cập nhật trạng thái đơn hàng trong database
                 System.out.println("✅ Payment successful: " + vnp_TxnRef);
-
+                vnpayService.savePayment(vnp_TxnRef, vnp_Amount, vnp_TransactionNo, vnp_PayDate);
                 return ResponseEntity.ok(Map.of(
                         "RspCode", "00",
                         "Message", "Success",
