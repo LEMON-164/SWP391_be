@@ -1,5 +1,13 @@
 package com.lemon.supershop.swp391fa25evdm.refra.VnPay.service;
 
+import com.lemon.supershop.swp391fa25evdm.order.model.entity.Order;
+import com.lemon.supershop.swp391fa25evdm.order.repository.OrderRepo;
+import com.lemon.supershop.swp391fa25evdm.payment.model.entity.Payment;
+import com.lemon.supershop.swp391fa25evdm.payment.model.enums.PaymentStatus;
+import com.lemon.supershop.swp391fa25evdm.payment.repository.PaymentRepo;
+import com.lemon.supershop.swp391fa25evdm.refra.VnPay.model.dto.VnpayRes;
+import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +21,11 @@ import java.util.*;
 
 @Service
 public class VnpayService {
+
+    @Autowired
+    private OrderRepo orderRepo;
+    @Autowired
+    private PaymentRepo paymentRepo;
 
     @Value("${vnpay.tmn_code}")
     private String tmnCode;
@@ -32,77 +45,83 @@ public class VnpayService {
     /**
      * Tạo URL thanh toán VNPay
      * @param orderId Mã đơn hàng
-     * @param amount Số tiền (VNĐ)
-     * @param orderInfo Thông tin đơn hàng
      * @param ipAddress IP của khách hàng
      * @param bankCode Mã ngân hàng (tùy chọn, null nếu để khách chọn tại VNPay)
      * @return URL thanh toán
      */
-    public String createPaymentUrl(String orderId, long amount, String orderInfo, String ipAddress, String bankCode) throws Exception {
-        Map<String, String> vnp_Params = new HashMap<>();
+    public VnpayRes createPaymentUrl(String orderId, String ipAddress, String bankCode) throws Exception {
+        Optional<Order> order = orderRepo.findById(Integer.valueOf(orderId));
+        if (order.isPresent()) {
+            long amount = order.get().getTotal();
+            String orderInfo = order.get().getDescription();
+            Map<String, String> vnp_Params = new HashMap<>();
 
-        vnp_Params.put("vnp_Version", "2.1.0");
-        vnp_Params.put("vnp_Command", "pay");
-        vnp_Params.put("vnp_TmnCode", tmnCode);
-        vnp_Params.put("vnp_Amount", String.valueOf(amount * 100)); // VNPay yêu cầu số tiền * 100
-        vnp_Params.put("vnp_CurrCode", "VND");
-        vnp_Params.put("vnp_TxnRef", orderId);
-        vnp_Params.put("vnp_OrderInfo", orderInfo);
-        vnp_Params.put("vnp_OrderType", "other");
+            vnp_Params.put("vnp_Version", "2.1.0");
+            vnp_Params.put("vnp_Command", "pay");
+            vnp_Params.put("vnp_TmnCode", tmnCode);
+            vnp_Params.put("vnp_Amount", String.valueOf(amount * 100)); // VNPay yêu cầu số tiền * 100
+            vnp_Params.put("vnp_CurrCode", "VND");
+            vnp_Params.put("vnp_TxnRef", orderId);
+            vnp_Params.put("vnp_OrderInfo", orderInfo);
+            vnp_Params.put("vnp_OrderType", "other");
 
-        // Thêm vnp_BankCode nếu được chỉ định (tùy chọn)
-        // Nếu không có, khách hàng sẽ chọn ngân hàng tại trang VNPay
-        if (bankCode != null && !bankCode.isEmpty()) {
-            vnp_Params.put("vnp_BankCode", bankCode);
-        }
-        vnp_Params.put("vnp_Locale", "vn");
-        vnp_Params.put("vnp_ReturnUrl", returnUrl);
-        vnp_Params.put("vnp_IpAddr", ipAddress);
+            // Thêm vnp_BankCode nếu được chỉ định (tùy chọn)
+            // Nếu không có, khách hàng sẽ chọn ngân hàng tại trang VNPay
+            if (bankCode != null && !bankCode.isEmpty()) {
+                vnp_Params.put("vnp_BankCode", bankCode);
+            }
+            vnp_Params.put("vnp_Locale", "vn");
+            vnp_Params.put("vnp_ReturnUrl", returnUrl);
+            vnp_Params.put("vnp_IpAddr", ipAddress);
 
-        // Tạo thời gian
-        Calendar cld = Calendar.getInstance(TimeZone.getTimeZone("Etc/GMT+7"));
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
-        String vnp_CreateDate = formatter.format(cld.getTime());
-        vnp_Params.put("vnp_CreateDate", vnp_CreateDate);
+            // Tạo thời gian
+            Calendar cld = Calendar.getInstance(TimeZone.getTimeZone("Etc/GMT+7"));
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
+            String vnp_CreateDate = formatter.format(cld.getTime());
+            vnp_Params.put("vnp_CreateDate", vnp_CreateDate);
 
-        cld.add(Calendar.MINUTE, 15); // Hết hạn sau 15 phút
-        String vnp_ExpireDate = formatter.format(cld.getTime());
-        vnp_Params.put("vnp_ExpireDate", vnp_ExpireDate);
+            cld.add(Calendar.MINUTE, 15); // Hết hạn sau 15 phút
+            String vnp_ExpireDate = formatter.format(cld.getTime());
+            vnp_Params.put("vnp_ExpireDate", vnp_ExpireDate);
 
-        // Build query string và tạo secure hash
-        List<String> fieldNames = new ArrayList<>(vnp_Params.keySet());
-        Collections.sort(fieldNames);
+            // Build query string và tạo secure hash
+            List<String> fieldNames = new ArrayList<>(vnp_Params.keySet());
+            Collections.sort(fieldNames);
 
-        StringBuilder hashData = new StringBuilder();
-        StringBuilder query = new StringBuilder();
+            StringBuilder hashData = new StringBuilder();
+            StringBuilder query = new StringBuilder();
 
-        Iterator<String> itr = fieldNames.iterator();
-        while (itr.hasNext()) {
-            String fieldName = itr.next();
-            String fieldValue = vnp_Params.get(fieldName);
-            if ((fieldValue != null) && (fieldValue.length() > 0)) {
-                // Build hash data
-                hashData.append(fieldName);
-                hashData.append('=');
-                hashData.append(URLEncoder.encode(fieldValue, StandardCharsets.US_ASCII.toString()));
+            Iterator<String> itr = fieldNames.iterator();
+            while (itr.hasNext()) {
+                String fieldName = itr.next();
+                String fieldValue = vnp_Params.get(fieldName);
+                if ((fieldValue != null) && (fieldValue.length() > 0)) {
+                    // Build hash data
+                    hashData.append(fieldName);
+                    hashData.append('=');
+                    hashData.append(URLEncoder.encode(fieldValue, StandardCharsets.US_ASCII.toString()));
 
-                // Build query
-                query.append(URLEncoder.encode(fieldName, StandardCharsets.US_ASCII.toString()));
-                query.append('=');
-                query.append(URLEncoder.encode(fieldValue, StandardCharsets.US_ASCII.toString()));
+                    // Build query
+                    query.append(URLEncoder.encode(fieldName, StandardCharsets.US_ASCII.toString()));
+                    query.append('=');
+                    query.append(URLEncoder.encode(fieldValue, StandardCharsets.US_ASCII.toString()));
 
-                if (itr.hasNext()) {
-                    query.append('&');
-                    hashData.append('&');
+                    if (itr.hasNext()) {
+                        query.append('&');
+                        hashData.append('&');
+                    }
                 }
             }
+
+            String queryUrl = query.toString();
+            String vnp_SecureHash = hmacSHA512(hashSecret, hashData.toString());
+            queryUrl += "&vnp_SecureHash=" + vnp_SecureHash;
+            String url = vnpayUrl + "?" + queryUrl;
+            VnpayRes res = new VnpayRes(orderId, amount, bankCode, url);
+            return res;
+//            return vnpayUrl + "?" + queryUrl;
         }
-
-        String queryUrl = query.toString();
-        String vnp_SecureHash = hmacSHA512(hashSecret, hashData.toString());
-        queryUrl += "&vnp_SecureHash=" + vnp_SecureHash;
-
-        return vnpayUrl + "?" + queryUrl;
+        return null;
     }
 
     /**
@@ -141,6 +160,28 @@ public class VnpayService {
 
         String calculatedHash = hmacSHA512(hashSecret, hashData.toString());
         return calculatedHash.equals(vnp_SecureHash);
+    }
+
+    @Transactional
+    public void savePayment(String vnp_TxnRef, String vnp_Amount, String vnp_TransactionNo, String vnp_PayDate) {
+        // 1️⃣ Tìm đơn hàng tương ứng
+        Order order = orderRepo.findById(Integer.parseInt(vnp_TxnRef))
+                .orElseThrow(() -> new RuntimeException("Order not found with id " + vnp_TxnRef));
+
+        // 2️⃣ Tạo đối tượng Payment mới
+        Payment payment = new Payment();
+        payment.setOrder(order);
+        payment.setUser(order.getUser());
+        payment.setMethod("VNPAY");
+        payment.setPaidStatus(PaymentStatus.PAID);
+        payment.setPaidAt(new Date()); // hoặc parse từ vnp_PayDate
+
+        // 3️⃣ Lưu payment
+        paymentRepo.save(payment);
+
+        // 4️⃣ Cập nhật trạng thái đơn hàng
+        order.setStatus("Paid"); // nếu bạn có field này trong Order
+        orderRepo.save(order);
     }
 
     /**
