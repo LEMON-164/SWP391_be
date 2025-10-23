@@ -1,5 +1,4 @@
-package com.lemon.supershop.swp391fa25evdm.distribution.model.dto;
-
+package com.lemon.supershop.swp391fa25evdm.distribution.model.dto.request;
 import java.util.List;
 
 public class DistributionReq {

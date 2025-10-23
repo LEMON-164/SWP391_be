@@ -29,14 +29,14 @@ public class DealerService {
 
     public List<DealerRes> getAllDealers() {
         return dealerRepo.findAll().stream().map(dealer -> {
-            return convertDealertoDealerRes(dealer);
+            return converttoRes(dealer);
         }).collect(Collectors.toList());
     }
 
     public DealerRes getDealer(int id) {
         Optional<Dealer> dealer = dealerRepo.findById(id);
         if (dealer.isPresent()) {
-            return  convertDealertoDealerRes(dealer.get());
+            return  converttoRes(dealer.get());
         } else {
             return null;
         }
@@ -44,13 +44,13 @@ public class DealerService {
 
     public List<DealerRes> searchDealerbyName(String name) {
         return dealerRepo.findByNameContainingIgnoreCase(name).stream().map(dealer -> {
-            return convertDealertoDealerRes(dealer);
+            return converttoRes(dealer);
         }).collect(Collectors.toList());
     }
 
     public List<DealerRes> searchDealerbyAddress(String address) {
         return dealerRepo.findByAddressContainingIgnoreCase(address).stream().map(dealer -> {
-            return convertDealertoDealerRes(dealer);
+            return converttoRes(dealer);
         }).collect(Collectors.toList());
     }
 
@@ -73,7 +73,7 @@ public class DealerService {
         }
         dealer.setStatus(DealerStatus.ACTIVE);
         dealerRepo.save(dealer);
-        return  convertDealertoDealerRes(dealer);
+        return  converttoRes(dealer);
     }
 
     public DealerRes updateDealer(int id, DealerReq dto) {
@@ -93,7 +93,7 @@ public class DealerService {
             }
 
             dealerRepo.save(dealer);
-            return  convertDealertoDealerRes(dealer);
+            return  converttoRes(dealer);
         }
         return null;
     }
@@ -108,7 +108,7 @@ public class DealerService {
         return false;
     }
 
-    public DealerRes convertDealertoDealerRes(Dealer dealer){
+    public DealerRes converttoRes(Dealer dealer){
         DealerRes dto = new DealerRes();
         if (dealer != null) {
             dto.setId(dealer.getId());

@@ -87,8 +87,8 @@ public class Product {
     @OneToOne(mappedBy = "product")
     private InstallmentPlan installmentPlan;
 
-    @OneToOne(mappedBy = "product")
-    private TestDrive testDrive;
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<TestDrive> testDrives;
 
     public Product() {}
 
@@ -252,11 +252,11 @@ public class Product {
         this.status = status;
     }
 
-    public TestDrive getTestDrive() {
-        return testDrive;
+    public List<TestDrive> getTestDrives() {
+        return testDrives;
     }
 
-    public void setTestDrive(TestDrive testDrive) {
-        this.testDrive = testDrive;
+    public void setTestDrives(List<TestDrive> testDrives) {
+        this.testDrives = testDrives;
     }
 }

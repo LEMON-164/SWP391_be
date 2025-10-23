@@ -4,24 +4,40 @@ package com.lemon.supershop.swp391fa25evdm.refra.VnPay.model.dto;
 import java.io.Serializable;
 
 public class VnpayRes implements Serializable {
-    private String status;
-    private String msg;
+    private String orderId;
+    private long amount;
+    private String bank;
     private String url;
 
-    public String getStatus() {
-        return status;
+    public VnpayRes(String orderId, long amount, String bank, String url) {
+        this.orderId = orderId;
+        this.amount = amount;
+        this.bank = bank;
+        this.url = url;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public String getOrderId() {
+        return orderId;
     }
 
-    public String getMsg() {
-        return msg;
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
     }
 
-    public void setMsg(String msg) {
-        this.msg = msg;
+    public long getAmount() {
+        return amount;
+    }
+
+    public void setAmount(long amount) {
+        this.amount = amount;
+    }
+
+    public String getBank() {
+        return bank;
+    }
+
+    public void setBank(String bank) {
+        this.bank = bank;
     }
 
     public String getUrl() {

@@ -3,9 +3,6 @@ package com.lemon.supershop.swp391fa25evdm.testdrive.service;
 import java.util.List;
 import java.util.Optional;
 
-import com.lemon.supershop.swp391fa25evdm.category.model.entity.Category;
-import com.lemon.supershop.swp391fa25evdm.category.model.entity.DealerCategory;
-import com.lemon.supershop.swp391fa25evdm.category.repository.CategoryRepository;
 import com.lemon.supershop.swp391fa25evdm.dealer.model.dto.DealerRes;
 import com.lemon.supershop.swp391fa25evdm.dealer.model.entity.Dealer;
 import com.lemon.supershop.swp391fa25evdm.dealer.service.DealerService;
@@ -18,7 +15,6 @@ import com.lemon.supershop.swp391fa25evdm.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.lemon.supershop.swp391fa25evdm.category.repository.DealerCategoryRepository;
 import com.lemon.supershop.swp391fa25evdm.dealer.repository.DealerRepo;
 import com.lemon.supershop.swp391fa25evdm.testdrive.model.dto.TestDriveReq;
 import com.lemon.supershop.swp391fa25evdm.testdrive.model.dto.TestDriveRes;
@@ -154,8 +150,9 @@ public class TestDriveService {
             if (testDrive.getDealer() != null) {
                 Optional<Dealer> dealer = dealerRepo.findById(testDrive.getDealer().getId());
                 if (dealer.isPresent()){
-                    DealerRes dealerRes = dealerService.convertDealertoDealerRes(dealer.get());
+                    DealerRes dealerRes = dealerService.converttoRes(dealer.get());
                     res.setDealer(dealerRes);
+                    res.setLocation(dealerRes.getAddress());
                 }
             }
             if (testDrive.getProduct() != null) {
