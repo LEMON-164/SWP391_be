@@ -53,6 +53,12 @@ public class UserController {
         return ResponseEntity.ok(users);
     }
 
+    @GetMapping("/available-dealer-managers")
+    public ResponseEntity<List<UserRes>> getAvailableDealerManagers() {
+        List<UserRes> users = userService.findDealerManagersWithoutDealer();
+        return ResponseEntity.ok(users);
+    }
+
     @PostMapping("/addBlackList/{id}")
     public ResponseEntity<String> addBlackList(@PathVariable("id") int id) {
         userService.blackList(id);
