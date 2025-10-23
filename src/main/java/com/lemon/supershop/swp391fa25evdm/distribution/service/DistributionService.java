@@ -76,56 +76,54 @@ public class DistributionService {
 
     public DistributionRes respondToInvitation(int id, DistributionResponseReq req) {
         Optional<Distribution> opt = distributionRepo.findById(id);
-        if (!opt.isPresent()) {
-            throw new RuntimeException("Distribution not found with id: " + id);
+        if (opt.isPresent()) {
+            Distribution distribution = opt.get();
+
+            // Validate status
+            if (!"INVITED".equals(distribution.getStatus())) {
+                throw new RuntimeException("Invalid status. Expected INVITED, got: " + distribution.getStatus());
+            }
+
+            distribution.setStatus(req.getResponse()); // "ACCEPTED" or "DECLINED"
+            distribution.setDealerNotes(req.getDealerNotes());
+
+            distributionRepo.save(distribution);
+            return convertToRes(distribution);
         }
-
-        Distribution distribution = opt.get();
-
-        // Validate status
-        if (!"INVITED".equals(distribution.getStatus())) {
-            throw new RuntimeException("Invalid status. Expected INVITED, got: " + distribution.getStatus());
-        }
-
-        distribution.setStatus(req.getResponse()); // "ACCEPTED" or "DECLINED"
-        distribution.setDealerNotes(req.getDealerNotes());
-
-        distributionRepo.save(distribution);
-        return convertToRes(distribution);
+        return null;
     }
 
     public DistributionRes submitOrder(int id, DistributionOrderReq req) {
         Optional<Distribution> opt = distributionRepo.findById(id);
-        if (!opt.isPresent()) {
-            throw new RuntimeException("Distribution not found with id: " + id);
-        }
+        if (opt.isPresent()) {
+            Distribution distribution = opt.get();
 
-        Distribution distribution = opt.get();
-
-        if (!"ACCEPTED".equals(distribution.getStatus())) {
-            throw new RuntimeException("Invalid status. Expected ACCEPTED, got: " + distribution.getStatus());
-        }
-
-        if (req.getProductIds() != null && !req.getProductIds().isEmpty()) {
-            List<Product> products = new ArrayList<>();
-            for (Integer productId : req.getProductIds()) {
-                Optional<Product> product = productRepo.findById(productId);
-                if (product.isPresent()) {
-                    products.add(product.get());
-                }
+            if (!"ACCEPTED".equals(distribution.getStatus())) {
+                throw new RuntimeException("Invalid status. Expected ACCEPTED, got: " + distribution.getStatus());
             }
-            distribution.setProducts(products);
-        }
 
-        distribution.setRequestedQuantity(req.getRequestedQuantity());
-        distribution.setRequestedDeliveryDate(req.getRequestedDeliveryDate());
-        if (req.getDealerNotes() != null) {
-            distribution.setDealerNotes(req.getDealerNotes());
-        }
-        distribution.setStatus("PENDING");
+            if (req.getProductIds() != null && !req.getProductIds().isEmpty()) {
+                List<Product> products = new ArrayList<>();
+                for (Integer productId : req.getProductIds()) {
+                    Optional<Product> product = productRepo.findById(productId);
+                    if (product.isPresent()) {
+                        products.add(product.get());
+                    }
+                }
+                distribution.setProducts(products);
+            }
 
-        distributionRepo.save(distribution);
-        return convertToRes(distribution);
+            distribution.setRequestedQuantity(req.getRequestedQuantity());
+            distribution.setRequestedDeliveryDate(req.getRequestedDeliveryDate());
+            if (req.getDealerNotes() != null) {
+                distribution.setDealerNotes(req.getDealerNotes());
+            }
+            distribution.setStatus("PENDING");
+
+            distributionRepo.save(distribution);
+            return convertToRes(distribution);
+        }
+        return null;
     }
 
     public DistributionRes approveOrder(int id, DistributionApprovalReq req) {
@@ -232,12 +230,6 @@ public class DistributionService {
                     distribution.setProducts(validProducts);
                 }
             }
-//            if (req.getCategoryId() > 0){
-//                Optional<Category> category = categoryRepository.findById(req.getCategoryId());
-//                if (category.isPresent()){
-//                    distribution.setCategory(category.get());
-//                }
-//            }
             if (req.getDealerId() > 0){
                 Optional<Dealer> dealer = dealerRepo.findById(req.getDealerId());
                 if (dealer.isPresent()){
@@ -258,9 +250,7 @@ public class DistributionService {
     private DistributionRes convertToRes(Distribution distribution) {
         DistributionRes res = new DistributionRes();
 
-//        if (distribution.getCategory() != null) {
-//            res.setCategoryId(distribution.getCategory().getId());
-//        }
+
         res.setId(distribution.getId());
         res.setStatus(distribution.getStatus());
         if (distribution.getDealer() != null) {

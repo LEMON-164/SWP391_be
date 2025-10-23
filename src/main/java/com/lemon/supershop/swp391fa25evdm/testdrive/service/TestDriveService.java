@@ -143,7 +143,7 @@ public class TestDriveService {
             if (testDrive.getUser() != null) {
                 Optional<User> user = userRepo.findById(testDrive.getUser().getId());
                 if (user.isPresent()){
-                    UserRes userRes = userService.convertUsertoUserRes(user.get());
+                    UserRes userRes = userService.converttoRes(user.get());
                     res.setUser(userRes);
                 }
             }
