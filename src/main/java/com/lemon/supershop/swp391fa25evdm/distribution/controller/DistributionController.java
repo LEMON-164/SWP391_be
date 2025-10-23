@@ -2,11 +2,11 @@ package com.lemon.supershop.swp391fa25evdm.distribution.controller;
 
 import java.util.List;
 
+import com.lemon.supershop.swp391fa25evdm.distribution.model.dto.request.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.lemon.supershop.swp391fa25evdm.distribution.model.dto.DistributionReq;
 import com.lemon.supershop.swp391fa25evdm.distribution.model.dto.DistributionRes;
 import com.lemon.supershop.swp391fa25evdm.distribution.service.DistributionService;
 
@@ -24,11 +24,11 @@ public class DistributionController {
         return ResponseEntity.ok(distributions);
     }
 
-    @GetMapping("/search/category/{categoryId}")
-    public ResponseEntity<List<DistributionRes>> getDistributionsByCategory(@PathVariable int categoryId) {
-        List<DistributionRes> distributions = distributionService.getDistributionsByCategoryId(categoryId);
-        return ResponseEntity.ok(distributions);
-    }
+//    @GetMapping("/search/category/{categoryId}")
+//    public ResponseEntity<List<DistributionRes>> getDistributionsByCategory(@PathVariable int categoryId) {
+//        List<DistributionRes> distributions = distributionService.getDistributionsByCategoryId(categoryId);
+//        return ResponseEntity.ok(distributions);
+//    }
 
     @GetMapping("/search/dealer/{dealerId}")
     public ResponseEntity<List<DistributionRes>> getDistributionsByDealer(@PathVariable int dealerId) {
@@ -41,7 +41,70 @@ public class DistributionController {
 //        List<DistributionRes> distributions = distributionService.getDistributionsByContractId(contractId);
 //        return ResponseEntity.ok(distributions);
 //    }
-
+    @PostMapping("/invite")
+    public ResponseEntity<DistributionRes> sendInvitation(@RequestBody DistributionInvitationReq request) {
+        try {
+            DistributionRes response = distributionService.sendInvitation(request);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+    @PutMapping("/{id}/respond")
+    public ResponseEntity<DistributionRes> respondToInvitation(
+            @PathVariable int id,
+            @RequestBody DistributionResponseReq request) {
+        try {
+            DistributionRes response = distributionService.respondToInvitation(id, request);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+    @PutMapping("/{id}/submit-order")
+    public ResponseEntity<DistributionRes> submitOrder(
+            @PathVariable int id,
+            @RequestBody DistributionOrderReq request) {
+        try {
+            DistributionRes response = distributionService.submitOrder(id, request);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+    @PutMapping("/{id}/approve")
+    public ResponseEntity<DistributionRes> approveOrder(
+            @PathVariable int id,
+            @RequestBody DistributionApprovalReq request) {
+        try {
+            DistributionRes response = distributionService.approveOrder(id, request);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+    @PutMapping("/{id}/plan")
+    public ResponseEntity<DistributionRes> planDelivery(
+            @PathVariable int id,
+            @RequestBody DistributionPlanningReq request) {
+        try {
+            DistributionRes response = distributionService.planDelivery(id, request);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+    @PutMapping("/{id}/complete")
+    public ResponseEntity<DistributionRes> confirmReceived(
+            @PathVariable int id,
+            @RequestBody DistributionCompletionReq request) {
+        try {
+            DistributionRes response = distributionService.confirmReceived(id, request);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
     @PostMapping("/createDistribution")
     public ResponseEntity<DistributionRes> createDistribution(@RequestBody DistributionReq distributionReq) {
         DistributionRes distributionRes = distributionService.createDistribution(distributionReq);

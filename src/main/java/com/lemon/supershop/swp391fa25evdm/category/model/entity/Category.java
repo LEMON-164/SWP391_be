@@ -1,10 +1,8 @@
 package com.lemon.supershop.swp391fa25evdm.category.model.entity;
 
-import com.lemon.supershop.swp391fa25evdm.distribution.model.entity.Distribution;
 import com.lemon.supershop.swp391fa25evdm.policies.model.entity.Policy;
 import com.lemon.supershop.swp391fa25evdm.product.model.entity.Product;
 import com.lemon.supershop.swp391fa25evdm.promotion.model.entity.Promotion;
-import com.lemon.supershop.swp391fa25evdm.testdrive.model.entity.TestDrive;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -51,9 +49,6 @@ public class Category {
 
     @OneToMany(mappedBy = "category", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<DealerCategory> dealerCategories = new ArrayList<>();
-
-    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Distribution> distributions = new ArrayList<>();
 
     @OneToMany(mappedBy = "category", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Policy> policies = new ArrayList<>();
@@ -150,14 +145,6 @@ public class Category {
 
     public void setDealerCategories(List<DealerCategory> dealerCategories) {
         this.dealerCategories = dealerCategories;
-    }
-
-    public List<Distribution> getDistributions() {
-        return distributions;
-    }
-
-    public void setDistributions(List<Distribution> distributions) {
-        this.distributions = distributions;
     }
 
     public List<Policy> getPolicies() {
