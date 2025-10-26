@@ -9,6 +9,7 @@ import com.lemon.supershop.swp391fa25evdm.refra.VnPay.model.dto.VnpayRes;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.Mac;
@@ -163,25 +164,35 @@ public class VnpayService {
     }
 
     @Transactional
-    public void savePayment(String vnp_TxnRef, String vnp_Amount, String vnp_TransactionNo, String vnp_PayDate) {
-        // 1️⃣ Tìm đơn hàng tương ứng
-        Order order = orderRepo.findById(Integer.parseInt(vnp_TxnRef))
-                .orElseThrow(() -> new RuntimeException("Order not found with id " + vnp_TxnRef));
+    public void savePayment(String vnp_TxnRef, String vnp_Amount, String vnp_TransactionNo,String vnp_BankCode, String vnp_ResponseCode) {
+        // 3. Tìm Payment trong DB
+        Optional<Payment> payment = paymentRepo.findByVnpOrderId(vnp_TxnRef);
+        if (payment.isEmpty()) {
 
-        // 2️⃣ Tạo đối tượng Payment mới
-        Payment payment = new Payment();
-        payment.setOrder(order);
-        payment.setUser(order.getUser());
-        payment.setMethod("VNPAY");
-        payment.setPaidStatus(PaymentStatus.PAID);
-        payment.setPaidAt(new Date()); // hoặc parse từ vnp_PayDate
+            // 4. ✅ UPDATE DB (giống callback, vì localhost không nhận IPN)
+            if ("00".equals(vnp_ResponseCode)) {
+                // Thanh toán thành công
+                payment.get().setPaidStatus(PaymentStatus.PAID);
+                payment.get().setTransactionCode(vnp_TransactionNo);
+                payment.get().setResponseCode(vnp_ResponseCode);
+                payment.get().setBankCode(vnp_BankCode);
+                payment.get().setUpdateAt(new Date());
+                payment.get().setProviderResponse(params.toString());
+                paymentRepo.save(payment.get());
 
-        // 3️⃣ Lưu payment
-        paymentRepo.save(payment);
+                System.out.println("✅ Payment successful (return): " + vnp_TxnRef);
+            } else {
+                // Thanh toán thất bại
+                payment.get().setPaidStatus(PaymentStatus.FAILED);
+                payment.get().setResponseCode(vnp_ResponseCode);
+                payment.get().setUpdateAt(new Date());
+                payment.get().setProviderResponse(params.toString());
+                paymentRepo.save(payment.get());
 
-        // 4️⃣ Cập nhật trạng thái đơn hàng
-        order.setStatus("Paid"); // nếu bạn có field này trong Order
-        orderRepo.save(order);
+                System.out.println("❌ Payment failed (return): " + vnp_TxnRef + " - Code: " + vnp_ResponseCode);
+            }
+        }
+        return null;
     }
 
     /**
