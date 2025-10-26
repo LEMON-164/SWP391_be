@@ -12,6 +12,8 @@ public class UserRes {
     private String address;
     private String role;
     private UserStatus status;
+    private String dealerName;
+    private String dealerAddress;
 
     public UserRes() {}
 
@@ -67,5 +69,21 @@ public class UserRes {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public String getDealerName() {
+        return dealerName;
+    }
+
+    public void setDealerName(String dealerName) {
+        this.dealerName = dealerName;
+    }
+
+    public String getDealerAddress() {
+        return dealerAddress;
+    }
+
+    public void setDealerAddress(String dealerAddress) {
+        this.dealerAddress = dealerAddress;
     }
 }

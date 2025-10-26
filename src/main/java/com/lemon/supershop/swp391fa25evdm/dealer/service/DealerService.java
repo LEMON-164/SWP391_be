@@ -5,12 +5,13 @@ import com.lemon.supershop.swp391fa25evdm.dealer.model.dto.DealerRes;
 import com.lemon.supershop.swp391fa25evdm.dealer.model.entity.Dealer;
 import com.lemon.supershop.swp391fa25evdm.dealer.model.enums.DealerStatus;
 import com.lemon.supershop.swp391fa25evdm.dealer.repository.DealerRepo;
+import com.lemon.supershop.swp391fa25evdm.user.model.entity.User;
+import com.lemon.supershop.swp391fa25evdm.user.repository.UserRepo;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -19,6 +20,8 @@ public class DealerService {
 
     @Autowired
     private DealerRepo dealerRepo;
+    @Autowired
+    private UserRepo userRepo;
 
     private static final Pattern EMAIL_PATTERN =
             Pattern.compile("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$", Pattern.CASE_INSENSITIVE);
@@ -72,6 +75,20 @@ public class DealerService {
             dealer.setTaxcode(dto.getTaxcode());
         }
         dealer.setStatus(DealerStatus.ACTIVE);
+        dealerRepo.save(dealer);
+        Optional<User> user = userRepo.findById(dto.getUserId());
+        if (user.isPresent()) {
+            if (user.get().getRole().getName().trim().equals("Dealer Manager")){
+                user.get().setDealer(dealer);
+                userRepo.save(user.get());
+                if (dealer.getUsers() != null){
+                    dealer.getUsers().add(user.get());
+                } else {
+                    Set<User> users = new HashSet<>();
+                    dealer.setUsers(users);
+                }
+            }
+        }
         dealerRepo.save(dealer);
         return  converttoRes(dealer);
     }
