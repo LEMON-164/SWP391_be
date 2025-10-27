@@ -5,6 +5,7 @@ package com.lemon.supershop.swp391fa25evdm.distribution.model.entity;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.lemon.supershop.swp391fa25evdm.contract.model.entity.Contract;
 import com.lemon.supershop.swp391fa25evdm.dealer.model.entity.Dealer;
 import com.lemon.supershop.swp391fa25evdm.product.model.entity.Product;
 
@@ -18,6 +19,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 
@@ -86,6 +88,9 @@ public class Distribution {
     @Column(name = "ReceivedQuantity")
     private Integer receivedQuantity;
 
+    @OneToOne(mappedBy = "distribution")
+    private Contract contract;
+
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
@@ -120,6 +125,14 @@ public class Distribution {
 
     public void setDealer(Dealer dealer) {
         this.dealer = dealer;
+    }
+
+    public Contract getContract() {
+        return contract;
+    }
+
+    public void setContract(Contract contract) {
+        this.contract = contract;
     }
 
     public List<Product> getProducts() {
