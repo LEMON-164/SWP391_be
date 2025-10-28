@@ -1,9 +1,5 @@
 package com.lemon.supershop.swp391fa25evdm.category.model.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 public class CategoryReq {
     private String name;
     private String brand;
