@@ -1,60 +1,58 @@
-package com.lemon.supershop.swp391fa25evdm.distribution.model.dto;
-
-import com.lemon.supershop.swp391fa25evdm.dealer.model.dto.DealerRes;
-import com.lemon.supershop.swp391fa25evdm.product.model.dto.ProductReq;
-import com.lemon.supershop.swp391fa25evdm.product.model.dto.ProductRes;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+package com.lemon.supershop.swp391fa25evdm.distribution.model.dto.response;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.lemon.supershop.swp391fa25evdm.dealer.model.dto.DealerRes;
+import com.lemon.supershop.swp391fa25evdm.product.model.dto.ProductRes;
+
 public class DistributionRes {
 
-    private int id;
-    private DealerRes dealer;
-    private int contractId;
+    private Integer id;
     private String status;
+    private DealerRes dealer;
     private List<ProductRes> products;
+    private List<DistributionItemRes> items;
+
+    // Messages/Notes
     private String invitationMessage;
     private String dealerNotes;
     private String evmNotes;
     private String feedback;
+
+    // Timeline - CHỈ 2 FIELD ĐANG DÙNG
     private LocalDateTime createdAt;
     private LocalDateTime invitedAt;
+
+    // Dates
     private LocalDateTime deadline;
     private LocalDateTime requestedDeliveryDate;
     private LocalDateTime estimatedDeliveryDate;
     private LocalDateTime actualDeliveryDate;
+
+    // Quantities - CHỈ 2 FIELD ĐANG DÙNG
     private Integer requestedQuantity;
     private Integer receivedQuantity;
+    private Double manufacturerPrice; // Giá hãng gửi cho dealer
 
     public DistributionRes() {
     }
 
-    public int getId() {
+    // Getters and Setters
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public int getContractId() {
-        return contractId;
+    public String getStatus() {
+        return status;
     }
 
-    public void setContractId(int contractId) {
-        this.contractId = contractId;
-    }
-
-    public List<ProductRes> getProducts() {
-        return products;
-    }
-
-    public void setProducts(List<ProductRes> products) {
-        this.products = products;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public DealerRes getDealer() {
@@ -65,12 +63,20 @@ public class DistributionRes {
         this.dealer = dealer;
     }
 
-    public String getStatus() {
-        return status;
+    public List<ProductRes> getProducts() {
+        return products;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setProducts(List<ProductRes> products) {
+        this.products = products;
+    }
+
+    public List<DistributionItemRes> getItems() {
+        return items;
+    }
+
+    public void setItems(List<DistributionItemRes> items) {
+        this.items = items;
     }
 
     public String getInvitationMessage() {
@@ -168,5 +174,12 @@ public class DistributionRes {
     public void setReceivedQuantity(Integer receivedQuantity) {
         this.receivedQuantity = receivedQuantity;
     }
-}
 
+    public Double getManufacturerPrice() {
+        return manufacturerPrice;
+    }
+
+    public void setManufacturerPrice(Double manufacturerPrice) {
+        this.manufacturerPrice = manufacturerPrice;
+    }
+}

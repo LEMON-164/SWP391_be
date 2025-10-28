@@ -4,27 +4,20 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public class DistributionOrderReq {
-    private List<Integer> productIds;
-    private Integer requestedQuantity;
+
+    private List<DistributionOrderItemReq> items;
     private LocalDateTime requestedDeliveryDate;
     private String dealerNotes;
 
-    public DistributionOrderReq() {}
-
-    public List<Integer> getProductIds() {
-        return productIds;
+    public DistributionOrderReq() {
     }
 
-    public void setProductIds(List<Integer> productIds) {
-        this.productIds = productIds;
+    public List<DistributionOrderItemReq> getItems() {
+        return items;
     }
 
-    public Integer getRequestedQuantity() {
-        return requestedQuantity;
-    }
-
-    public void setRequestedQuantity(Integer requestedQuantity) {
-        this.requestedQuantity = requestedQuantity;
+    public void setItems(List<DistributionOrderItemReq> items) {
+        this.items = items;
     }
 
     public LocalDateTime getRequestedDeliveryDate() {
