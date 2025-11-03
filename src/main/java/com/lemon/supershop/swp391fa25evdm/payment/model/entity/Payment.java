@@ -1,12 +1,24 @@
 package com.lemon.supershop.swp391fa25evdm.payment.model.entity;
 
+import java.util.Date;
+
 import com.lemon.supershop.swp391fa25evdm.order.model.entity.Order;
 import com.lemon.supershop.swp391fa25evdm.payment.model.enums.PaymentStatus;
 import com.lemon.supershop.swp391fa25evdm.preorder.model.entity.PreOrder;
 import com.lemon.supershop.swp391fa25evdm.user.model.entity.User;
-import jakarta.persistence.*;
 
-import java.util.Date;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "payment")
