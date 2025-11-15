@@ -16,8 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.lemon.supershop.swp391fa25evdm.dealer.repository.DealerRepo;
-import com.lemon.supershop.swp391fa25evdm.testdrive.model.dto.TestDriveReq;
-import com.lemon.supershop.swp391fa25evdm.testdrive.model.dto.TestDriveRes;
+import com.lemon.supershop.swp391fa25evdm.testdrive.model.dto.request.TestDriveReq;
+import com.lemon.supershop.swp391fa25evdm.testdrive.model.dto.response.TestDriveRes;
 import com.lemon.supershop.swp391fa25evdm.testdrive.model.entity.TestDrive;
 import com.lemon.supershop.swp391fa25evdm.testdrive.repository.TestDriveRepository;
 import com.lemon.supershop.swp391fa25evdm.user.repository.UserRepo;

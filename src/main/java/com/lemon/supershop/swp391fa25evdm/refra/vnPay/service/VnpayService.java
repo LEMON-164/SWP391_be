@@ -1,4 +1,4 @@
-package com.lemon.supershop.swp391fa25evdm.refra.VnPay.service;
+package com.lemon.supershop.swp391fa25evdm.refra.vnPay.service;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -27,7 +27,7 @@ import com.lemon.supershop.swp391fa25evdm.order.repository.OrderRepo;
 import com.lemon.supershop.swp391fa25evdm.payment.model.entity.Payment;
 import com.lemon.supershop.swp391fa25evdm.payment.model.enums.PaymentStatus;
 import com.lemon.supershop.swp391fa25evdm.payment.repository.PaymentRepo;
-import com.lemon.supershop.swp391fa25evdm.refra.VnPay.model.dto.Response.VnpayRes;
+import com.lemon.supershop.swp391fa25evdm.refra.vnPay.model.dto.Response.VnpayRes;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;

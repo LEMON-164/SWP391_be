@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.lemon.supershop.swp391fa25evdm.category.model.entity.Category;
@@ -14,6 +15,8 @@ public interface CategoryRepository extends JpaRepository<Category, Integer> {
 
     // Find by name (exact match)
     Optional<Category> findByNameIgnoreCase(String name);
+
+    Optional<Category> findByNameIgnoreCaseAndDealerId(String name, Integer dealerId);
 
     // Find by name containing (partial match)
     List<Category> findByNameContainingIgnoreCase(String name);
@@ -36,7 +39,12 @@ public interface CategoryRepository extends JpaRepository<Category, Integer> {
     //Check existence by name
     boolean existsByNameIgnoreCase(String name);
 
+    boolean existsByNameIgnoreCaseAndDealerId(String name, Integer dealerId);
+
     // Find active categories
-    @Query("SELECT c FROM Category c WHERE c.status = 'ACTIVE'")
+    @Query("SELECT c FROM Category c WHERE c.status = 'ACTIVE' OR c.status = 'AVAILABLE'")
     List<Category> findActiveCategories();
+
+    @Query("SELECT c FROM Category c WHERE c.dealer.id = :dealerId")
+    List<Category> findByDealerId(@Param("dealerId") Integer dealerId);
 }

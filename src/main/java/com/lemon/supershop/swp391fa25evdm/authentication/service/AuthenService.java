@@ -1,6 +1,8 @@
 package com.lemon.supershop.swp391fa25evdm.authentication.service;
 
 import com.lemon.supershop.swp391fa25evdm.authentication.model.dto.*;
+import com.lemon.supershop.swp391fa25evdm.dealer.model.entity.Dealer;
+import com.lemon.supershop.swp391fa25evdm.dealer.repository.DealerRepo;
 import com.lemon.supershop.swp391fa25evdm.refra.JwtUtil;
 import com.lemon.supershop.swp391fa25evdm.role.model.entity.Role;
 import com.lemon.supershop.swp391fa25evdm.role.repository.RoleRepo;
@@ -23,6 +25,9 @@ public class AuthenService {
     private RoleRepo roleRepo;
 
     @Autowired
+    private DealerRepo dealerRepo;
+
+    @Autowired
     private JwtUtil jwtUtil;
 
     private static final Pattern EMAIL_PATTERN =
@@ -34,32 +39,48 @@ public class AuthenService {
 
 
     public LoginRes login(LoginReq dto) {
-        Optional<User> user = Optional.empty();
+        Optional<User> userOpt = Optional.empty();
         if (dto.getIdentifier() != null){
             if (EMAIL_PATTERN.matcher(dto.getIdentifier()).matches()){
-                user = userRepo.findByEmail(dto.getIdentifier());
+                userOpt = userRepo.findByEmail(dto.getIdentifier());
             } else {
-                user = userRepo.findByUsername(dto.getIdentifier());
+                userOpt = userRepo.findByUsername(dto.getIdentifier());
             }
         }
 
-        if (!user.isPresent()) {
+        if (!userOpt.isPresent()) {
             throw new RuntimeException("User not found");
         }
-        if (!user.get().getPassword().equals(dto.getPassword())) {
+
+        User user = userOpt.get();
+
+        if (user.getStatus() == UserStatus.INACTIVE) {
+            throw new RuntimeException("Account inactive");
+        }
+
+        if (!user.getPassword().equals(dto.getPassword())) {
             throw new RuntimeException("Invalid password");
         }
 
-        String token = jwtUtil.generateToken(user.get().getUsername());
-        String refreshToken = jwtUtil.generateRefreshToken(user.get().getUsername());
+        String token = jwtUtil.generateToken(user.getUsername());
+        String refreshToken = jwtUtil.generateRefreshToken(user.getUsername());
 
-        LoginRes response = new LoginRes(token, refreshToken, user.get().getUsername(), user.get().getRole().getName());
+        LoginRes response = new LoginRes(token, refreshToken, user.getUsername(), user.getRole().getName());
+
+        // Thêm thông tin user và dealer nếu có
+        response.setUserId(user.getId());
+        if (user.getDealer() != null) {
+            response.setDealerId(user.getDealer().getId());
+            response.setDealerName(user.getDealer().getName());
+            response.setDealerAddress(user.getDealer().getAddress());
+        }
 
         return response;
     }
 
     public void register(RegisterReq dto) {
         User user = new User();
+        user.setId(0);
         User newUser = converttoEntity(user, dto);
         if (newUser != null) {
             userRepo.save(newUser);
@@ -69,14 +90,28 @@ public class AuthenService {
     public void changePassword(int id, ChangePassReq dto){
         Optional<User> user = userRepo.findById(id);
         if (user.isPresent()) {
-            if (dto.getOldPass().equals(user.get().getPassword())){
-                if (!dto.getNewPass().equals(user.get().getPassword())){
-                    if (dto.getNewPass().equals(dto.getConfirmPass())){
-                        user.get().setPassword(dto.getNewPass());
-                        userRepo.save(user.get());
-                    }
-                }
+            String oldPass = dto.getOldPass();
+            String newPass = dto.getNewPass();
+            String confirmPass = dto.getConfirmPass();
+
+            if (oldPass == null || newPass == null || confirmPass == null) {
+                throw new RuntimeException("Password fields must not be null");
             }
+
+            if (!oldPass.equals(user.get().getPassword())) {
+                throw new RuntimeException("Old password does not match");
+            }
+
+            if (newPass.equals(user.get().getPassword())) {
+                throw new RuntimeException("New password must be different from old password");
+            }
+
+            if (!newPass.equals(confirmPass)) {
+                throw new RuntimeException("Confirm password does not match new password");
+            }
+
+            user.get().setPassword(newPass);
+            userRepo.save(user.get());
         }
     }
 
@@ -107,6 +142,12 @@ public class AuthenService {
             }
             if (dto.getAddress() != null){
                 user.setAddress(dto.getAddress());
+            }
+            if (dto.getDealerId() != null && dto.getDealerId() > 0) {
+                Optional<Dealer> dealer = dealerRepo.findById(dto.getDealerId());
+                if (dealer.isPresent()) {
+                    user.setDealer(dealer.get());
+                }
             }
             user.setStatus(UserStatus.ACTIVE);
             return user;

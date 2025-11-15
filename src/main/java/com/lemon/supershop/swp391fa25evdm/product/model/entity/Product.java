@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.lemon.supershop.swp391fa25evdm.category.model.entity.Category;
 import com.lemon.supershop.swp391fa25evdm.category.model.entity.DealerCategory;
 import com.lemon.supershop.swp391fa25evdm.distribution.model.entity.Distribution;
+import com.lemon.supershop.swp391fa25evdm.distribution.model.entity.DistributionItem;
 import com.lemon.supershop.swp391fa25evdm.order.model.entity.Order;
 import com.lemon.supershop.swp391fa25evdm.payment.model.entity.InstallmentPlan;
 import com.lemon.supershop.swp391fa25evdm.preorder.model.entity.PreOrder;
@@ -71,6 +72,13 @@ public class Product {
     @Column(name = "DealerPrice", columnDefinition = "BIGINT")
     private long dealerPrice;
 
+    @Column(name = "ManufacturerPrice", columnDefinition = "BIGINT", updatable = false)
+    private Long manufacturerPrice;
+
+
+    @Column(name = "RetailPrice", columnDefinition = "BIGINT")
+    private Long retailPrice;
+
     @Column(name = "Image", columnDefinition = "VARCHAR(MAX)")
     private String image;
 
@@ -94,10 +102,9 @@ public class Product {
     @OneToOne(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Order order;
 
-    @ManyToOne
-    @JoinColumn(name = "DistributionId")
-    @JsonIgnore
-    private Distribution distribution;
+    @OneToOne()
+    @JoinColumn(name = "DistributionItemId")
+    private DistributionItem distributionItem;
 
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<PreOrder> preOrders = new ArrayList<>();
@@ -215,14 +222,6 @@ public class Product {
         this.preOrders = preOrders;
     }
 
-    public Distribution getDistribution() {
-        return distribution;
-    }
-
-    public void setDistribution(Distribution distribution) {
-        this.distribution = distribution;
-    }
-
     public double getBattery() {
         return battery;
     }
@@ -285,5 +284,29 @@ public class Product {
 
     public void setTestDrives(List<TestDrive> testDrives) {
         this.testDrives = testDrives;
+    }
+
+    public DistributionItem getDistributionItem() {
+        return distributionItem;
+    }
+
+    public void setDistributionItem(DistributionItem distributionItem) {
+        this.distributionItem = distributionItem;
+    }
+
+    public Long getManufacturerPrice() {
+        return manufacturerPrice;
+    }
+
+    public void setManufacturerPrice(Long manufacturerPrice) {
+        this.manufacturerPrice = manufacturerPrice;
+    }
+
+    public Long getRetailPrice() {
+        return retailPrice;
+    }
+
+    public void setRetailPrice(Long retailPrice) {
+        this.retailPrice = retailPrice;
     }
 }

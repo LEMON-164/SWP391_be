@@ -31,6 +31,18 @@ public class DealerCategoryController {
         return ResponseEntity.ok(dealerCategory);
     }
 
+    @GetMapping("/search/dealer/{dealerId}")
+    public ResponseEntity<List<DealerCategoryRes>> getDealerCategoriesByDealerId(@PathVariable int dealerId) {
+        List<DealerCategoryRes> dealerCategories = dealerCategoryService.getDealerCategoriesByDealerId(dealerId);
+        return ResponseEntity.ok(dealerCategories);
+    }
+
+    @GetMapping("/search/category/{categoryId}")
+    public ResponseEntity<List<DealerCategoryRes>> getDealerCategoriesByCategoryId(@PathVariable int categoryId) {
+        List<DealerCategoryRes> dealerCategories = dealerCategoryService.getDealerCategoriesByCategoryId(categoryId);
+        return ResponseEntity.ok(dealerCategories);
+    }
+
     @PostMapping ("/create")
     public ResponseEntity<DealerCategoryRes> createDealerCategory(@RequestBody DealerCategoryReq dealerCategoryReq) {
         DealerCategoryRes categoryRes = dealerCategoryService.createDealerCategory(dealerCategoryReq);

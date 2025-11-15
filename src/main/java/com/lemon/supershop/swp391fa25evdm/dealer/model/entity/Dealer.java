@@ -1,12 +1,14 @@
 package com.lemon.supershop.swp391fa25evdm.dealer.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.lemon.supershop.swp391fa25evdm.category.model.entity.Category;
 import com.lemon.supershop.swp391fa25evdm.category.model.entity.DealerCategory;
 import com.lemon.supershop.swp391fa25evdm.dealer.model.enums.DealerStatus;
 import com.lemon.supershop.swp391fa25evdm.distribution.model.entity.Distribution;
 import com.lemon.supershop.swp391fa25evdm.order.model.entity.Order;
 import com.lemon.supershop.swp391fa25evdm.payment.model.entity.InstallmentPlan;
 import com.lemon.supershop.swp391fa25evdm.policies.model.entity.Policy;
+import com.lemon.supershop.swp391fa25evdm.product.model.entity.Product;
 import com.lemon.supershop.swp391fa25evdm.promotion.model.entity.Promotion;
 import com.lemon.supershop.swp391fa25evdm.testdrive.model.entity.TestDrive;
 import com.lemon.supershop.swp391fa25evdm.user.model.entity.User;
@@ -77,6 +79,9 @@ public class Dealer {
     @OneToMany(mappedBy = "dealer", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<TestDrive> testDrives;
 
+//    @OneToMany(mappedBy = "dealer", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+//    private List<Category> categories = new ArrayList<>();
+
     public Dealer() {}
 
     public int getId() {
@@ -106,6 +111,12 @@ public class Dealer {
     public String getAddress() {
         return address;
     }
+
+    @Column(name = "Latitude", columnDefinition = "DECIMAL(10,8)")
+    private Double latitude;
+
+    @Column(name = "Longitude", columnDefinition = "DECIMAL(11,8)")
+    private Double longitude;
 
     public void setAddress(String address) {
         this.address = address;
@@ -197,5 +208,37 @@ public class Dealer {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public List<InstallmentPlan> getInstallmentPlans() {
+        return installmentPlans;
+    }
+
+    public void setInstallmentPlans(List<InstallmentPlan> installmentPlans) {
+        this.installmentPlans = installmentPlans;
+    }
+
+//    public List<Category> getCategories() {
+//        return categories;
+//    }
+//
+//    public void setCategories(List<Category> categories) {
+//        this.categories = categories;
+//    }
+
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
     }
 }

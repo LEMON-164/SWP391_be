@@ -54,6 +54,12 @@ public class ProductController {
         return ResponseEntity.ok(products);
     }
 
+    @GetMapping("/search/dealerCategory/{dealerCategoryId}")
+    public ResponseEntity<List<ProductRes>> getProductsByDealerCategoryId(@PathVariable int dealerCategoryId) {
+        List<ProductRes> products = productService.getProductByDealerCategoryId(dealerCategoryId);
+        return ResponseEntity.ok(products);
+    }
+
     @PostMapping("/addProduct")
     public ResponseEntity<ProductRes> addProduct(@RequestBody ProductReq productReq) {
         ProductRes createdProduct = productService.createProduct(productReq);

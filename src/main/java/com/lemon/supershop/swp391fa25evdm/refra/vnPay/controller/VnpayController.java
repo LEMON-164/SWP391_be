@@ -1,4 +1,4 @@
-package com.lemon.supershop.swp391fa25evdm.refra.VnPay.controller;
+package com.lemon.supershop.swp391fa25evdm.refra.vnPay.controller;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.lemon.supershop.swp391fa25evdm.refra.VnPay.model.dto.Response.VnpayRes;
-import com.lemon.supershop.swp391fa25evdm.refra.VnPay.service.VnpayService;
+import com.lemon.supershop.swp391fa25evdm.refra.vnPay.model.dto.Response.VnpayRes;
+import com.lemon.supershop.swp391fa25evdm.refra.vnPay.service.VnpayService;
 
 import jakarta.servlet.http.HttpServletRequest;
 

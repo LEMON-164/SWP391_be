@@ -5,13 +5,14 @@ public class CategoryRes {
     private Integer id;
     private String name;
     private String brand;
-    private String version;
-    private String type;
+//    private String version;
+//    private String type;
     private Long basePrice;
     private Integer warranty;
     private Boolean isSpecial;
     private String description;
     private String status;
+    private Integer dealerId;
 
     public CategoryRes(){}
 
@@ -39,21 +40,21 @@ public class CategoryRes {
         this.brand = brand;
     }
 
-    public String getVersion() {
-        return version;
-    }
-
-    public void setVersion(String version) {
-        this.version = version;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
+//    public String getVersion() {
+//        return version;
+//    }
+//
+//    public void setVersion(String version) {
+//        this.version = version;
+//    }
+//
+//    public String getType() {
+//        return type;
+//    }
+//
+//    public void setType(String type) {
+//        this.type = type;
+//    }
 
     public Long getBasePrice() {
         return basePrice;
@@ -93,5 +94,17 @@ public class CategoryRes {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public void setBasePrice(Long basePrice) {
+        this.basePrice = basePrice;
+    }
+
+    public Integer getDealerId() {
+        return dealerId;
+    }
+
+    public void setDealerId(Integer dealerId) {
+        this.dealerId = dealerId;
     }
 }

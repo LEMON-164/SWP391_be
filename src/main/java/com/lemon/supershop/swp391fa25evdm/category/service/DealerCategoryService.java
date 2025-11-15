@@ -39,6 +39,16 @@ public class DealerCategoryService {
                 .orElse(null);
     }
 
+    public List<DealerCategoryRes> getDealerCategoriesByDealerId(int dealerId) {
+        List<DealerCategory> dealerCategories = dealerCategoryRepository.findByDealerId(dealerId);
+        return dealerCategories.stream().map(this::convertToRes).toList();
+    }
+
+    public List<DealerCategoryRes> getDealerCategoriesByCategoryId(int categoryId) {
+        List<DealerCategory> dealerCategories = dealerCategoryRepository.findByCategoryId(categoryId);
+        return dealerCategories.stream().map(this::convertToRes).toList();
+    }
+
     public DealerCategoryRes createDealerCategory(DealerCategoryReq dto) {
         DealerCategory dealerCategory = new DealerCategory();
         if (dto.getName() != null){

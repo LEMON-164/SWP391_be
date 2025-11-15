@@ -17,6 +17,8 @@ public class ProductRes {
     private Date manufacture_date;
     private String image;
     private String description;
+    private Long manufacturerPrice;
+    private Long retailPrice;
     private long price;
     private ProductStatus status;
     private int categoryId;
@@ -150,5 +152,21 @@ public class ProductRes {
 
     public void setStatus(ProductStatus status) {
         this.status = status;
+    }
+
+    public Long getManufacturerPrice() {
+        return manufacturerPrice;
+    }
+
+    public void setManufacturerPrice(Long manufacturerPrice) {
+        this.manufacturerPrice = manufacturerPrice;
+    }
+
+    public Long getRetailPrice() {
+        return retailPrice;
+    }
+
+    public void setRetailPrice(Long retailPrice) {
+        this.retailPrice = retailPrice;
     }
 }

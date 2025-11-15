@@ -38,17 +38,12 @@ public class Distribution {
     @Column(name = "ManufacturerPrice")
     private Double manufacturerPrice; // Giá hãng gửi cho dealer
 
-    @OneToMany(mappedBy = "distribution", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Product> products;
+    @Column(name = "ParentDistributionId")
+    private Integer parentDistributionId; // ID của đơn gốc nếu đây là đơn bổ sung
 
-    @OneToMany(mappedBy = "distribution", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<DistributionItem> items;
+    @Column(name = "IsSupplementary")
+    private Boolean isSupplementary; // True nếu đây là đơn bổ sung số lượng thiếu
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "DealerId")
-    private Dealer dealer;
-
-    // Messages & Notes
     @Column(name = "InvitationMessage", columnDefinition = "NVARCHAR(500)")
     private String invitationMessage;
 
@@ -90,6 +85,18 @@ public class Distribution {
 
     @OneToOne(mappedBy = "distribution")
     private Contract contract;
+
+    //    @OneToMany(mappedBy = "distribution", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+//    private List<Product> products;
+
+    @OneToMany(mappedBy = "distribution", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<DistributionItem> items;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "DealerId")
+    private Dealer dealer;
+
+
 
     @PrePersist
     protected void onCreate() {
@@ -135,13 +142,13 @@ public class Distribution {
         this.contract = contract;
     }
 
-    public List<Product> getProducts() {
-        return products;
-    }
-
-    public void setProducts(List<Product> products) {
-        this.products = products;
-    }
+//    public List<Product> getProducts() {
+//        return products;
+//    }
+//
+//    public void setProducts(List<Product> products) {
+//        this.products = products;
+//    }
 
     public List<DistributionItem> getItems() {
         return items;
@@ -254,4 +261,22 @@ public class Distribution {
     public void setManufacturerPrice(Double manufacturerPrice) {
         this.manufacturerPrice = manufacturerPrice;
     }
+
+    public Integer getParentDistributionId() {
+        return parentDistributionId;
+    }
+
+    public void setParentDistributionId(Integer parentDistributionId) {
+        this.parentDistributionId = parentDistributionId;
+    }
+
+    public Boolean getSupplementary() {
+        return isSupplementary;
+    }
+
+    public void setSupplementary(Boolean supplementary) {
+        isSupplementary = supplementary;
+    }
+
+
 }

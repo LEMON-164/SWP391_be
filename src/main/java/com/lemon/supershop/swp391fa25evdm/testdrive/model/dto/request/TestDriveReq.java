@@ -1,10 +1,6 @@
-package com.lemon.supershop.swp391fa25evdm.testdrive.model.dto;
+package com.lemon.supershop.swp391fa25evdm.testdrive.model.dto.request;
 
 import java.time.LocalDateTime;
-
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 public class TestDriveReq {
 
@@ -14,6 +10,9 @@ public class TestDriveReq {
     private int userId;
     private int dealerId;
     private int productId;
+    private int categoryId;
+    private String productModelName;
+    private int escortStaffId;
 
     public TestDriveReq() {
     }

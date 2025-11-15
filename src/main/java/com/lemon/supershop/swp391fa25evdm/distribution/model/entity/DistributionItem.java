@@ -2,17 +2,10 @@ package com.lemon.supershop.swp391fa25evdm.distribution.model.entity;
 
 import java.math.BigDecimal;
 
+import com.lemon.supershop.swp391fa25evdm.category.model.entity.Category;
 import com.lemon.supershop.swp391fa25evdm.product.model.entity.Product;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "distribution_item")
@@ -27,9 +20,12 @@ public class DistributionItem {
     @JoinColumn(name = "DistributionId")
     private Distribution distribution;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ProductId")
+    @OneToOne(mappedBy = "distributionItem")
     private Product product;
+
+    @OneToOne
+    @JoinColumn(name = "CategoryId")
+    private Category category;
 
     @Column(name = "Color", columnDefinition = "NVARCHAR(20)")
     private String color;
@@ -90,5 +86,13 @@ public class DistributionItem {
 
     public void setDealerPrice(BigDecimal dealerPrice) {
         this.dealerPrice = dealerPrice;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
     }
 }

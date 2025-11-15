@@ -1,4 +1,4 @@
-package com.lemon.supershop.swp391fa25evdm.refra.VnPay.model.dto.Response;
+package com.lemon.supershop.swp391fa25evdm.refra.vnPay.model.dto.Response;
 
 import java.io.Serializable;
 
@@ -44,8 +44,8 @@ import java.io.Serializable;
  * @author Lemon SuperShop Team
  * @version 1.0
  * @since 2025-01-15
- * @see com.lemon.supershop.swp391fa25evdm.refra.VnPay.service.VnpayService
- * @see com.lemon.supershop.swp391fa25evdm.refra.VnPay.controller.VnpayController
+ * @see com.lemon.supershop.swp391fa25evdm.refra.vnPay.service.VnpayService
+ * @see com.lemon.supershop.swp391fa25evdm.refra.vnPay.controller.VnpayController
  */
 public class VnpayRes implements Serializable {
     

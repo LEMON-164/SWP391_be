@@ -25,10 +25,16 @@ public class TestDrive {
     private String location;
 
     @Column(name = "status", columnDefinition = "VARCHAR(20)")
-    private String status; // PENDING, CONFIRMED, COMPLETED, CANCELED
+    private String status; // PENDING, ASSIGNING, APPROVED, IN_PROGRESS, DONE, REJECTED, CANCELLED
 
     @Column(name = "notes", columnDefinition = "NVARCHAR(MAX)")
     private String notes;
+
+    @Column(name = "specific_vin", columnDefinition = "VARCHAR(50)")
+    private String specificVIN;
+
+//    @Column(name = "product_model_name", columnDefinition = "NVARCHAR(100)")
+//    private String productModelName;
 
     @Column(insertable = false, updatable = false, name = "Create_at", columnDefinition = "DATETIME2 DEFAULT GETDATE()" )
     @Temporal(TemporalType.TIMESTAMP)

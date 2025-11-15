@@ -1,5 +1,8 @@
 package com.lemon.supershop.swp391fa25evdm.category.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.lemon.supershop.swp391fa25evdm.dealer.model.entity.Dealer;
+import com.lemon.supershop.swp391fa25evdm.distribution.model.entity.DistributionItem;
 import com.lemon.supershop.swp391fa25evdm.policies.model.entity.Policy;
 import com.lemon.supershop.swp391fa25evdm.product.model.entity.Product;
 import com.lemon.supershop.swp391fa25evdm.promotion.model.entity.Promotion;
@@ -44,6 +47,11 @@ public class Category {
     private String status;
 
     //relation
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "DealerId")
+    @JsonIgnore
+    private Dealer dealer;
+
     @OneToMany(mappedBy = "category", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Product> products = new ArrayList<>();
 
@@ -56,6 +64,8 @@ public class Category {
     @OneToMany(mappedBy = "category", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Promotion> promotions = new ArrayList<>();
 
+    @OneToOne(mappedBy = "category")
+    private DistributionItem distributionItem;
     //cons-get-set
     public Category() {}
 
@@ -169,5 +179,21 @@ public class Category {
 
     public void setSpecial(boolean special) {
         isSpecial = special;
+    }
+
+    public Dealer getDealer() {
+        return dealer;
+    }
+
+    public void setDealer(Dealer dealer) {
+        this.dealer = dealer;
+    }
+
+    public DistributionItem getDistributionItem() {
+        return distributionItem;
+    }
+
+    public void setDistributionItem(DistributionItem distributionItem) {
+        this.distributionItem = distributionItem;
     }
 }

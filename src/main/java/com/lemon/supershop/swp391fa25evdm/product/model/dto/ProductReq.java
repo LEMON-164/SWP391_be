@@ -15,6 +15,8 @@ public class ProductReq {
     private String color;
     private Date manufacture_date;
     private Date stockInDate;
+    private Long manufacturerPrice;
+    private Long retailPrice;
     private long dealerPrice;
     private String description;
     private ProductStatus status;
@@ -151,5 +153,21 @@ public class ProductReq {
 
     public void setColor(String color) {
         this.color = color;
+    }
+
+    public Long getManufacturerPrice() {
+        return manufacturerPrice;
+    }
+
+    public void setManufacturerPrice(Long manufacturerPrice) {
+        this.manufacturerPrice = manufacturerPrice;
+    }
+
+    public Long getRetailPrice() {
+        return retailPrice;
+    }
+
+    public void setRetailPrice(Long retailPrice) {
+        this.retailPrice = retailPrice;
     }
 }

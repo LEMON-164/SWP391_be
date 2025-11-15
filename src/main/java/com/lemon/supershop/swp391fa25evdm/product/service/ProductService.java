@@ -59,9 +59,13 @@ public class ProductService {
     public ProductRes updateProduct (int id, ProductReq productReq) {
         Optional<Product> existingProductOpt = productRepo.findById(id);
         if (existingProductOpt.isPresent()) {
-            Product existingProduct = convertReqToEntity(existingProductOpt.get(), productReq);
-            productRepo.save(existingProduct);
-            return convertToRes(existingProduct);
+            // Prevent updating products that have been sold
+            if (ProductStatus.SOLDOUT.equals(existingProductOpt.get().getStatus())) {
+                throw new IllegalStateException("Không thể cập nhật thông tin xe đã bán");
+            }
+            Product updatedProduct  = convertReqToEntity(existingProductOpt.get(), productReq);
+            productRepo.save(updatedProduct);
+            return convertToRes(updatedProduct);
         }
         return null;
     }
@@ -84,6 +88,11 @@ public class ProductService {
     public List<ProductRes> getProductByEngineNum(String engineNum){
         List<Product> productOpt = productRepo.findByEngineNumContainingIgnoreCase(engineNum);
         return productOpt.isEmpty() ? null : productOpt.stream().map(this::convertToRes).toList();
+    }
+
+    public List<ProductRes> getProductByDealerCategoryId(int dealerCategoryId){
+        List<Product> products = productRepo.findByDealerCategoryId(dealerCategoryId);
+        return products.stream().map(this::convertToRes).toList();
     }
 
     public ProductRes convertToRes(Product product) {

@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.lemon.supershop.swp391fa25evdm.testdrive.model.dto.TestDriveReq;
-import com.lemon.supershop.swp391fa25evdm.testdrive.model.dto.TestDriveRes;
+import com.lemon.supershop.swp391fa25evdm.testdrive.model.dto.request.TestDriveReq;
+import com.lemon.supershop.swp391fa25evdm.testdrive.model.dto.response.TestDriveRes;
 import com.lemon.supershop.swp391fa25evdm.testdrive.service.TestDriveService;
 
 @RestController
