@@ -8,10 +8,8 @@ import java.util.Optional;
 import java.util.Random;
 
 import com.lemon.supershop.swp391fa25evdm.category.service.CategoryService;
-import com.lemon.supershop.swp391fa25evdm.contract.model.entity.Contract;
 import com.lemon.supershop.swp391fa25evdm.dealer.model.dto.DealerRes;
 import com.lemon.supershop.swp391fa25evdm.dealer.model.entity.Dealer;
-import com.lemon.supershop.swp391fa25evdm.dealer.service.DealerService;
 import com.lemon.supershop.swp391fa25evdm.distribution.model.dto.request.*;
 import com.lemon.supershop.swp391fa25evdm.distribution.model.dto.response.DistributionItemRes;
 import com.lemon.supershop.swp391fa25evdm.distribution.model.dto.response.DistributionRes;
@@ -24,8 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.lemon.supershop.swp391fa25evdm.category.model.entity.Category;
-import com.lemon.supershop.swp391fa25evdm.category.repository.CategoryRepository;
-import com.lemon.supershop.swp391fa25evdm.contract.repository.ContractRepo;
+import com.lemon.supershop.swp391fa25evdm.category.repository.CategoryRepo;
 import com.lemon.supershop.swp391fa25evdm.dealer.repository.DealerRepo;
 import com.lemon.supershop.swp391fa25evdm.distribution.model.entity.Distribution;
 import com.lemon.supershop.swp391fa25evdm.distribution.model.entity.DistributionItem;
@@ -37,7 +34,7 @@ public class DistributionService {
     @Autowired
     private DistributionRepo distributionRepo;
     @Autowired
-    private CategoryRepository categoryRepository;
+    private CategoryRepo categoryRepo;
     @Autowired
     private CategoryService categoryService;
     @Autowired
@@ -132,7 +129,7 @@ public class DistributionService {
                     }
                 } else if (item.getCategoryId() != null) {
                     // Cách 2: Đặt theo categoryId - KHÔNG tạo product, chỉ lưu categoryId
-                    Optional<Category> categoryOpt = categoryRepository.findById(item.getCategoryId());
+                    Optional<Category> categoryOpt = categoryRepo.findById(item.getCategoryId());
                     if (categoryOpt.isEmpty()) {
                         throw new RuntimeException("Category không tồn tại với ID: " + item.getCategoryId());
                     }
@@ -224,7 +221,7 @@ public class DistributionService {
                     productTemplate = productOpt.get();
                 } else if (item.getCategoryId() != null) {
                     // Cách 2: Đặt theo categoryId - KHÔNG tạo product
-                    Optional<Category> categoryOpt = categoryRepository.findById(item.getCategoryId());
+                    Optional<Category> categoryOpt = categoryRepo.findById(item.getCategoryId());
                     if (categoryOpt.isEmpty()) {
                         throw new RuntimeException("Category không tồn tại với ID: " + item.getCategoryId());
                     }
@@ -539,7 +536,7 @@ public class DistributionService {
 
                     if (template == null && orderedItem.getCategory() != null) {
                         // Item đặt theo categoryId (không có product template)
-                        Optional<Category> catOpt = categoryRepository.findById(orderedItem.getCategory().getId());
+                        Optional<Category> catOpt = categoryRepo.findById(orderedItem.getCategory().getId());
                         if (catOpt.isPresent()) {
                             category = catOpt.get();
 
@@ -723,7 +720,7 @@ public class DistributionService {
             Integer categoryId = entry.getKey();
             Long maxPrice = entry.getValue();
 
-            Optional<Category> catOpt = categoryRepository.findById(categoryId);
+            Optional<Category> catOpt = categoryRepo.findById(categoryId);
             if (catOpt.isPresent()) {
                 Category category = catOpt.get();
                 long currentPrice = category.getBasePrice();
@@ -731,7 +728,7 @@ public class DistributionService {
                 // Chỉ cập nhật nếu giá mới cao hơn giá hiện tại
                 if (maxPrice > currentPrice) {
                     category.setBasePrice(maxPrice);
-                    categoryRepository.save(category);
+                    categoryRepo.save(category);
                 }
             }
         }
@@ -781,7 +778,7 @@ public class DistributionService {
         if (targetCategory != null && maxPrice > 0) {
             long oldBasePrice = targetCategory.getBasePrice();
             targetCategory.setBasePrice(maxPrice);
-            categoryRepository.save(targetCategory);
+            categoryRepo.save(targetCategory);
         }
     }
 
@@ -1045,7 +1042,7 @@ public class DistributionService {
             } else if (parentItem.getCategory() != null) {
                 // Nếu chỉ có categoryId, cố gắng load category name
                 try {
-                    Optional<Category> catOpt = categoryRepository.findById(parentItem.getCategory().getId());
+                    Optional<Category> catOpt = categoryRepo.findById(parentItem.getCategory().getId());
                     if (catOpt.isPresent()) {
                         itemName = catOpt.get().getName();
                     }

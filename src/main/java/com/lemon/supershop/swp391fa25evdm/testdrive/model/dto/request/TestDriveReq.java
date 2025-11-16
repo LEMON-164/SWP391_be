@@ -65,5 +65,27 @@ public class TestDriveReq {
         this.productId = productId;
     }
 
+    public int getCategoryId() {
+        return categoryId;
+    }
 
+    public void setCategoryId(int categoryId) {
+        this.categoryId = categoryId;
+    }
+
+    public String getProductModelName() {
+        return productModelName;
+    }
+
+    public void setProductModelName(String productModelName) {
+        this.productModelName = productModelName;
+    }
+
+    public int getEscortStaffId() {
+        return escortStaffId;
+    }
+
+    public void setEscortStaffId(int escortStaffId) {
+        this.escortStaffId = escortStaffId;
+    }
 }

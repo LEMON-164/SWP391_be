@@ -278,14 +278,6 @@ public class Product {
         this.status = status;
     }
 
-    public List<TestDrive> getTestDrives() {
-        return testDrives;
-    }
-
-    public void setTestDrives(List<TestDrive> testDrives) {
-        this.testDrives = testDrives;
-    }
-
     public DistributionItem getDistributionItem() {
         return distributionItem;
     }
@@ -308,5 +300,13 @@ public class Product {
 
     public void setRetailPrice(Long retailPrice) {
         this.retailPrice = retailPrice;
+    }
+
+    public List<TestDrive> getTestDrives() {
+        return testDrives;
+    }
+
+    public void setTestDrives(List<TestDrive> testDrives) {
+        this.testDrives = testDrives;
     }
 }

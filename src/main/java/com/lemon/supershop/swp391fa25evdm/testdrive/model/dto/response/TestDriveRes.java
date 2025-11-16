@@ -85,4 +85,28 @@ public class TestDriveRes {
     public void setLocation(String location) {
         this.location = location;
     }
+
+    public String getProductModelName() {
+        return productModelName;
+    }
+
+    public void setProductModelName(String productModelName) {
+        this.productModelName = productModelName;
+    }
+
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
+    }
+
+    public UserRes getEscortStaff() {
+        return escortStaff;
+    }
+
+    public void setEscortStaff(UserRes escortStaff) {
+        this.escortStaff = escortStaff;
+    }
 }

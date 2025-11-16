@@ -1,4 +1,4 @@
-package com.lemon.supershop.swp391fa25evdm.email.service;
+package com.lemon.supershop.swp391fa25evdm.refra.email.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

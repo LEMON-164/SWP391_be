@@ -42,6 +42,45 @@ public class TestDriveController {
         return ResponseEntity.ok(testDrives);
     }
 
+    @GetMapping("/check-availability")
+    public ResponseEntity<?> checkAvailability(
+            @RequestParam int productId,
+            @RequestParam String scheduleDate,
+            @RequestParam(defaultValue = "2") int durationHours) {
+        try {
+            java.time.LocalDateTime dateTime = java.time.LocalDateTime.parse(scheduleDate);
+            var result = testDriveService.checkAvailability(productId, dateTime, durationHours);
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Invalid date format. Use ISO format: yyyy-MM-ddTHH:mm:ss");
+        }
+    }
+
+    @GetMapping("/available-slots")
+    public ResponseEntity<?> getAvailableSlots(
+            @RequestParam int productId,
+            @RequestParam String date) {
+        try {
+            var result = testDriveService.getAvailableSlots(productId, date);
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Invalid date format. Use format: yyyy-MM-dd");
+        }
+    }
+
+    @GetMapping("/{id}/calendar.ics")
+    public ResponseEntity<String> exportToCalendar(@PathVariable int id) {
+        try {
+            String icsContent = testDriveService.generateIcsFile(id);
+            return ResponseEntity.ok()
+                    .header("Content-Type", "text/calendar; charset=utf-8")
+                    .header("Content-Disposition", "attachment; filename=test-drive-" + id + ".ics")
+                    .body(icsContent);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Failed to generate calendar file: " + e.getMessage());
+        }
+    }
+
     @PostMapping("/createTestDrive")
     public ResponseEntity<TestDriveRes> createTestDrive (@RequestBody TestDriveReq testDriveReq) {
         TestDriveRes testDriveRes = testDriveService.createTestDrive(testDriveReq);
@@ -61,6 +100,91 @@ public class TestDriveController {
             return ResponseEntity.noContent().build();
         }
     }
+
+    // ============ Status Management APIs ============
+
+    @PutMapping("/{id}/approve")
+    public ResponseEntity<TestDriveRes> approveTestDrive(@PathVariable int id) {
+        TestDriveReq req = new TestDriveReq();
+        req.setStatus("APPROVED");
+        TestDriveRes result = testDriveService.updateTestDrive(id, req);
+        if (result != null) {
+            return ResponseEntity.ok(result);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PutMapping("/{id}/start")
+    public ResponseEntity<TestDriveRes> startTestDrive(@PathVariable int id) {
+        TestDriveReq req = new TestDriveReq();
+        req.setStatus("IN_PROGRESS");
+        TestDriveRes result = testDriveService.updateTestDrive(id, req);
+        if (result != null) {
+            return ResponseEntity.ok(result);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PutMapping("/{id}/reject")
+    public ResponseEntity<TestDriveRes> rejectTestDrive(
+            @PathVariable int id,
+            @RequestBody(required = false) TestDriveReq req) {
+        if (req == null) {
+            req = new TestDriveReq();
+        }
+        req.setStatus("REJECTED");
+        TestDriveRes result = testDriveService.updateTestDrive(id, req);
+        if (result != null) {
+            return ResponseEntity.ok(result);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PutMapping("/{id}/cancel")
+    public ResponseEntity<TestDriveRes> cancelTestDrive(
+            @PathVariable int id,
+            @RequestBody(required = false) TestDriveReq req) {
+        if (req == null) {
+            req = new TestDriveReq();
+        }
+        req.setStatus("CANCELLED");
+        TestDriveRes result = testDriveService.updateTestDrive(id, req);
+        if (result != null) {
+            return ResponseEntity.ok(result);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PutMapping("/{id}/complete")
+    public ResponseEntity<TestDriveRes> completeTestDrive(@PathVariable int id) {
+        TestDriveReq req = new TestDriveReq();
+        req.setStatus("DONE");
+        TestDriveRes result = testDriveService.updateTestDrive(id, req);
+        if (result != null) {
+            return ResponseEntity.ok(result);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    // ============ Staff Assignment API ============
+
+    @PostMapping("/{id}/assign")
+    public ResponseEntity<TestDriveRes> assignVehicleAndStaff(
+            @PathVariable int id,
+            @RequestBody TestDriveReq req) {
+        TestDriveRes result = testDriveService.assignVehicleAndStaff(id, req.getProductId(), req.getEscortStaffId());
+        if (result != null) {
+            return ResponseEntity.ok(result);
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
 
     @DeleteMapping("/deleteTestDrive/{id}")
     public ResponseEntity<String> deleteTestDrive (@PathVariable int id) {

@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.lemon.supershop.swp391fa25evdm.product.model.enums.ProductStatus;
+import com.lemon.supershop.swp391fa25evdm.refra.email.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -47,7 +48,7 @@ public class OrderService {
     private PromotionRepo promotionRepo;
 
     @Autowired
-    private com.lemon.supershop.swp391fa25evdm.email.service.EmailService emailService;
+    private EmailService emailService;
 
     public List<OrderRes> ListOrderbyUserId(int userId) {
         User user = userRepo.findById(userId).get();

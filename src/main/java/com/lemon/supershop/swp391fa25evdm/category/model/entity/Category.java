@@ -6,6 +6,7 @@ import com.lemon.supershop.swp391fa25evdm.distribution.model.entity.Distribution
 import com.lemon.supershop.swp391fa25evdm.policies.model.entity.Policy;
 import com.lemon.supershop.swp391fa25evdm.product.model.entity.Product;
 import com.lemon.supershop.swp391fa25evdm.promotion.model.entity.Promotion;
+import com.lemon.supershop.swp391fa25evdm.testdrive.model.entity.TestDrive;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -66,6 +67,9 @@ public class Category {
 
     @OneToOne(mappedBy = "category")
     private DistributionItem distributionItem;
+
+    @OneToOne(mappedBy = "category")
+    private TestDrive testDrive;
     //cons-get-set
     public Category() {}
 
@@ -195,5 +199,13 @@ public class Category {
 
     public void setDistributionItem(DistributionItem distributionItem) {
         this.distributionItem = distributionItem;
+    }
+
+    public TestDrive getTestDrive() {
+        return testDrive;
+    }
+
+    public void setTestDrive(TestDrive testDrive) {
+        this.testDrive = testDrive;
     }
 }

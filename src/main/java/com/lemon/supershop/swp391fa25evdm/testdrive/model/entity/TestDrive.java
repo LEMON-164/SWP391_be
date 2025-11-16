@@ -33,6 +33,9 @@ public class TestDrive {
     @Column(name = "specific_vin", columnDefinition = "VARCHAR(50)")
     private String specificVIN;
 
+    @Column(name = "product_model_name", columnDefinition = "NVARCHAR(100)")
+    private String productModelName;
+
 //    @Column(name = "product_model_name", columnDefinition = "NVARCHAR(100)")
 //    private String productModelName;
 
@@ -52,12 +55,20 @@ public class TestDrive {
     private User user;  // khách hàng đặt test drive
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "EscortStaffId") // nhân viên đi kèm
+    private User escortStaff;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "DealerId")
     private Dealer dealer; // đại lý tổ chức test drive
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "CategoryId")
+    private Category category;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ProductId")
-    private Product product;
+    private Product product; //
 
     public TestDrive() {
     }
@@ -126,11 +137,43 @@ public class TestDrive {
         this.dealer = dealer;
     }
 
+    public String getSpecificVIN() {
+        return specificVIN;
+    }
+
+    public void setSpecificVIN(String specificVIN) {
+        this.specificVIN = specificVIN;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
     public Product getProduct() {
         return product;
     }
 
     public void setProduct(Product product) {
         this.product = product;
+    }
+
+    public String getProductModelName() {
+        return productModelName;
+    }
+
+    public void setProductModelName(String productModelName) {
+        this.productModelName = productModelName;
+    }
+
+    public User getEscortStaff() {
+        return escortStaff;
+    }
+
+    public void setEscortStaff(User escortStaff) {
+        this.escortStaff = escortStaff;
     }
 }

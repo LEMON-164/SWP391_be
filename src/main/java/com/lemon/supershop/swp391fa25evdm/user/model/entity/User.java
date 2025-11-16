@@ -78,6 +78,9 @@ public class User {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<TestDrive> testDrives;
 
+    @OneToMany(mappedBy = "escortStaff", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<TestDrive> escortedTestDrives;
+
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Contract> contracts;
 
@@ -216,5 +219,13 @@ public class User {
 
     public void setStatus(UserStatus status) {
         this.status = status;
+    }
+
+    public List<TestDrive> getEscortedTestDrives() {
+        return escortedTestDrives;
+    }
+
+    public void setEscortedTestDrives(List<TestDrive> escortedTestDrives) {
+        this.escortedTestDrives = escortedTestDrives;
     }
 }

@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 import com.lemon.supershop.swp391fa25evdm.category.model.entity.Category;
 
 @Repository
-public interface CategoryRepository extends JpaRepository<Category, Integer> {
+public interface CategoryRepo extends JpaRepository<Category, Integer> {
 
     // Find by name (exact match)
     Optional<Category> findByNameIgnoreCase(String name);
