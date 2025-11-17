@@ -10,6 +10,10 @@ import com.lemon.supershop.swp391fa25evdm.user.model.entity.User;
 import com.lemon.supershop.swp391fa25evdm.user.model.enums.UserStatus;
 import com.lemon.supershop.swp391fa25evdm.user.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
+import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -76,6 +80,62 @@ public class AuthenService {
         }
 
         return response;
+    }
+
+    public LoginRes loginWithGoogle(OAuth2User oauthUser) {
+
+        // Google trả về dữ liệu trong oauthUser
+        String email = oauthUser.getAttribute("email");
+        String name = oauthUser.getAttribute("name");
+
+        if (email == null || !EMAIL_PATTERN.matcher(email).matches()) {
+            throw new RuntimeException("Phải cung cấp email đúng form");
+        }
+
+
+
+        // Tìm user trong DB
+        Optional<User> userOpt = userRepo.findByEmail(email);
+
+        User user;
+
+        if (userOpt.isPresent()) {
+            user = userOpt.get(); // user đã có trong hệ thống
+            if (user.getStatus() == UserStatus.INACTIVE) {
+                throw new RuntimeException("Account inactive");
+            }
+        } else {
+            // Tạo user mới
+            user = new User();
+            user.setEmail(email);
+            user.setUsername(name);
+            user.setPassword("");   // Google không trả → để trống
+            user.setPhone("");      // Google không trả phone
+            user.setAddress("");    // Google không trả address
+            user.setStatus(UserStatus.ACTIVE);
+
+            // Gán role mặc định (USER)
+            Role defaultRole = roleRepo.findByNameContainingIgnoreCase("USER")
+                    .orElseThrow(() -> new RuntimeException("Default role USER not found"));
+            user.setRole(defaultRole);
+
+            user = userRepo.save(user); // lưu user mới
+        }
+
+        // Tạo JWT + Refresh token
+        String token = jwtUtil.generateToken(user.getUsername());
+        String refreshToken = jwtUtil.generateRefreshToken(user.getUsername());
+
+        LoginRes res = new LoginRes(token, refreshToken, user.getUsername(), user.getRole().getName());
+        res.setUserId(user.getId());
+
+        if (user.getDealer() != null) {
+            res.setDealerId(user.getDealer().getId());
+            res.setDealerName(user.getDealer().getName());
+            res.setDealerAddress(user.getDealer().getAddress());
+        }
+
+        return res;
     }
 
     public void register(RegisterReq dto) {

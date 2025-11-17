@@ -2,13 +2,9 @@ package com.lemon.supershop.swp391fa25evdm.authentication.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.web.bind.annotation.*;
 
 import com.lemon.supershop.swp391fa25evdm.authentication.model.dto.ChangePassReq;
 import com.lemon.supershop.swp391fa25evdm.authentication.model.dto.LoginReq;
@@ -22,6 +18,31 @@ import com.lemon.supershop.swp391fa25evdm.authentication.service.AuthenService;
 public class AuthController {
     @Autowired
     AuthenService authenService;
+
+    @GetMapping("/login/google")
+    public ResponseEntity<?> googleSuccess(@AuthenticationPrincipal OAuth2User oauthUser) {
+
+        if (oauthUser == null) {
+            return ResponseEntity.status(401).body(
+                    java.util.Map.of(
+                            "success", false,
+                            "message", "Google authentication failed"
+                    )
+            );
+        }
+
+        return ResponseEntity.ok(
+                java.util.Map.of(
+                        "success", true,
+                        "jwt", oauthUser.getAttribute("jwt"),
+                        "refreshToken", oauthUser.getAttribute("refreshToken"),
+                        "role", oauthUser.getAttribute("role"),
+                        "email", oauthUser.getAttribute("email"),
+                        "name", oauthUser.getAttribute("name")
+                )
+        );
+    }
+
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginReq dto) {
