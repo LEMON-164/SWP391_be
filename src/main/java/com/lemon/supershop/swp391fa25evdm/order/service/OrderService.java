@@ -162,12 +162,22 @@ public class OrderService {
             orderRes.setOrderId(order.getId());
             if (order.getUser() != null){
                 orderRes.setCustomerName(order.getUser().getUsername());
+                orderRes.setCustomerEmail(order.getUser().getEmail());
+                orderRes.setCustomerPhone(order.getUser().getPhone());
+                orderRes.setCustomerAddress(order.getUser().getAddress());
             }
             if (order.getContract() != null){
                 orderRes.setContracts(order.getContract());
             }
             if (order.getProduct() != null){
                 orderRes.setProductName(order.getProduct().getName());
+                orderRes.setProductVin(order.getProduct().getVinNum());
+                orderRes.setProductEngine(order.getProduct().getEngineNum());
+                orderRes.setProductBattery(order.getProduct().getBattery());
+                orderRes.setProductRange(order.getProduct().getRange());
+                orderRes.setProductHP(order.getProduct().getHp());
+                orderRes.setProductTorque(order.getProduct().getTorque());
+                orderRes.setProductColor(order.getProduct().getColor());
             }
             if (order.getDealer() != null){
                 orderRes.setDealerId(order.getDealer().getId());
@@ -191,6 +201,9 @@ public class OrderService {
                 orderRes.setDeliveryDate(order.getDeliveryDate());
             } else if (order.getShipAt() != null){
                 orderRes.setDeliveryDate(order.getShipAt());
+            }
+            if (order.getShipAddress() != null){
+                orderRes.setNotes(order.getShipAddress());
             }
         }
         return orderRes;
