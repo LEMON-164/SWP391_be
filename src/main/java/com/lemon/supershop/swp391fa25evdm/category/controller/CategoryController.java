@@ -47,13 +47,28 @@ public class CategoryController {
     }
 
     @PostMapping ("/create")
-    public ResponseEntity<CategoryRes> createCategory(@Valid @RequestBody CategoryReq categoryReq) {
-        CategoryRes categoryRes = categoryService.createCategory(categoryReq);
-        if (categoryRes != null) {
-            return ResponseEntity.ok(categoryRes);
-        } else {
-            return ResponseEntity.badRequest().build();
+    public ResponseEntity<?> createCategory(@Valid @RequestBody CategoryReq categoryReq) {
+        try {
+            CategoryRes categoryRes = categoryService.createCategory(categoryReq);
+            if (categoryRes != null) {
+                return ResponseEntity.ok(categoryRes);
+            }
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(
+                    java.util.Map.of(
+                            "success", false,
+                            "message", e.getMessage()
+                    )
+            );
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(
+                    java.util.Map.of(
+                            "success", false,
+                            "message", "Đã xảy ra lỗi. Vui lòng thử lại sau hoặc liên hệ hỗ trợ."
+                    )
+            );
         }
+        return ResponseEntity.badRequest().build();
     }
 
     @PutMapping("/update/{id}")
@@ -96,6 +111,12 @@ public class CategoryController {
     @GetMapping("/search/brand/{brand}")
     public ResponseEntity<List<CategoryRes>> getCategoriesByBrand(@PathVariable String brand) {
         List<CategoryRes> categories = categoryService.getCategoriesByBrand(brand);
+        return ResponseEntity.ok(categories);
+    }
+
+    @GetMapping("/search/dealer/{dealerId}")
+    public ResponseEntity<List<CategoryRes>> getCategoriesByDealerId(@PathVariable Integer dealerId) {
+        List<CategoryRes> categories = categoryService.getCategoriesByDealerId(dealerId);
         return ResponseEntity.ok(categories);
     }
 }

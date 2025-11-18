@@ -5,7 +5,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @SpringBootApplication
-@EnableFeignClients(basePackages = "com.lemon.supershop.swp391fa25evdm.refra.MOMO.client")
 public class Swp391Fa25EvdmApplication {
 
 	public static void main(String[] args) {

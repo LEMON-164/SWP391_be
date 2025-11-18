@@ -2,6 +2,7 @@ package com.lemon.supershop.swp391fa25evdm.distribution.model.dto.request;
 
 public class DistributionOrderItemReq {
 
+    private Integer categoryId;
     private Integer productId;
     private String color;
     private Integer quantity;
@@ -31,5 +32,13 @@ public class DistributionOrderItemReq {
 
     public void setQuantity(Integer quantity) {
         this.quantity = quantity;
+    }
+
+    public Integer getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(Integer categoryId) {
+        this.categoryId = categoryId;
     }
 }

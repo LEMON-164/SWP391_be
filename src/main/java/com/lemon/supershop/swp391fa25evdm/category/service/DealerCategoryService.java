@@ -11,9 +11,8 @@ import org.springframework.stereotype.Service;
 
 import com.lemon.supershop.swp391fa25evdm.category.model.dto.DealerCategoryReq;
 import com.lemon.supershop.swp391fa25evdm.category.model.dto.DealerCategoryRes;
-import com.lemon.supershop.swp391fa25evdm.category.model.entity.Category;
 import com.lemon.supershop.swp391fa25evdm.category.model.entity.DealerCategory;
-import com.lemon.supershop.swp391fa25evdm.category.repository.CategoryRepository;
+import com.lemon.supershop.swp391fa25evdm.category.repository.CategoryRepo;
 import com.lemon.supershop.swp391fa25evdm.category.repository.DealerCategoryRepository;
 import com.lemon.supershop.swp391fa25evdm.dealer.repository.DealerRepo;
 
@@ -26,7 +25,7 @@ public class DealerCategoryService {
     private DealerRepo dealerRepo;
 
     @Autowired
-    private CategoryRepository categoryRepository;
+    private CategoryRepo categoryRepo;
 
     public List<DealerCategoryRes> getAllDealerCategories() {
         List<DealerCategory> dealerCategories = dealerCategoryRepository.findAll();
@@ -37,6 +36,16 @@ public class DealerCategoryService {
         return dealerCategoryRepository.findById(id)
                 .map(this::convertToRes)
                 .orElse(null);
+    }
+
+    public List<DealerCategoryRes> getDealerCategoriesByDealerId(int dealerId) {
+        List<DealerCategory> dealerCategories = dealerCategoryRepository.findByDealerId(dealerId);
+        return dealerCategories.stream().map(this::convertToRes).toList();
+    }
+
+    public List<DealerCategoryRes> getDealerCategoriesByCategoryId(int categoryId) {
+        List<DealerCategory> dealerCategories = dealerCategoryRepository.findByCategoryId(categoryId);
+        return dealerCategories.stream().map(this::convertToRes).toList();
     }
 
     public DealerCategoryRes createDealerCategory(DealerCategoryReq dto) {
@@ -54,7 +63,7 @@ public class DealerCategoryService {
             dealerCategory.setStatus(dto.getStatus());
         }
         if (dto.getCategoryId() > 0) {
-            Optional<Category> category = categoryRepository.findById(dto.getCategoryId());
+            Optional<Category> category = categoryRepo.findById(dto.getCategoryId());
             if (category.isPresent()) {
                 dealerCategory.setCategory(category.get());
             }
@@ -97,7 +106,7 @@ public class DealerCategoryService {
             existingDealerCategory.setStatus(dto.getStatus());
         }
         if (dto.getCategoryId() != 0) {
-            existingDealerCategory.setCategory(categoryRepository.findById(dto.getCategoryId()).orElse(null));
+            existingDealerCategory.setCategory(categoryRepo.findById(dto.getCategoryId()).orElse(null));
         }
         if (dto.getDealerId() != 0) {
             existingDealerCategory.setDealer(dealerRepo.findById(dto.getDealerId()).orElse(null));

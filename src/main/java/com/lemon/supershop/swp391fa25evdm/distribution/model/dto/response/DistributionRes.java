@@ -35,6 +35,15 @@ public class DistributionRes {
     private Integer receivedQuantity;
     private Double manufacturerPrice; // Giá hãng gửi cho dealer
 
+    // Supplementary order fields
+    private Integer parentDistributionId;  // ID của đơn gốc nếu đây là đơn bổ sung
+    private Boolean isSupplementary;       // True nếu đây là đơn bổ sung số lượng thiếu
+
+    // Payment information
+    private Double paidAmount;             // Số tiền đã thanh toán
+    private String transactionNo;          // Mã giao dịch VNPay
+    private LocalDateTime paidAt;
+
     public DistributionRes() {
     }
 
@@ -181,5 +190,45 @@ public class DistributionRes {
 
     public void setManufacturerPrice(Double manufacturerPrice) {
         this.manufacturerPrice = manufacturerPrice;
+    }
+
+    public Integer getParentDistributionId() {
+        return parentDistributionId;
+    }
+
+    public void setParentDistributionId(Integer parentDistributionId) {
+        this.parentDistributionId = parentDistributionId;
+    }
+
+    public Boolean getSupplementary() {
+        return isSupplementary;
+    }
+
+    public void setSupplementary(Boolean supplementary) {
+        isSupplementary = supplementary;
+    }
+
+    public Double getPaidAmount() {
+        return paidAmount;
+    }
+
+    public void setPaidAmount(Double paidAmount) {
+        this.paidAmount = paidAmount;
+    }
+
+    public String getTransactionNo() {
+        return transactionNo;
+    }
+
+    public void setTransactionNo(String transactionNo) {
+        this.transactionNo = transactionNo;
+    }
+
+    public LocalDateTime getPaidAt() {
+        return paidAt;
+    }
+
+    public void setPaidAt(LocalDateTime paidAt) {
+        this.paidAt = paidAt;
     }
 }

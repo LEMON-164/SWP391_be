@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 
 public class DistributionItemPriceReq {
 
+    private Integer approvedQuantity;
     private Integer distributionItemId;
     private BigDecimal dealerPrice;
 
@@ -24,5 +25,13 @@ public class DistributionItemPriceReq {
 
     public void setDealerPrice(BigDecimal dealerPrice) {
         this.dealerPrice = dealerPrice;
+    }
+
+    public Integer getApprovedQuantity() {
+        return approvedQuantity;
+    }
+
+    public void setApprovedQuantity(Integer approvedQuantity) {
+        this.approvedQuantity = approvedQuantity;
     }
 }

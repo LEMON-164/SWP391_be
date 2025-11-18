@@ -6,7 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.lemon.supershop.swp391fa25evdm.category.repository.CategoryRepository;
+import com.lemon.supershop.swp391fa25evdm.category.repository.CategoryRepo;
 import com.lemon.supershop.swp391fa25evdm.dealer.repository.DealerRepo;
 import com.lemon.supershop.swp391fa25evdm.policies.model.dto.PoliciesReq;
 import com.lemon.supershop.swp391fa25evdm.policies.model.dto.PoliciesRes;
@@ -19,7 +19,7 @@ public class PoliciesService {
     @Autowired
     private PoliciesRepo policiesRepo;
     @Autowired
-    private CategoryRepository categoryRepo;
+    private CategoryRepo categoryRepo;
     @Autowired
     private DealerRepo dealerRepo;
 

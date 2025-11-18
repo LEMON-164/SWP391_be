@@ -136,6 +136,19 @@ public class DistributionController {
         }
     }
 
+    // Step 4b: EVM Staff gửi lại giá mới (khi dealer từ chối giá cũ)
+    @PutMapping("/{id}/resend-price")
+    public ResponseEntity<DistributionRes> resendPrice(
+            @PathVariable int id,
+            @RequestBody DistributionApprovalReq request) {
+        try {
+            DistributionRes response = distributionService.resendPrice(id, request);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
     // Step 4a: Dealer Manager phản hồi về giá hãng (chấp nhận hoặc từ chối)
     @PutMapping("/{id}/respond-price")
     public ResponseEntity<?> respondToPrice(
@@ -176,6 +189,37 @@ public class DistributionController {
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
+        }
+    }
+
+    // LUỒNG MỚI: Dealer Manager tạo yêu cầu xe trực tiếp (Pull Model)
+    // Bỏ qua bước invitation, trực tiếp tạo distribution với status PENDING
+    @PostMapping("/dealer-request")
+    public ResponseEntity<?> createDealerRequest(@RequestBody DistributionOrderReq request) {
+        try {
+            DistributionRes response = distributionService.createDealerRequest(request);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(java.util.Map.of(
+                    "message", e.getMessage() != null ? e.getMessage() : "Bad Request"
+            ));
+        }
+    }
+
+    /**
+     * Tạo đơn phân phối bổ sung cho số lượng thiếu
+     * POST /api/distributions/{parentId}/create-supplementary
+     * EVM Staff gọi endpoint này khi duyệt đơn với số lượng < yêu cầu
+     */
+    @PostMapping("/{parentId}/create-supplementary")
+    public ResponseEntity<?> createSupplementaryDistribution(@PathVariable int parentDistributionId) {
+        try {
+            DistributionRes response = distributionService.createSupplementaryDistribution(parentDistributionId);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(java.util.Map.of(
+                    "message", e.getMessage() != null ? e.getMessage() : "Bad Request"
+            ));
         }
     }
 }

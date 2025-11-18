@@ -1,12 +1,9 @@
-package com.lemon.supershop.swp391fa25evdm.testdrive.model.dto;
+package com.lemon.supershop.swp391fa25evdm.testdrive.model.dto.response;
 
 import java.time.LocalDateTime;
 
 import com.lemon.supershop.swp391fa25evdm.dealer.model.dto.DealerRes;
 import com.lemon.supershop.swp391fa25evdm.user.model.dto.UserRes;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 public class TestDriveRes {
 
@@ -18,6 +15,9 @@ public class TestDriveRes {
     private UserRes user;
     private DealerRes dealer;
     private String productName;
+    private String productModelName; // Customer's requested model name
+    private String categoryName; // Customer's requested category
+    private UserRes escortStaff;
 
     public TestDriveRes() {
     }
@@ -84,5 +84,29 @@ public class TestDriveRes {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public String getProductModelName() {
+        return productModelName;
+    }
+
+    public void setProductModelName(String productModelName) {
+        this.productModelName = productModelName;
+    }
+
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
+    }
+
+    public UserRes getEscortStaff() {
+        return escortStaff;
+    }
+
+    public void setEscortStaff(UserRes escortStaff) {
+        this.escortStaff = escortStaff;
     }
 }

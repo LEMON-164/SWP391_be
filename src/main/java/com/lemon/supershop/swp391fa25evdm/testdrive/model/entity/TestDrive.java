@@ -25,10 +25,19 @@ public class TestDrive {
     private String location;
 
     @Column(name = "status", columnDefinition = "VARCHAR(20)")
-    private String status; // PENDING, CONFIRMED, COMPLETED, CANCELED
+    private String status; // PENDING, ASSIGNING, APPROVED, IN_PROGRESS, DONE, REJECTED, CANCELLED
 
     @Column(name = "notes", columnDefinition = "NVARCHAR(MAX)")
     private String notes;
+
+    @Column(name = "specific_vin", columnDefinition = "VARCHAR(50)")
+    private String specificVIN;
+
+    @Column(name = "product_model_name", columnDefinition = "NVARCHAR(100)")
+    private String productModelName;
+
+//    @Column(name = "product_model_name", columnDefinition = "NVARCHAR(100)")
+//    private String productModelName;
 
     @Column(insertable = false, updatable = false, name = "Create_at", columnDefinition = "DATETIME2 DEFAULT GETDATE()" )
     @Temporal(TemporalType.TIMESTAMP)
@@ -46,12 +55,20 @@ public class TestDrive {
     private User user;  // khách hàng đặt test drive
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "EscortStaffId") // nhân viên đi kèm
+    private User escortStaff;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "DealerId")
     private Dealer dealer; // đại lý tổ chức test drive
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "CategoryId")
+    private Category category;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ProductId")
-    private Product product;
+    private Product product; //
 
     public TestDrive() {
     }
@@ -120,11 +137,43 @@ public class TestDrive {
         this.dealer = dealer;
     }
 
+    public String getSpecificVIN() {
+        return specificVIN;
+    }
+
+    public void setSpecificVIN(String specificVIN) {
+        this.specificVIN = specificVIN;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
     public Product getProduct() {
         return product;
     }
 
     public void setProduct(Product product) {
         this.product = product;
+    }
+
+    public String getProductModelName() {
+        return productModelName;
+    }
+
+    public void setProductModelName(String productModelName) {
+        this.productModelName = productModelName;
+    }
+
+    public User getEscortStaff() {
+        return escortStaff;
+    }
+
+    public void setEscortStaff(User escortStaff) {
+        this.escortStaff = escortStaff;
     }
 }

@@ -2,13 +2,9 @@ package com.lemon.supershop.swp391fa25evdm.authentication.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.web.bind.annotation.*;
 
 import com.lemon.supershop.swp391fa25evdm.authentication.model.dto.ChangePassReq;
 import com.lemon.supershop.swp391fa25evdm.authentication.model.dto.LoginReq;
@@ -23,9 +19,60 @@ public class AuthController {
     @Autowired
     AuthenService authenService;
 
+    @GetMapping("/login/google")
+    public ResponseEntity<?> googleSuccess(@AuthenticationPrincipal OAuth2User oauthUser) {
+
+        if (oauthUser == null) {
+            return ResponseEntity.status(401).body(
+                    java.util.Map.of(
+                            "success", false,
+                            "message", "Google authentication failed"
+                    )
+            );
+        }
+
+        return ResponseEntity.ok(
+                java.util.Map.of(
+                        "success", true,
+                        "jwt", oauthUser.getAttribute("jwt"),
+                        "refreshToken", oauthUser.getAttribute("refreshToken"),
+                        "role", oauthUser.getAttribute("role"),
+                        "email", oauthUser.getAttribute("email"),
+                        "name", oauthUser.getAttribute("name")
+                )
+        );
+    }
+
+
     @PostMapping("/login")
-    public ResponseEntity<LoginRes> login(@RequestBody LoginReq dto) {
-        return ResponseEntity.ok(authenService.login(dto));
+    public ResponseEntity<?> login(@RequestBody LoginReq dto) {
+        try {
+            LoginRes response = authenService.login(dto);
+            return ResponseEntity.ok(response);
+        } catch (RuntimeException ex) {
+            // Trả về 401 Unauthorized với message rõ ràng
+            if ("User not found".equals(ex.getMessage())) {
+                return ResponseEntity.status(401).body(java.util.Map.of(
+                        "success", false,
+                        "message", "Tài khoản không tồn tại. Vui lòng đăng ký tài khoản mới."
+                ));
+            } else if ("Invalid password".equals(ex.getMessage())) {
+                return ResponseEntity.status(401).body(java.util.Map.of(
+                        "success", false,
+                        "message", "Mật khẩu không chính xác. Vui lòng thử lại."
+                ));
+            } else if ("Account inactive".equals(ex.getMessage())) {
+                return ResponseEntity.status(403).body(java.util.Map.of(
+                        "success", false,
+                        "message", "Tài khoản đã bị vô hiệu hóa. Vui lòng liên hệ quản trị viên."
+                ));
+            } else {
+                return ResponseEntity.status(500).body(java.util.Map.of(
+                        "success", false,
+                        "message", "Đã xảy ra lỗi khi đăng nhập. Vui lòng thử lại sau."
+                ));
+            }
+        }
     }
 
     @PostMapping("/register")

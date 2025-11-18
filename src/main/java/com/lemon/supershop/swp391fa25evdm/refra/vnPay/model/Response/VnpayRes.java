@@ -1,4 +1,4 @@
-package com.lemon.supershop.swp391fa25evdm.refra.VnPay.model.Response;
+package com.lemon.supershop.swp391fa25evdm.refra.vnPay.model.Response;
 
 
 import java.io.Serializable;

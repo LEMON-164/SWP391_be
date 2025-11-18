@@ -8,6 +8,8 @@ public class DealerRes {
     private int id;
     private String name;
     private String address;
+    private Double latitude;
+    private Double longitude;
     private String phone;
     private String email;
     private String taxcode;
@@ -78,5 +80,21 @@ public class DealerRes {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
     }
 }

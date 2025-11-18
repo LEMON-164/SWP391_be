@@ -2,16 +2,14 @@ package com.lemon.supershop.swp391fa25evdm.product.service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
-import com.lemon.supershop.swp391fa25evdm.category.model.dto.CategoryRes;
 import com.lemon.supershop.swp391fa25evdm.category.model.entity.DealerCategory;
 import com.lemon.supershop.swp391fa25evdm.product.model.enums.ProductStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.lemon.supershop.swp391fa25evdm.category.model.entity.Category;
-import com.lemon.supershop.swp391fa25evdm.category.repository.CategoryRepository;
+import com.lemon.supershop.swp391fa25evdm.category.repository.CategoryRepo;
 import com.lemon.supershop.swp391fa25evdm.category.repository.DealerCategoryRepository;
 import com.lemon.supershop.swp391fa25evdm.product.model.dto.ProductReq;
 import com.lemon.supershop.swp391fa25evdm.product.model.dto.ProductRes;
@@ -25,7 +23,7 @@ public class ProductService {
     private ProductRepo productRepo;
 
     @Autowired
-    private CategoryRepository categoryRepository;
+    private CategoryRepo categoryRepo;
 
     @Autowired
     private DealerCategoryRepository dealerCategoryRepository;
@@ -59,9 +57,13 @@ public class ProductService {
     public ProductRes updateProduct (int id, ProductReq productReq) {
         Optional<Product> existingProductOpt = productRepo.findById(id);
         if (existingProductOpt.isPresent()) {
-            Product existingProduct = convertReqToEntity(existingProductOpt.get(), productReq);
-            productRepo.save(existingProduct);
-            return convertToRes(existingProduct);
+            // Prevent updating products that have been sold
+            if (ProductStatus.SOLDOUT.equals(existingProductOpt.get().getStatus())) {
+                throw new IllegalStateException("Không thể cập nhật thông tin xe đã bán");
+            }
+            Product updatedProduct  = convertReqToEntity(existingProductOpt.get(), productReq);
+            productRepo.save(updatedProduct);
+            return convertToRes(updatedProduct);
         }
         return null;
     }
@@ -84,6 +86,11 @@ public class ProductService {
     public List<ProductRes> getProductByEngineNum(String engineNum){
         List<Product> productOpt = productRepo.findByEngineNumContainingIgnoreCase(engineNum);
         return productOpt.isEmpty() ? null : productOpt.stream().map(this::convertToRes).toList();
+    }
+
+    public List<ProductRes> getProductByDealerCategoryId(int dealerCategoryId){
+        List<Product> products = productRepo.findByDealerCategoryId(dealerCategoryId);
+        return products.stream().map(this::convertToRes).toList();
     }
 
     public ProductRes convertToRes(Product product) {
@@ -129,7 +136,7 @@ public class ProductService {
                 productRes.setStatus(ProductStatus.INACTIVE);
             }
             if (product.getCategory() != null) {
-                Optional<Category> category = categoryRepository.findById(product.getCategory().getId());
+                Optional<Category> category = categoryRepo.findById(product.getCategory().getId());
                 if (category.isPresent()) {
                     productRes.setCategoryId(category.get().getId());
                     productRes.setSpecial(category.get().isSpecial());
@@ -189,7 +196,7 @@ public class ProductService {
                 product.setDealerPrice(productReq.getDealerPrice());
             }
             if (productReq.getCategoryId() > 0){
-                categoryRepository.findById(productReq.getCategoryId()).ifPresent(product::setCategory);
+                categoryRepo.findById(productReq.getCategoryId()).ifPresent(product::setCategory);
             }
             if (productReq.getDealerCategoryId() > 0){
                 dealerCategoryRepository.findById(productReq.getDealerCategoryId()).ifPresent(product::setDealerCategory);
