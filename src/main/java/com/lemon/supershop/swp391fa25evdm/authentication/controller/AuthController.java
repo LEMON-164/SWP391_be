@@ -19,29 +19,37 @@ public class AuthController {
     @Autowired
     AuthenService authenService;
 
-    @GetMapping("/login/google")
-    public ResponseEntity<?> googleSuccess(@AuthenticationPrincipal OAuth2User oauthUser) {
-
+    @GetMapping("/google/callback")
+    public void googleCallback(@AuthenticationPrincipal OAuth2User oauthUser, jakarta.servlet.http.HttpServletResponse response) throws java.io.IOException {
+        // Kiểm tra nếu OAuth2 authentication thất bại
         if (oauthUser == null) {
-            return ResponseEntity.status(401).body(
-                    java.util.Map.of(
-                            "success", false,
-                            "message", "Google authentication failed"
-                    )
-            );
+            response.sendRedirect("http://localhost:3000/login?error=authentication_failed");
+            return;
         }
 
-        return ResponseEntity.ok(
-                java.util.Map.of(
-                        "success", true,
-                        "jwt", oauthUser.getAttribute("jwt"),
-                        "refreshToken", oauthUser.getAttribute("refreshToken"),
-                        "role", oauthUser.getAttribute("role"),
-                        "email", oauthUser.getAttribute("email"),
-                        "name", oauthUser.getAttribute("name")
-                )
+        // Lấy JWT tokens và user info từ OAuth2User attributes
+        // Các attributes này được thêm vào bởi CustomOAuth2UserService.loadUser()
+        String jwt = (String) oauthUser.getAttribute("jwt");                    // Access token (JWT)
+        String refreshToken = (String) oauthUser.getAttribute("refreshToken"); // Refresh token để renew JWT khi hết hạn
+        String role = (String) oauthUser.getAttribute("role");                  // Role của user (Customer, Admin, etc.)
+        String email = (String) oauthUser.getAttribute("email");                // Email từ Google
+        String name = (String) oauthUser.getAttribute("name");                  // Tên từ Google
+
+        // Xác định dashboard path dựa trên role của user
+        // Ví dụ: Customer -> /dashboard/customer, Admin -> /dashboard/admin
+        String dashboardPath = getDashboardPath(role);
+
+        // Tạo redirect URL về frontend với tokens và user info trong query params
+        // Frontend sẽ parse URL params này để lưu tokens vào localStorage
+        String redirectUrl = String.format(
+                "http://localhost:3000%s?google_login=success&token=%s&refreshToken=%s&role=%s&email=%s&name=%s",
+                dashboardPath, jwt, refreshToken, role, email, name
         );
+
+        // Redirect user về frontend dashboard với authenticated state
+        response.sendRedirect(redirectUrl);
     }
+
 
 
     @PostMapping("/login")
@@ -92,5 +100,26 @@ public class AuthController {
     public ResponseEntity<String> changePassword(@PathVariable("id") int id, ChangePassReq dto){
         authenService.changePassword(id, dto);
         return ResponseEntity.ok("Password changed successfully");
+    }
+
+    private String getDashboardPath(String role) {
+        // Nếu role null hoặc không xác định, mặc định là customer
+        if (role == null) return "/dashboard/customer";
+
+        // Switch case để map role sang dashboard path (case-insensitive)
+        switch (role.toLowerCase()) {
+            case "admin":
+                return "/dashboard/admin";
+            case "dealer-manager":
+                return "/dashboard/dealer-manager";
+            case "dealer-staff":
+                return "/dashboard/dealer-staff";
+            case "evm-staff":
+                return "/dashboard/evm-staff";
+            case "customer":
+            default:
+                // Default case: tất cả role không xác định đều redirect về customer dashboard
+                return "/dashboard/customer";
+        }
     }
 }

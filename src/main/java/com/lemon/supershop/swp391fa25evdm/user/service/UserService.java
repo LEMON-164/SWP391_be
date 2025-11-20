@@ -80,6 +80,12 @@ public class UserService {
         }).collect(Collectors.toList());
     }
 
+    public List<UserRes> findDealerStaffByDealerId(int dealerId) {
+        return userRepo.findByRole_NameAndDealer_Id("Dealer Staff", dealerId).stream().map(user -> {
+            return converttoRes(user);
+        }).collect(Collectors.toList());
+    }
+
     public UserRes updateProfile(int id, UserReq dto){
         Optional<User> user = userRepo.findById(id);
         if(user.isPresent()){
@@ -131,6 +137,32 @@ public class UserService {
             return true;
         }
         return false;
+    }
+
+    // Cập nhật dealer cho customer (giờ dùng chung field dealer)
+    public UserRes updatePreferredDealer(int userId, Integer dealerId) {
+        Optional<User> userOpt = userRepo.findById(userId);
+        if (userOpt.isPresent()) {
+            User user = userOpt.get();
+
+            if (dealerId == null) {
+                // Xóa dealer
+                user.setDealer(null);
+            } else {
+                // Set dealer
+                Optional<Dealer> dealerOpt = dealerRepo.findById(dealerId);
+                if (dealerOpt.isPresent()) {
+                    user.setDealer(dealerOpt.get());
+                } else {
+                    throw new RuntimeException("Dealer not found with id: " + dealerId);
+                }
+            }
+
+            userRepo.save(user);
+            return converttoRes(user);
+        } else {
+            throw new RuntimeException("User not found with id: " + userId);
+        }
     }
 
     public UserRes converttoRes(User user){

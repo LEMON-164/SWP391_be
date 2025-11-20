@@ -9,6 +9,7 @@ import com.lemon.supershop.swp391fa25evdm.product.model.dto.ProductRes;
 public class DistributionRes {
 
     private Integer id;
+    private String code;
     private String status;
     private DealerRes dealer;
     private List<ProductRes> products;
@@ -230,5 +231,13 @@ public class DistributionRes {
 
     public void setPaidAt(LocalDateTime paidAt) {
         this.paidAt = paidAt;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 }

@@ -292,15 +292,6 @@ public class TestDriveService {
                 throw new IllegalArgumentException("Vui lòng chọn mẫu xe muốn lái thử");
             }
 
-            if (req.getProductModelName() != null){
-                boolean product = productRepo.existsProductByNameContainingIgnoreCase(req.getProductModelName());
-                if (product) {
-                    testDrive.setProductModelName(req.getProductModelName());
-                }
-            } else {
-                throw new IllegalArgumentException("Vui lòng chọn mẫu xe muốn lái thử");
-            }
-
             if (req.getScheduleDate() != null) {
                 java.time.LocalDateTime scheduleDateTime = req.getScheduleDate();
                 java.time.LocalDateTime now = java.time.LocalDateTime.now();
@@ -373,8 +364,8 @@ public class TestDriveService {
                     res.setProductName(product.get().getName());
                 }
             }
-            if (testDrive.getProductModelName() != null) {
-                res.setProductModelName(testDrive.getProductModelName());
+            if (testDrive.getProduct() != null) {
+                res.setProductModelName(testDrive.getProduct().getName());
             }
             if (testDrive.getCategory() != null){
                 res.setCategoryName(testDrive.getCategory().getName());

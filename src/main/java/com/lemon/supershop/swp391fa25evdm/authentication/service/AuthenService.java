@@ -9,6 +9,7 @@ import com.lemon.supershop.swp391fa25evdm.role.repository.RoleRepo;
 import com.lemon.supershop.swp391fa25evdm.user.model.entity.User;
 import com.lemon.supershop.swp391fa25evdm.user.model.enums.UserStatus;
 import com.lemon.supershop.swp391fa25evdm.user.repository.UserRepo;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -82,53 +83,63 @@ public class AuthenService {
         return response;
     }
 
+    @Transactional  // Giữ Hibernate session mở để tránh LazyInitializationException khi access user.getRole().getName()
     public LoginRes loginWithGoogle(OAuth2User oauthUser) {
 
-        // Google trả về dữ liệu trong oauthUser
-        String email = oauthUser.getAttribute("email");
-        String name = oauthUser.getAttribute("name");
+        // Lấy email và name từ Google OAuth2 user attributes
+        // Google trả về các attributes này trong OAuth2 UserInfo endpoint response
+        String email = oauthUser.getAttribute("email");  // Email từ Google account
+        String name = oauthUser.getAttribute("name");    // Display name từ Google profile
 
+        // Validate email: phải có và đúng format
         if (email == null || !EMAIL_PATTERN.matcher(email).matches()) {
             throw new RuntimeException("Phải cung cấp email đúng form");
         }
 
-
-
-        // Tìm user trong DB
+        // Tìm user trong database theo email
         Optional<User> userOpt = userRepo.findByEmail(email);
 
         User user;
 
         if (userOpt.isPresent()) {
-            user = userOpt.get(); // user đã có trong hệ thống
+            // User đã tồn tại trong hệ thống (đã đăng ký trước đó)
+            user = userOpt.get();
+
+            // Kiểm tra status: nếu account bị vô hiệu hóa thì không cho login
             if (user.getStatus() == UserStatus.INACTIVE) {
                 throw new RuntimeException("Account inactive");
             }
         } else {
-            // Tạo user mới
+            // User chưa có trong hệ thống -> Tạo user mới (auto-registration)
             user = new User();
             user.setEmail(email);
-            user.setUsername(name);
-            user.setPassword("");   // Google không trả → để trống
-            user.setPhone("");      // Google không trả phone
-            user.setAddress("");    // Google không trả address
-            user.setStatus(UserStatus.ACTIVE);
+            user.setUsername(name);     // Dùng Google name làm username
+            user.setPassword("");       // Google user không có password (xác thực qua Google)
+            user.setPhone("");          // Google OAuth không trả về phone number
+            user.setAddress("");        // Google OAuth không trả về address
+            user.setStatus(UserStatus.ACTIVE);  // User mới tự động active
 
-            // Gán role mặc định (USER)
-            Role defaultRole = roleRepo.findByNameContainingIgnoreCase("USER")
-                    .orElseThrow(() -> new RuntimeException("Default role USER not found"));
+            // Gán role mặc định là "Customer" cho user mới
+            // Tìm role "Customer" trong database (phải tồn tại sẵn)
+            Role defaultRole = roleRepo.findByNameContainingIgnoreCase("Customer")
+                    .orElseThrow(() -> new RuntimeException("Default role Customer not found"));
             user.setRole(defaultRole);
 
-            user = userRepo.save(user); // lưu user mới
+            // Lưu user mới vào database
+            user = userRepo.save(user);
         }
 
-        // Tạo JWT + Refresh token
-        String token = jwtUtil.generateToken(user.getUsername());
-        String refreshToken = jwtUtil.generateRefreshToken(user.getUsername());
+        // Generate JWT access token và refresh token cho user
+        // Token được sign bằng secret key và có expiration time
+        String token = jwtUtil.generateToken(user.getUsername());           // Access token (JWT) - short-lived (vd: 1 giờ)
+        String refreshToken = jwtUtil.generateRefreshToken(user.getUsername()); // Refresh token - long-lived (vd: 7 ngày)
 
+        // Tạo LoginRes object chứa tokens và user info
+        // @Transactional đảm bảo user.getRole() có thể access được (không bị LazyInitializationException)
         LoginRes res = new LoginRes(token, refreshToken, user.getUsername(), user.getRole().getName());
-        res.setUserId(user.getId());
+        res.setUserId(user.getId());  // Set user ID để frontend có thể dùng
 
+        // Nếu user có dealer (Dealer Manager/Staff), thêm dealer info vào response
         if (user.getDealer() != null) {
             res.setDealerId(user.getDealer().getId());
             res.setDealerName(user.getDealer().getName());
