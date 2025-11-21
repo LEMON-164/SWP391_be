@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import com.lemon.supershop.swp391fa25evdm.category.model.entity.DealerCategory;
 import com.lemon.supershop.swp391fa25evdm.product.model.enums.ProductStatus;
+import com.lemon.supershop.swp391fa25evdm.testdrive.repository.TestDriveRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,10 +27,44 @@ public class ProductService {
     private CategoryRepo categoryRepo;
 
     @Autowired
+    private TestDriveRepo testDriveRepo;
+
+    @Autowired
     private DealerCategoryRepository dealerCategoryRepository;
 
     public List<ProductRes> findAllProducts(){
         List<Product> products = productRepo.findAll();
+        return products.stream().map(this::convertToRes).toList();
+    }
+
+
+    // Get available test drive products (not currently assigned to any active test drive)
+    public List<ProductRes> getAvailableTestDriveProducts(){
+        List<Integer> inUseProductIds = testDriveRepo.findProductIdsInUse();
+        if (inUseProductIds.isEmpty()) {
+            inUseProductIds = List.of(0); // Dummy ID to avoid empty list in query
+        }
+        List<Product> products = productRepo.findAvailableTestDriveProducts(inUseProductIds);
+        return products.stream().map(this::convertToRes).toList();
+    }
+
+    // Get available test drive products by category
+    public List<ProductRes> getAvailableTestDriveProductsByCategory(int categoryId){
+        List<Integer> inUseProductIds = testDriveRepo.findProductIdsInUse();
+        if (inUseProductIds.isEmpty()) {
+            inUseProductIds = List.of(0);
+        }
+        List<Product> products = productRepo.findAvailableTestDriveProductsByCategory(categoryId, inUseProductIds);
+        return products.stream().map(this::convertToRes).toList();
+    }
+
+    // Get available test drive products by dealer category
+    public List<ProductRes> getAvailableTestDriveProductsByDealerCategory(int dealerCategoryId){
+        List<Integer> inUseProductIds = testDriveRepo.findProductIdsInUse();
+        if (inUseProductIds.isEmpty()) {
+            inUseProductIds = List.of(0);
+        }
+        List<Product> products = productRepo.findAvailableTestDriveProductsByDealerCategory(dealerCategoryId, inUseProductIds);
         return products.stream().map(this::convertToRes).toList();
     }
 

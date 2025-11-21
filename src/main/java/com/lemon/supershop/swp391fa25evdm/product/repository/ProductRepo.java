@@ -18,6 +18,28 @@ public interface ProductRepo extends JpaRepository<Product, Integer> {
     List<Product> findByCategoryId(int id);
     boolean existsProductByNameContainingIgnoreCase(String name);
 
+
+    // Find available products (TEST_DRIVE status and not currently in use)
+    @Query("SELECT p FROM Product p WHERE p.status = 'TEST_DRIVE' " +
+            "AND p.id NOT IN :inUseProductIds")
+    List<Product> findAvailableTestDriveProducts(@Param("inUseProductIds") List<Integer> inUseProductIds);
+
+    // Find available products by category (TEST_DRIVE status and not in use)
+    @Query("SELECT p FROM Product p WHERE p.category.id = :categoryId " +
+            "AND p.status = 'TEST_DRIVE' " +
+            "AND p.id NOT IN :inUseProductIds")
+    List<Product> findAvailableTestDriveProductsByCategory(
+            @Param("categoryId") int categoryId,
+            @Param("inUseProductIds") List<Integer> inUseProductIds);
+
+    // Find available products by dealer category (TEST_DRIVE status and not in use)
+    @Query("SELECT p FROM Product p WHERE p.dealerCategory.id = :dealerCategoryId " +
+            "AND p.status = 'TEST_DRIVE' " +
+            "AND p.id NOT IN :inUseProductIds")
+    List<Product> findAvailableTestDriveProductsByDealerCategory(
+            @Param("dealerCategoryId") int dealerCategoryId,
+            @Param("inUseProductIds") List<Integer> inUseProductIds);
+
     // Find products by dealer category ID
     @Query("SELECT p FROM Product p WHERE p.dealerCategory.id = :dealerCategoryId")
     List<Product> findByDealerCategoryId(@Param("dealerCategoryId") int dealerCategoryId);

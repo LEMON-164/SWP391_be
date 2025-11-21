@@ -14,10 +14,13 @@ public class TestDriveRes {
     private String location;
     private UserRes user;
     private DealerRes dealer;
+    private Integer productId;
     private String productName;
-    private String productModelName; // Customer's requested model name
+    private String specificVIN;
+    private Integer categoryId;
     private String categoryName; // Customer's requested category
     private UserRes escortStaff;
+    private Integer attemptNumber;
 
     public TestDriveRes() {
     }
@@ -86,14 +89,6 @@ public class TestDriveRes {
         this.location = location;
     }
 
-    public String getProductModelName() {
-        return productModelName;
-    }
-
-    public void setProductModelName(String productModelName) {
-        this.productModelName = productModelName;
-    }
-
     public String getCategoryName() {
         return categoryName;
     }
@@ -109,4 +104,36 @@ public class TestDriveRes {
     public void setEscortStaff(UserRes escortStaff) {
         this.escortStaff = escortStaff;
     }
+
+    public Integer getProductId() {
+        return productId;
+    }
+
+    public void setProductId(Integer productId) {
+        this.productId = productId;
+    }
+
+    public String getSpecificVIN() {
+        return specificVIN;
+    }
+
+    public void setSpecificVIN(String specificVIN) {
+        this.specificVIN = specificVIN;
+    }
+
+    public Integer getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(Integer categoryId) {
+        this.categoryId = categoryId;
+    }
+
+//    public Integer getAttemptNumber() {
+//        return attemptNumber;
+//    }
+//
+//    public void setAttemptNumber(Integer attemptNumber) {
+//        this.attemptNumber = attemptNumber;
+//    }
 }
