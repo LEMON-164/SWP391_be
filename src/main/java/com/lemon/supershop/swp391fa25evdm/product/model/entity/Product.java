@@ -99,6 +99,11 @@ public class Product {
     @JsonIgnore
     private DealerCategory dealerCategory;
 
+    @ManyToOne
+    @JoinColumn(name = "DistributionId")
+    @JsonIgnore
+    private Distribution distribution;
+
     @OneToOne(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Order order;
 
@@ -308,5 +313,13 @@ public class Product {
 
     public void setTestDrives(List<TestDrive> testDrives) {
         this.testDrives = testDrives;
+    }
+
+    public Distribution getDistribution() {
+        return distribution;
+    }
+
+    public void setDistribution(Distribution distribution) {
+        this.distribution = distribution;
     }
 }

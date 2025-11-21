@@ -21,8 +21,8 @@ public class TestDrive {
     @Column(name = "schedule_date", columnDefinition = "DATETIME2")
     private LocalDateTime scheduleDate;
 
-    @Column(name = "location", columnDefinition = "NVARCHAR(255)")
-    private String location;
+//    @Column(name = "location", columnDefinition = "NVARCHAR(255)")
+//    private String location;
 
     @Column(name = "status", columnDefinition = "VARCHAR(20)")
     private String status; // PENDING, ASSIGNING, APPROVED, IN_PROGRESS, DONE, REJECTED, CANCELLED
@@ -32,9 +32,6 @@ public class TestDrive {
 
     @Column(name = "specific_vin", columnDefinition = "VARCHAR(50)")
     private String specificVIN;
-
-    @Column(name = "product_model_name", columnDefinition = "NVARCHAR(100)")
-    private String productModelName;
 
 //    @Column(name = "product_model_name", columnDefinition = "NVARCHAR(100)")
 //    private String productModelName;
@@ -87,14 +84,6 @@ public class TestDrive {
 
     public void setScheduleDate(LocalDateTime scheduleDate) {
         this.scheduleDate = scheduleDate;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
     }
 
     public String getStatus() {
@@ -159,14 +148,6 @@ public class TestDrive {
 
     public void setProduct(Product product) {
         this.product = product;
-    }
-
-    public String getProductModelName() {
-        return productModelName;
-    }
-
-    public void setProductModelName(String productModelName) {
-        this.productModelName = productModelName;
     }
 
     public User getEscortStaff() {

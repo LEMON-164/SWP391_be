@@ -83,7 +83,9 @@ public class CategoryService {
         }
 
         category.setName(dto.getName());
-        category.setBrand(dto.getBrand());
+        category.setBrand(dto.getBrand() != null && !dto.getBrand().trim().isEmpty()
+                ? dto.getBrand()
+                : "VinFast");
 //        category.setVersion(dto.getVersion());
 //        category.setType(dto.getType());
         category.setBasePrice(dto.getBasePrice());
@@ -143,7 +145,9 @@ public class CategoryService {
         Category category = new Category();
 
         category.setName(dto.getName());
-        category.setBrand(dto.getBrand());
+        category.setBrand(dto.getBrand() != null && !dto.getBrand().trim().isEmpty()
+                ? dto.getBrand()
+                : "VinFast");
 //        category.setVersion(dto.getVersion());
 //        category.setType(dto.getType());
         category.setSpecial(dto.isSpecial());

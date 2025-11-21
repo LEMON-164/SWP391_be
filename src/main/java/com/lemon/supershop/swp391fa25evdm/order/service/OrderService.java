@@ -99,6 +99,9 @@ public class OrderService {
     public OrderRes updateOrder(int orderId, OrderReq dto) {
         Optional<Order> order = orderRepo.findById(orderId);
         if (order.isPresent()){
+            if ("Đã giao".equals(order.get().getStatus())) {
+                throw new IllegalStateException("Không thể chỉnh sửa đơn hàng đã giao. Đơn hàng này đã hoàn tất.");
+            }
             Order updateOrder = converttoEntity(order.get(), dto);
             orderRepo.save(updateOrder);
             return convertoRes(order.get());
@@ -178,6 +181,7 @@ public class OrderService {
                 orderRes.setProductHP(order.getProduct().getHp());
                 orderRes.setProductTorque(order.getProduct().getTorque());
                 orderRes.setProductColor(order.getProduct().getColor());
+                orderRes.setProductImage(order.getProduct().getImage());
             }
             if (order.getDealer() != null){
                 orderRes.setDealerId(order.getDealer().getId());
@@ -208,98 +212,200 @@ public class OrderService {
         }
         return orderRes;
     }
-    public Order converttoEntity(Order order, OrderReq dto){
-        if (order != null){
-            if (order.getStatus() != null){
-                String oldStatus = order.getStatus();
-            } else {
-                order.setStatus("Chờ xử lý");
+    public Order converttoEntity(Order order, OrderReq dto) {
+
+        if (order == null) return null;
+
+        String oldStatus = (order.getStatus() != null) ? order.getStatus() : "Chờ xử lý";
+
+        // 1) UPDATE BASE FIELDS
+        if (dto.getDescription() != null) {
+            order.setDescription(dto.getDescription());
+        }
+
+        if (dto.getDeliveryDate() != null) {
+            order.setDeliveryDate(dto.getDeliveryDate());
+        }
+
+        // 2) UPDATE PRODUCT
+        if (dto.getProductId() > 0) {
+            productRepo.findById(dto.getProductId()).ifPresent(product -> {
+                order.setProduct(product);
+                order.setTotal(product.getDealerPrice());
+            });
+        }
+
+        // 3) UPDATE CONTRACT
+        if (dto.getContractId() > 0) {
+            contractRepo.findById(dto.getContractId()).ifPresent(contract -> {
+                contract.setOrder(order);
+
+                if (order.getContract() == null) {
+                    order.setContract(new ArrayList<>());
+                }
+
+                order.getContract().add(contract);
+                contractRepo.save(contract);
+            });
+        }
+
+        // 4) UPDATE DEALER + PROMO
+        if (dto.getDealerId() > 0) {
+            dealerRepo.findById(dto.getDealerId()).ifPresent(dealer -> {
+                order.setDealer(dealer);
+                List<Promotion> promotions = promotionRepo.findByDealer_Id(dealer.getId());
+                order.setPromotions(promotions);
+            });
+        }
+
+        // 5) STATUS UPDATE LOGIC
+        if (dto.getStatus() != null && !dto.getStatus().isEmpty()) {
+
+            // 5.1 — Reserved
+            if (("Đã đặt cọc".equals(dto.getStatus()) || "Đã yêu cầu đại lý".equals(dto.getStatus()))
+                    && !dto.getStatus().equals(oldStatus)) {
+
+                Product product = order.getProduct();
+                if (product != null) {
+                    product.setStatus(ProductStatus.RESERVED);
+                    productRepo.save(product);
+                }
             }
 
-            if (dto.getProductId() > 0 ){
-                Optional<Product> product  = productRepo.findById(dto.getProductId());
-                if (product.isPresent()){
-                    order.setProduct(product.orElse(null));
-                    order.setTotal(product.get().getDealerPrice());
-                }
-            }
-            if (dto.getContractId() > 0 ){
-                Optional<Contract> contract = contractRepo.findById(dto.getContractId());
-                if (contract.isPresent()){
-                    contract.get().setOrder(order);
-                    if (order.getContract() != null){
-                        order.getContract().add(contract.get());
-                        contractRepo.save(contract.get());
-                    } else {
-                        List<Contract> contracts = new ArrayList<Contract>();
-                        order.setContract(contracts);
-                    }
-                }
-            }
-            if (dto.getDealerId() > 0){
-                Optional<Dealer> dealer = dealerRepo.findById(dto.getDealerId());
-                if (dealer.isPresent()){
-                    order.setDealer(dealer.orElse(null));
-                    List<Promotion> promotions = promotionRepo.findByDealer_Id(dealer.get().getId());
-                    if (promotions != null){
-                        order.setPromotions(promotions);
-                    }
-                }
-            }
-            if (dto.getDescription() != null){
-                order.setDescription(dto.getDescription());
-            }
-            // Update delivery date if provided
-            if (dto.getDeliveryDate() != null) {
-                order.setDeliveryDate(dto.getDeliveryDate());
-                System.out.println("Updated delivery date to: " + dto.getDeliveryDate());
-            }
+            // 5.2 — Delivered + Cancel các đơn cùng mã số khung, số máy
+            if ("Đã giao".equals(dto.getStatus()) && !oldStatus.equals("Đã giao")) {
 
-            if (dto.getStatus() != null && !dto.getStatus().isEmpty()) {
-                // Update product status in showroom when deposit is confirmed
-                if (("Đã đặt cọc".equals(dto.getStatus()) || "Đã yêu cầu đại lý".equals(dto.getStatus()))
-                        && !dto.getStatus().equals(order.getStatus())) {
-                    try {
-                        Product product = order.getProduct();
-                        if (product != null) {
-                            product.setStatus(ProductStatus.RESERVED); // Đánh dấu xe đã được đặt cọc
-                            productRepo.save(product);
+                Product product = order.getProduct();
+                if (product != null) {
+                    product.setStatus(ProductStatus.SOLDOUT);
+                    productRepo.save(product);
+
+                    String vin = product.getVinNum();
+                    String engine = product.getEngineNum();
+
+                    List<Order> allOrders = orderRepo.findAll();
+
+                    for (Order o : allOrders) {
+                        if (o.getId() == order.getId()) continue;
+                        if (o.getProduct() == null) continue;
+
+                        boolean sameVin = vin != null && vin.equals(o.getProduct().getVinNum());
+                        boolean sameEngine = engine != null && engine.equals(o.getProduct().getEngineNum());
+
+                        if (sameVin || sameEngine) {
+                            if (!"Đã giao".equals(o.getStatus()) && !"Đã hủy".equals(o.getStatus())) {
+                                o.setStatus("Đã hủy");
+                                o.setShipAddress("Xe đã bán cho khách khác (VIN: " + vin + ")");
+                                orderRepo.save(o);
+                            }
                         }
-                    } catch (Exception e) {
-                        System.err.println("Failed to update product status: " + e.getMessage());
-                        e.printStackTrace();
-                    }
-                }
-
-                // Update product status to SOLDOUT when vehicle is delivered
-                if ("Đã giao".equals(dto.getStatus()) && !dto.getStatus().equals(order.getStatus())) {
-                    try {
-                        Product product = order.getProduct();
-                        if (product != null) {
-                            product.setStatus(ProductStatus.SOLDOUT); // Đánh dấu xe đã bán
-                            productRepo.save(product);
-                        }
-                    } catch (Exception e) {
-                        System.err.println("Failed to update product status to SOLDOUT: " + e.getMessage());
-                        e.printStackTrace();
                     }
                 }
             }
 
-            // Send email notification when status changes to "Sẵn sàng giao xe"
-            if ("Sẵn sàng giao xe".equals(dto.getStatus()) && !dto.getStatus().equals(order.getStatus())) {
+            // 5.3 — Send Email khi xe chuẩn bị giao
+            if ("Sẵn sàng giao xe".equals(dto.getStatus()) && !oldStatus.equals("Sẵn sàng giao xe")) {
                 sendEmail(order, dto);
             }
 
-            // Update status if provided
-            if (dto.getStatus() != null && !dto.getStatus().isEmpty()) {
-                order.setStatus(dto.getStatus());
-            }
-
-            return order;
+            order.setStatus(dto.getStatus());
         }
-        return null;
+
+        return order;
     }
+
+//    public Order converttoEntity(Order order, OrderReq dto){
+//        if (order != null){
+//            if (order.getStatus() != null){
+//                String oldStatus = order.getStatus();
+//            } else {
+//                order.setStatus("Chờ xử lý");
+//            }
+//
+//            if (dto.getProductId() > 0 ){
+//                Optional<Product> product  = productRepo.findById(dto.getProductId());
+//                if (product.isPresent()){
+//                    order.setProduct(product.orElse(null));
+//                    order.setTotal(product.get().getDealerPrice());
+//                }
+//            }
+//            if (dto.getContractId() > 0 ){
+//                Optional<Contract> contract = contractRepo.findById(dto.getContractId());
+//                if (contract.isPresent()){
+//                    contract.get().setOrder(order);
+//                    if (order.getContract() != null){
+//                        order.getContract().add(contract.get());
+//                        contractRepo.save(contract.get());
+//                    } else {
+//                        List<Contract> contracts = new ArrayList<Contract>();
+//                        order.setContract(contracts);
+//                    }
+//                }
+//            }
+//            if (dto.getDealerId() > 0){
+//                Optional<Dealer> dealer = dealerRepo.findById(dto.getDealerId());
+//                if (dealer.isPresent()){
+//                    order.setDealer(dealer.orElse(null));
+//                    List<Promotion> promotions = promotionRepo.findByDealer_Id(dealer.get().getId());
+//                    if (promotions != null){
+//                        order.setPromotions(promotions);
+//                    }
+//                }
+//            }
+//            if (dto.getDescription() != null){
+//                order.setDescription(dto.getDescription());
+//            }
+//            // Update delivery date if provided
+//            if (dto.getDeliveryDate() != null) {
+//                order.setDeliveryDate(dto.getDeliveryDate());
+//                System.out.println("Updated delivery date to: " + dto.getDeliveryDate());
+//            }
+//
+//            if (dto.getStatus() != null && !dto.getStatus().isEmpty()) {
+//                // Update product status in showroom when deposit is confirmed
+//                if (("Đã đặt cọc".equals(dto.getStatus()) || "Đã yêu cầu đại lý".equals(dto.getStatus()))
+//                        && !dto.getStatus().equals(order.getStatus())) {
+//                    try {
+//                        Product product = order.getProduct();
+//                        if (product != null) {
+//                            product.setStatus(ProductStatus.RESERVED); // Đánh dấu xe đã được đặt cọc
+//                            productRepo.save(product);
+//                        }
+//                    } catch (Exception e) {
+//                        System.err.println("Failed to update product status: " + e.getMessage());
+//                        e.printStackTrace();
+//                    }
+//                }
+//
+//                // Update product status to SOLDOUT when vehicle is delivered
+//                if ("Đã giao".equals(dto.getStatus()) && !dto.getStatus().equals(order.getStatus())) {
+//                    try {
+//                        Product product = order.getProduct();
+//                        if (product != null) {
+//                            product.setStatus(ProductStatus.SOLDOUT); // Đánh dấu xe đã bán
+//                            productRepo.save(product);
+//                        }
+//                    } catch (Exception e) {
+//                        System.err.println("Failed to update product status to SOLDOUT: " + e.getMessage());
+//                        e.printStackTrace();
+//                    }
+//                }
+//            }
+//
+//            // Send email notification when status changes to "Sẵn sàng giao xe"
+//            if ("Sẵn sàng giao xe".equals(dto.getStatus()) && !dto.getStatus().equals(order.getStatus())) {
+//                sendEmail(order, dto);
+//            }
+//
+//            // Update status if provided
+//            if (dto.getStatus() != null && !dto.getStatus().isEmpty()) {
+//                order.setStatus(dto.getStatus());
+//            }
+//
+//            return order;
+//        }
+//        return null;
+//    }
 
     public void sendEmail(Order order, OrderReq dto){
         try {

@@ -11,7 +11,6 @@ public class TestDriveReq {
     private int dealerId;
     private int productId;
     private int categoryId;
-    private String productModelName;
     private int escortStaffId;
 
     public TestDriveReq() {
@@ -71,14 +70,6 @@ public class TestDriveReq {
 
     public void setCategoryId(int categoryId) {
         this.categoryId = categoryId;
-    }
-
-    public String getProductModelName() {
-        return productModelName;
-    }
-
-    public void setProductModelName(String productModelName) {
-        this.productModelName = productModelName;
     }
 
     public int getEscortStaffId() {

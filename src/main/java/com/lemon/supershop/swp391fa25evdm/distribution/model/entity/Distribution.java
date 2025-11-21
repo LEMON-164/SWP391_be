@@ -86,8 +86,8 @@ public class Distribution {
     @OneToOne(mappedBy = "distribution")
     private Contract contract;
 
-    //    @OneToMany(mappedBy = "distribution", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-//    private List<Product> products;
+    @OneToMany(mappedBy = "distribution", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Product> products;
 
     @OneToMany(mappedBy = "distribution", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<DistributionItem> items;
@@ -142,13 +142,13 @@ public class Distribution {
         this.contract = contract;
     }
 
-//    public List<Product> getProducts() {
-//        return products;
-//    }
-//
-//    public void setProducts(List<Product> products) {
-//        this.products = products;
-//    }
+    public List<Product> getProducts() {
+        return products;
+    }
+
+    public void setProducts(List<Product> products) {
+        this.products = products;
+    }
 
     public List<DistributionItem> getItems() {
         return items;

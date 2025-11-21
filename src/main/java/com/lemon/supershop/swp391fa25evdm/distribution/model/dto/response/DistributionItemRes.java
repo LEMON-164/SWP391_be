@@ -12,6 +12,7 @@ public class DistributionItemRes {
     private CategoryRes category;
     private String color;
     private Integer quantity;
+    private Integer approvedQuantity;
     private BigDecimal dealerPrice;
 
     public DistributionItemRes() {}
@@ -70,5 +71,13 @@ public class DistributionItemRes {
 
     public void setCategory(CategoryRes category) {
         this.category = category;
+    }
+
+    public Integer getApprovedQuantity() {
+        return approvedQuantity;
+    }
+
+    public void setApprovedQuantity(Integer approvedQuantity) {
+        this.approvedQuantity = approvedQuantity;
     }
 }

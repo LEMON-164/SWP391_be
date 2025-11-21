@@ -7,7 +7,7 @@ public class DistributionReq {
     private int categoryId;
     private int dealerId;
     private int contractId;
-    private List<Integer> productId;
+//    private List<Integer> productId;
 
     public DistributionReq() {
     }
@@ -36,11 +36,11 @@ public class DistributionReq {
         this.contractId = contractId;
     }
 
-    public List<Integer> getProductId() {
-        return productId;
-    }
-
-    public void setProductId(List<Integer> productId) {
-        this.productId = productId;
-    }
+//    public List<Integer> getProductId() {
+//        return productId;
+//    }
+//
+//    public void setProductId(List<Integer> productId) {
+//        this.productId = productId;
+//    }
 }

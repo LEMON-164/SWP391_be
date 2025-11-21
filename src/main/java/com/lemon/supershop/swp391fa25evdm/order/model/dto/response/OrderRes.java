@@ -13,6 +13,7 @@ public class OrderRes {
     private String customerPhone;
     private String customerAddress;
     private String productName;
+    private String productImage;
     private String productVin;
     private String productEngine;
     private Double productBattery;
@@ -196,5 +197,13 @@ public class OrderRes {
 
     public void setNotes(String notes) {
         this.notes = notes;
+    }
+
+    public String getProductImage() {
+        return productImage;
+    }
+
+    public void setProductImage(String productImage) {
+        this.productImage = productImage;
     }
 }

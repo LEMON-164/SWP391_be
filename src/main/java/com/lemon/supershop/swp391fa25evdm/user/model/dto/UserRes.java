@@ -11,9 +11,12 @@ public class UserRes {
     private String phone;
     private String address;
     private String role;
-    private UserStatus status;
+    private String status;
+    private Integer dealerId;
     private String dealerName;
     private String dealerAddress;
+    private String temporaryPassword;  // Only used for Google login profile completion notification
+    private Boolean emailVerified;
 
     public UserRes() {}
 
@@ -41,7 +44,7 @@ public class UserRes {
         return role;
     }
 
-    public UserStatus getStatus() {return status;}
+    public String getStatus() {return status;}
 
     public void setId(int id) {
         this.id = id;
@@ -63,7 +66,7 @@ public class UserRes {
         this.address = address;
     }
 
-    public void setStatus(UserStatus status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 
@@ -85,5 +88,29 @@ public class UserRes {
 
     public void setDealerAddress(String dealerAddress) {
         this.dealerAddress = dealerAddress;
+    }
+
+    public Integer getDealerId() {
+        return dealerId;
+    }
+
+    public void setDealerId(Integer dealerId) {
+        this.dealerId = dealerId;
+    }
+
+    public String getTemporaryPassword() {
+        return temporaryPassword;
+    }
+
+    public void setTemporaryPassword(String temporaryPassword) {
+        this.temporaryPassword = temporaryPassword;
+    }
+
+    public Boolean getEmailVerified() {
+        return emailVerified;
+    }
+
+    public void setEmailVerified(Boolean emailVerified) {
+        this.emailVerified = emailVerified;
     }
 }

@@ -17,7 +17,7 @@ public class TestDriveController {
 
     @Autowired
     private TestDriveService testDriveService;
-    
+
     @GetMapping("/listTestDrives")
     public ResponseEntity<List<TestDriveRes>> getAllTestDrives() {
         List<TestDriveRes> testDrives = testDriveService.getAllTestDrive();
@@ -40,6 +40,35 @@ public class TestDriveController {
     public ResponseEntity<List<TestDriveRes>> getTestDriveByDealerId(@PathVariable int dealerId) {
         List<TestDriveRes> testDrives = testDriveService.getTestDriveByDealerId(dealerId);
         return ResponseEntity.ok(testDrives);
+    }
+
+    @PostMapping("/createTestDrive")
+    public ResponseEntity<TestDriveRes> createTestDrive (@RequestBody TestDriveReq testDriveReq) {
+        TestDriveRes testDriveRes = testDriveService.createTestDrive(testDriveReq);
+        if (testDriveRes != null) {
+            return ResponseEntity.ok(testDriveRes);
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @PutMapping("/updateTestDrive/{id}")
+    public ResponseEntity<TestDriveRes> updateTestDrive (@PathVariable int id, @RequestBody TestDriveReq dto) {
+        TestDriveRes testDriveRes = testDriveService.updateTestDrive(id, dto);
+        if (testDriveRes != null) {
+            return ResponseEntity.ok(testDriveRes);
+        } else {
+            return ResponseEntity.noContent().build();
+        }
+    }
+
+    @DeleteMapping("/deleteTestDrive/{id}")
+    public ResponseEntity<String> deleteTestDrive (@PathVariable int id) {
+        if (testDriveService.deleteTestDrive(id)){
+            return ResponseEntity.ok("Test drive deleted successfully");
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @GetMapping("/check-availability")
@@ -78,26 +107,6 @@ public class TestDriveController {
                     .body(icsContent);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Failed to generate calendar file: " + e.getMessage());
-        }
-    }
-
-    @PostMapping("/createTestDrive")
-    public ResponseEntity<TestDriveRes> createTestDrive (@RequestBody TestDriveReq testDriveReq) {
-        TestDriveRes testDriveRes = testDriveService.createTestDrive(testDriveReq);
-        if (testDriveRes != null) {
-            return ResponseEntity.ok(testDriveRes);
-        } else {
-            return ResponseEntity.badRequest().build();
-        }
-    }
-
-    @PutMapping("/updateTestDrive/{id}")
-    public ResponseEntity<TestDriveRes> updateTestDrive (@PathVariable int id, @RequestBody TestDriveReq dto) {
-        TestDriveRes testDriveRes = testDriveService.updateTestDrive(id, dto);
-        if (testDriveRes != null) {
-            return ResponseEntity.ok(testDriveRes);
-        } else {
-            return ResponseEntity.noContent().build();
         }
     }
 
@@ -173,23 +182,25 @@ public class TestDriveController {
 
     // ============ Staff Assignment API ============
 
+    /**
+     * Dealer staff assigns vehicle and escort staff to a pending test drive request
+     * POST /api/testdrives/{id}/assign
+     * Body: { "productId": 123, "escortStaffId": 456 }
+     */
     @PostMapping("/{id}/assign")
     public ResponseEntity<TestDriveRes> assignVehicleAndStaff(
             @PathVariable int id,
             @RequestBody TestDriveReq req) {
-        TestDriveRes result = testDriveService.assignVehicleAndStaff(id, req.getProductId(), req.getEscortStaffId());
-        if (result != null) {
-            return ResponseEntity.ok(result);
-        } else {
+        if (req.getProductId() <= 0) {
             return ResponseEntity.badRequest().build();
         }
-    }
 
+        // escortStaffId is optional, default to 0 if not provided
+        int escortStaffId = req.getEscortStaffId() > 0 ? req.getEscortStaffId() : 0;
 
-    @DeleteMapping("/deleteTestDrive/{id}")
-    public ResponseEntity<String> deleteTestDrive (@PathVariable int id) {
-        if (testDriveService.deleteTestDrive(id)){
-            return ResponseEntity.ok("Test drive deleted successfully");
+        TestDriveRes result = testDriveService.assignVehicleAndStaff(id, req.getProductId(), escortStaffId);
+        if (result != null) {
+            return ResponseEntity.ok(result);
         } else {
             return ResponseEntity.badRequest().build();
         }

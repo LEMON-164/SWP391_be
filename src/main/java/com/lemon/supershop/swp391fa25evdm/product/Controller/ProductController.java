@@ -60,6 +60,27 @@ public class ProductController {
         return ResponseEntity.ok(products);
     }
 
+    // Get available test drive vehicles (not currently assigned to active test drives)
+    @GetMapping("/available-testdrive")
+    public ResponseEntity<List<ProductRes>> getAvailableTestDriveProducts() {
+        List<ProductRes> products = productService.getAvailableTestDriveProducts();
+        return ResponseEntity.ok(products);
+    }
+
+    // Get available test drive vehicles by category
+    @GetMapping("/available-testdrive/category/{categoryId}")
+    public ResponseEntity<List<ProductRes>> getAvailableTestDriveProductsByCategory(@PathVariable int categoryId) {
+        List<ProductRes> products = productService.getAvailableTestDriveProductsByCategory(categoryId);
+        return ResponseEntity.ok(products);
+    }
+
+    // Get available test drive vehicles by dealer category
+    @GetMapping("/available-testdrive/dealerCategory/{dealerCategoryId}")
+    public ResponseEntity<List<ProductRes>> getAvailableTestDriveProductsByDealerCategory(@PathVariable int dealerCategoryId) {
+        List<ProductRes> products = productService.getAvailableTestDriveProductsByDealerCategory(dealerCategoryId);
+        return ResponseEntity.ok(products);
+    }
+
     @PostMapping("/addProduct")
     public ResponseEntity<ProductRes> addProduct(@RequestBody ProductReq productReq) {
         ProductRes createdProduct = productService.createProduct(productReq);

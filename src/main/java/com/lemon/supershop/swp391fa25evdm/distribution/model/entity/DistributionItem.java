@@ -33,6 +33,9 @@ public class DistributionItem {
     @Column(name = "Quantity", columnDefinition = "INT")
     private Integer quantity;
 
+    @Column(name = "ApprovedQuantity", columnDefinition = "INT")
+    private Integer approvedQuantity;
+
     // Dealer Price per line (đơn giá hãng bán cho đại lý)
     @Column(name = "DealerPrice", precision = 18, scale = 2)
     private BigDecimal dealerPrice;
@@ -94,5 +97,13 @@ public class DistributionItem {
 
     public void setCategory(Category category) {
         this.category = category;
+    }
+
+    public Integer getApprovedQuantity() {
+        return approvedQuantity;
+    }
+
+    public void setApprovedQuantity(Integer approvedQuantity) {
+        this.approvedQuantity = approvedQuantity;
     }
 }
