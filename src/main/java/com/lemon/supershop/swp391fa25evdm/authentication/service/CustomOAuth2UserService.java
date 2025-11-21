@@ -12,7 +12,20 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
-
+/**
+ * CUSTOM OAUTH2 USER SERVICE
+ * Service này xử lý thông tin user từ Google OAuth2 và tạo JWT tokens.
+ *
+ * Spring Security gọi service này sau khi nhận được user info từ Google.
+ * Service này có nhiệm vụ:
+ * 1. Lấy user info từ Google (email, name, etc.)
+ * 2. Tạo hoặc cập nhật user trong database
+ * 3. Generate JWT tokens (access token + refresh token)
+ * 4. Thêm tokens vào OAuth2User attributes để AuthController có thể lấy
+ *
+ * Flow:
+ * Google -> Spring Security -> CustomOAuth2UserService -> AuthenService -> AuthController
+ */
 @Service
 public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
 
@@ -50,6 +63,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         attributes.put("refreshToken", loginResult.getRefreshToken()); // Refresh token - dùng để renew JWT khi hết hạn
         attributes.put("role", loginResult.getRole());              // Role của user (Customer, Admin, etc.)
         attributes.put("userId", loginResult.getUserId());          // User ID trong database
+        attributes.put("isNewUser", loginResult.getNewUser());    // Flag phân biệt user mới cần điền thông tin
 
         // Nếu user có dealer (cho Dealer Manager/Staff), thêm dealer info
         if (loginResult.getDealerId() != null) {

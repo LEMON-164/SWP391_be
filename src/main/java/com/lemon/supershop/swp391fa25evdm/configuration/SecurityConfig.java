@@ -1,13 +1,17 @@
 package com.lemon.supershop.swp391fa25evdm.configuration;
 
 import com.lemon.supershop.swp391fa25evdm.authentication.service.CustomOAuth2UserService;
+import org.springframework.web.filter.CorsFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AuthorizeHttpRequestsConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
@@ -18,35 +22,35 @@ public class SecurityConfig{
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-
         http.csrf(csrf -> csrf.disable());
 
         http
-                // OLD: Có /login tạo lỗi "No static resource login"
-                // .authorizeHttpRequests(auth -> auth
-                //         .requestMatchers("/", "/login", "/oauth2/**", "/error").permitAll()
-                //         .anyRequest().authenticated()
-                // )
-
-                // NEW: Xóa /login vì FE tự xử lý, thêm /api/** để cho phép tất cả API
+                // Cho phép tất cả các endpoint API và OAuth2
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/", "/oauth2/**", "/api/auth/google/callback", "/api/**", "/error", "/swagger-ui/**", "/api-docs/**").permitAll()
                         .anyRequest().authenticated()
                 )
-
-                // OLD: Có .loginPage("/login") tạo lỗi
-                // .oauth2Login(oauth -> oauth
-                //         .loginPage("/login")
-                //         .userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService))
-                //         .defaultSuccessUrl("/api/auth/google/callback", true)
-                // );
-
-                // NEW: Xóa loginPage vì FE tự xử lý
+                // Cấu hình OAuth2 login
                 .oauth2Login(oauth -> oauth
                         .userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService))
                         .defaultSuccessUrl("/api/auth/google/callback", true)
                 );
 
         return http.build();
+    }
+
+    @Bean
+    public CorsFilter corsFilter() {
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowCredentials(true);
+        config.setAllowedOrigins(Arrays.asList("http://localhost:3000", "http://localhost:3001"));
+        config.setAllowedHeaders(Arrays.asList("*"));
+        config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
+        config.setExposedHeaders(Arrays.asList("Authorization"));
+        config.setMaxAge(3600L);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+        return new CorsFilter(source);
     }
 }

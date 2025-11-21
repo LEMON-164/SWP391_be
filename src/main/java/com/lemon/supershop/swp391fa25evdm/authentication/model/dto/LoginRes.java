@@ -9,6 +9,7 @@ public class LoginRes {
     private Integer dealerId;
     private String dealerName;
     private String dealerAddress;
+    private Boolean isNewUser;
 
     public LoginRes(String token, String refreshToken, String username, String role) {
         this.token = token;
@@ -90,5 +91,13 @@ public class LoginRes {
 
     public void setDealerAddress(String dealerAddress) {
         this.dealerAddress = dealerAddress;
+    }
+
+    public Boolean getNewUser() {
+        return isNewUser;
+    }
+
+    public void setNewUser(Boolean newUser) {
+        isNewUser = newUser;
     }
 }

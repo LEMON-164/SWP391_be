@@ -95,6 +95,13 @@ public class UserService {
             }
             if (dto.getEmail() != null && EMAIL_PATTERN.matcher(dto.getEmail()).matches()){
                 user.get().setEmail(dto.getEmail());
+
+                // GOOGLE USER AUTO PASSWORD: Nếu user chưa có password (Google login),
+                // tự động set password = phone number
+                if(user.get().getPassword() == null || user.get().getPassword().isEmpty()){
+                    user.get().setPassword(dto.getPhone());
+                    System.out.println("Auto-set password for Google user: " + id + " to phone number");
+                }
             }
             if(dto.getUsername() != null){
                 user.get().setUsername(dto.getUsername());
@@ -114,8 +121,20 @@ public class UserService {
                     user.get().setDealer(dealer.get());
                 }
             }
-            userRepo.save(user.get());
-            return converttoRes(user.get());
+            if(dto.getEmailVerified() != null){
+                user.get().setEmailVerified(dto.getEmailVerified());
+            }
+            User savedUser = userRepo.save(user.get());
+            UserRes userRes = converttoRes(savedUser);
+
+            // GOOGLE USER NOTIFICATION: Nếu vừa set password (Google user hoàn tất profile),
+            // trả về password tạm để frontend hiển thị thông báo
+            if(dto.getPhone() != null && !dto.getPhone().isEmpty() &&
+                    savedUser.getPassword() != null && savedUser.getPassword().equals(dto.getPhone())){
+                userRes.setTemporaryPassword(savedUser.getPassword());
+                System.out.println("Returning temporary password for Google user notification");
+            }
+            return userRes;
         } else {
             return null;
         }
@@ -181,13 +200,15 @@ public class UserService {
             if(user.getAddress() != null){
                 dto.setAddress(user.getAddress());
             }
-            if(user.getRole() != null){
+            if(user.getRole() != null && user.getRole().getName() != null){
                 dto.setRole(user.getRole().getName());
             }
             if (user.getStatus() != null){
-                dto.setStatus(user.getStatus());
+                dto.setStatus(user.getStatus().name());
             }
+            dto.setEmailVerified(user.getEmailVerified());
             if(user.getDealer() != null){
+                dto.setDealerId(user.getDealer().getId());
                 dto.setDealerName(user.getDealer().getName());
                 dto.setDealerAddress(user.getDealer().getAddress());
             }

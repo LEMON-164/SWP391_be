@@ -46,6 +46,9 @@ public class User {
     @Enumerated(EnumType.STRING)
     private UserStatus status;
 
+    @Column(name = "EmailVerified", columnDefinition = "BIT DEFAULT 0")
+    private Boolean emailVerified = false;
+
     @Column(insertable = false, updatable = false, name = "Create_at", columnDefinition = "DATETIME2 DEFAULT GETDATE()" )
     @Temporal(TemporalType.TIMESTAMP)
     private Date createAt;
@@ -227,5 +230,17 @@ public class User {
 
     public void setEscortedTestDrives(List<TestDrive> escortedTestDrives) {
         this.escortedTestDrives = escortedTestDrives;
+    }
+
+    public Boolean getEmailVerified() {
+        return emailVerified;
+    }
+
+    public void setEmailVerified(Boolean emailVerified) {
+        this.emailVerified = emailVerified;
+    }
+
+    public void setCreateAt(Date createAt) {
+        this.createAt = createAt;
     }
 }
