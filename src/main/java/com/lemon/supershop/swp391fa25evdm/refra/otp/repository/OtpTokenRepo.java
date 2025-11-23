@@ -1,6 +1,6 @@
 package com.lemon.supershop.swp391fa25evdm.refra.otp.repository;
 
-import com.lemon.supershop.swp391fa25evdm.otp.model.entity.OtpToken;
+import com.lemon.supershop.swp391fa25evdm.refra.otp.model.entity.OtpToken;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
