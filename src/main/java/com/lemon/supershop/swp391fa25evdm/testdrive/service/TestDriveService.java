@@ -273,7 +273,6 @@ public class TestDriveService {
 
             response.setConflictingBookings(bookings);
         }
-
         return response;
     }
 

@@ -1,4 +1,4 @@
-package com.lemon.supershop.swp391fa25evdm.otp.model.entity;
+package com.lemon.supershop.swp391fa25evdm.refra.otp.model.entity;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
